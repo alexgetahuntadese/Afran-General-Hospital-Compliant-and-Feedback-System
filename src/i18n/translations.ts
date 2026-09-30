@@ -1,0 +1,249 @@
+export type Language = 'en' | 'am';
+
+export interface CloneTranslations {
+  emergencyBanner: string;
+  hospitalName: string;
+  patientRelations: string;
+  navSubmit: string;
+  navTrack: string;
+  navStaffLogin: string;
+  navStaff: string;
+  navSignOut: string;
+  
+  heroTitle: string;
+  heroSubtitle: string;
+  
+  kindComplaint: string;
+  kindSuggestion: string;
+  kindCompliment: string;
+  
+  chooseDept: string;
+  overallExperience: string;
+  subjectLabel: string;
+  subjectPlaceholder: string;
+  messageLabel: string;
+  messagePlaceholder: string;
+  submitAnonymously: string;
+  anonymousNote: string;
+  nameLabel: string;
+  emailLabel: string;
+  phoneLabel: string;
+  submitButton: string;
+  submitting: string;
+  
+  thankYouTitle: string;
+  keepRefNotice: string;
+  trackThisCase: string;
+  submitAnother: string;
+  
+  trackHeading: string;
+  trackPlaceholder: string;
+  trackButton: string;
+  noCaseFound: string;
+  checkRefAgain: string;
+  responseFromPR: string;
+  awaitingResponse: string;
+  submittedAnonymously: string;
+  statusReceived: string;
+  statusInReview: string;
+  statusResolved: string;
+  
+  caseDashboard: string;
+  staffSignIn: string;
+  staffSignInDesc: string;
+  staffEmailPlaceholder: string;
+  signInBtn: string;
+  demoAdminBtn: string;
+  demoStaffBtn: string;
+  filterAll: string;
+  filterReceived: string;
+  filterInReview: string;
+  filterResolved: string;
+  searchCasesPlaceholder: string;
+  noCasesHere: string;
+  newSubmissionsAuto: string;
+  reviewCase: string;
+  close: string;
+  saveChanges: string;
+  responseVisibleNote: string;
+  statusLabel: string;
+  staffAccessTitle: string;
+  staffAccessDesc: string;
+  addStaffBtn: string;
+
+  // Analytics summary dashboard
+  summaryDashboard: string;
+  categoriesDistribution: string;
+  statusDistribution: string;
+  resolutionRate: string;
+  avgRating: string;
+  anonymousRate: string;
+  totalCases: string;
+  showCharts: string;
+  hideCharts: string;
+}
+
+export const translations: Record<Language, CloneTranslations> = {
+  en: {
+    emergencyBanner: 'For medical emergencies, go to the Emergency Department immediately.',
+    hospitalName: 'Afran General Hospital',
+    patientRelations: 'Patient Relations',
+    navSubmit: 'Submit',
+    navTrack: 'Track',
+    navStaffLogin: 'Staff login',
+    navStaff: 'Staff',
+    navSignOut: 'Sign out',
+    
+    heroTitle: 'Your voice helps us care better.',
+    heroSubtitle: 'Share a complaint, suggestion or compliment about your visit to Afran General Hospital. Every submission is read by our Patient Relations team.',
+    
+    kindComplaint: 'Complaint',
+    kindSuggestion: 'Suggestion',
+    kindCompliment: 'Compliment',
+    
+    chooseDept: 'Choose a department',
+    overallExperience: 'Overall experience (optional)',
+    subjectLabel: 'Subject',
+    subjectPlaceholder: 'Add a short subject',
+    messageLabel: 'Tell us what happened',
+    messagePlaceholder: 'Please add a bit more detail...',
+    submitAnonymously: 'Submit anonymously',
+    anonymousNote: 'We will not store your contact details.',
+    nameLabel: 'Name',
+    emailLabel: 'Email',
+    phoneLabel: 'Phone',
+    submitButton: 'Submit',
+    submitting: 'Submitting...',
+    
+    thankYouTitle: 'Thank you. We have received it.',
+    keepRefNotice: 'Keep this reference number to check progress:',
+    trackThisCase: 'Track this case',
+    submitAnother: 'Submit another',
+    
+    trackHeading: 'Track your case',
+    trackPlaceholder: 'AGH-7K2P9Q',
+    trackButton: 'Track',
+    noCaseFound: 'No case found',
+    checkRefAgain: 'Check the reference number and try again.',
+    responseFromPR: 'Response from Patient Relations',
+    awaitingResponse: 'Our Patient Relations team is reviewing your submission. Updates will appear here.',
+    submittedAnonymously: 'Submitted anonymously',
+    statusReceived: 'Received',
+    statusInReview: 'Under review',
+    statusResolved: 'Resolved',
+    
+    caseDashboard: 'Case dashboard',
+    staffSignIn: 'Staff sign in',
+    staffSignInDesc: 'Sign in with your staff account to review cases.',
+    staffEmailPlaceholder: 'colleague@afranhospital.com',
+    signInBtn: 'Sign In',
+    demoAdminBtn: 'Demo Administrator',
+    demoStaffBtn: 'Demo Staff Member',
+    filterAll: 'All',
+    filterReceived: 'Received',
+    filterInReview: 'Under review',
+    filterResolved: 'Resolved',
+    searchCasesPlaceholder: 'Search cases...',
+    noCasesHere: 'No cases here',
+    newSubmissionsAuto: 'New submissions will appear here automatically.',
+    reviewCase: 'Review case',
+    close: 'Close',
+    saveChanges: 'Save changes',
+    responseVisibleNote: 'Response (visible to the person on the tracking page)',
+    statusLabel: 'Status',
+    staffAccessTitle: 'Staff access',
+    staffAccessDesc: 'People must sign in once before you can add them.',
+    addStaffBtn: 'Add colleague',
+
+    summaryDashboard: 'Analytics & Trends',
+    categoriesDistribution: 'Feedback Categories Distribution',
+    statusDistribution: 'Case Status Distribution',
+    resolutionRate: 'Resolution Rate',
+    avgRating: 'Average Rating',
+    anonymousRate: 'Anonymous',
+    totalCases: 'Total Cases',
+    showCharts: 'Show Analytics',
+    hideCharts: 'Hide Analytics',
+  },
+  am: {
+    emergencyBanner: 'ለአስቸኳይ የህክምና ድንገተኛ አደጋ፣ ወዲያውኑ ወደ ድንገተኛ ክፍል ይሂዱ።',
+    hospitalName: 'አፍራን አጠቃላይ ሆስፒታል',
+    patientRelations: 'የታካሚዎች ተሞክሮ',
+    navSubmit: 'ቅሬታ/አስተያየት',
+    navTrack: 'ጉዳይ መከታተያ',
+    navStaffLogin: 'የሰራተኞች መግቢያ',
+    navStaff: 'የስራ አመራር',
+    navSignOut: 'ውጣ',
+    
+    heroTitle: 'የእርስዎ ድምፅ የተሻለ ህክምና እንድንሰጥ ይረዳናል።',
+    heroSubtitle: 'ስለ አፍራን አጠቃላይ ሆስፒታል ቆይታዎ ቅሬታ፣ የማሻሻያ ሀሳብ ወይም ምስጋና ያጋሩን። እያንዳንዱ ማመልከቻ በታካሚዎች ተሞክሮ ቡድናችን በጥንቃቄ ይነበባል።',
+    
+    kindComplaint: 'ቅሬታ',
+    kindSuggestion: 'የማሻሻያ ሀሳብ',
+    kindCompliment: 'ምስጋና',
+    
+    chooseDept: 'የሆስፒታሉን ክፍል ይምረጡ',
+    overallExperience: 'አጠቃላይ ተሞክሮ (አማራጭ)',
+    subjectLabel: 'ርዕስ',
+    subjectPlaceholder: 'አጭር ርዕስ ያስገቡ',
+    messageLabel: 'የተከሰተውን ሁኔታ ያብራሩልን',
+    messagePlaceholder: 'እባክዎ የተወሰነ ዝርዝር ማብራሪያ ይጻፉ...',
+    submitAnonymously: 'በሚስጥር (ያለ ስም) አቅርብ',
+    anonymousNote: 'የእርስዎን የእውቂያ መረጃ አናስቀምጥም።',
+    nameLabel: 'ስም',
+    emailLabel: 'ኢሜይል',
+    phoneLabel: 'ስልክ ቁጥር',
+    submitButton: 'አስገባ',
+    submitting: 'በመላክ ላይ...',
+    
+    thankYouTitle: 'እናመሰግናለን። ማመልከቻዎ ደርሶናል።',
+    keepRefNotice: 'የጉዳይዎን ሂደት ለመከታተል ይህንን መለያ ቁጥር ይያዙ:',
+    trackThisCase: 'ይህንን ጉዳይ ተከታተል',
+    submitAnother: 'ሌላ ማመልከቻ አስገባ',
+    
+    trackHeading: 'ጉዳይዎን ይከታተሉ',
+    trackPlaceholder: 'AGH-7K2P9Q',
+    trackButton: 'ፈልግ',
+    noCaseFound: 'ጉዳዩ አልተገኘም',
+    checkRefAgain: 'እባክዎ የመለያ ቁጥሩን አረጋግጠው በድጋሚ ይሞክሩ።',
+    responseFromPR: 'ከታካሚዎች ተሞክሮ የተሰጠ ይፋዊ ምላሽ',
+    awaitingResponse: 'የታካሚዎች ተሞክሮ ቡድናችን ማመልከቻዎን እየተመለከተው ነው። ምላሹ እዚህ ይለጠፋል።',
+    submittedAnonymously: 'ማንነት ሳይገለጽ የቀረበ',
+    statusReceived: 'ደርሷል',
+    statusInReview: 'በማጣራት ላይ',
+    statusResolved: 'ተፈትቷል',
+    
+    caseDashboard: 'የጉዳዮች ዳሽቦርድ',
+    staffSignIn: 'የሰራተኞች መግቢያ',
+    staffSignInDesc: 'ጉዳዮችን ለመገምገም በሰራተኛ መለያዎ ይግቡ።',
+    staffEmailPlaceholder: 'colleague@afranhospital.com',
+    signInBtn: 'ግባ',
+    demoAdminBtn: 'ዋና አስተዳዳሪ (ሞካሪ)',
+    demoStaffBtn: 'የሆስፒታል ሰራተኛ (ሞካሪ)',
+    filterAll: 'ሁሉም',
+    filterReceived: 'የደረሱ',
+    filterInReview: 'በማጣራት ላይ',
+    filterResolved: 'የተፈቱ',
+    searchCasesPlaceholder: 'ጉዳዮችን ፈልግ...',
+    noCasesHere: 'እዚህ ምንም ጉዳይ የለም',
+    newSubmissionsAuto: 'አዳዲስ ማመልከቻዎች እዚህ በራሳቸው ይመጣሉ።',
+    reviewCase: 'ጉዳዩን መርምር',
+    close: 'ዝጋ',
+    saveChanges: 'ለውጦችን መዝግብ',
+    responseVisibleNote: 'ምላሽ (በመከታተያ ገጹ ላይ ለተገልጋዩ የሚታይ)',
+    statusLabel: 'ሁኔታ',
+    staffAccessTitle: 'የሰራተኞች ፈቃድ',
+    staffAccessDesc: 'አዳዲስ የስራ ባልደረቦችን እዚህ ማከል ይችላሉ።',
+    addStaffBtn: 'ሰራተኛ ጨምር',
+
+    summaryDashboard: 'ትንታኔ እና የሂደት መረጃ',
+    categoriesDistribution: 'የአስተያየት አይነቶች ስርጭት',
+    statusDistribution: 'የጉዳዮች ሁኔታ ስርጭት',
+    resolutionRate: 'የመፍትሄ ምጣኔ',
+    avgRating: 'አማካይ ደረጃ',
+    anonymousRate: 'ማንነት ያልተገለጸበት',
+    totalCases: 'አጠቃላይ ጉዳዮች',
+    showCharts: 'ትንታኔ አሳይ',
+    hideCharts: 'ትንታኔ ደብቅ',
+  }
+};

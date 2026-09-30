@@ -1,0 +1,6 @@
+{
+  "name": "Afran General Hospital - Feedback & Compliance Portal",
+  "description": "Official patient feedback, grievance redressal, quality assurance, and compliance management portal for Afran General Hospital.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
