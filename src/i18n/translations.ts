@@ -16,6 +16,7 @@ export interface CloneTranslations {
   kindComplaint: string;
   kindSuggestion: string;
   kindCompliment: string;
+  kindFeedback: string;
   
   chooseDept: string;
   overallExperience: string;
@@ -25,6 +26,7 @@ export interface CloneTranslations {
   messagePlaceholder: string;
   submitAnonymously: string;
   anonymousNote: string;
+  confidentialityNote: string;
   nameLabel: string;
   emailLabel: string;
   phoneLabel: string;
@@ -53,8 +55,20 @@ export interface CloneTranslations {
   staffSignInDesc: string;
   staffEmailPlaceholder: string;
   signInBtn: string;
-  demoAdminBtn: string;
-  demoStaffBtn: string;
+  sendingSignInLink: string;
+  passwordlessSignIn: string;
+  magicLinkSent: string;
+  managerProvisionNote: string;
+  saving: string;
+  searching: string;
+  roleStaff: string;
+  roleDepartmentHead: string;
+  roleCeo: string;
+  managerScope: string;
+  ceoScope: string;
+  staffScope: string;
+  escalated: string;
+  markEscalated: string;
   filterAll: string;
   filterReceived: string;
   filterInReview: string;
@@ -69,7 +83,6 @@ export interface CloneTranslations {
   statusLabel: string;
   staffAccessTitle: string;
   staffAccessDesc: string;
-  addStaffBtn: string;
 
   // Analytics summary dashboard
   summaryDashboard: string;
@@ -100,6 +113,7 @@ export const translations: Record<Language, CloneTranslations> = {
     kindComplaint: 'Complaint',
     kindSuggestion: 'Suggestion',
     kindCompliment: 'Compliment',
+    kindFeedback: 'Feedback',
     
     chooseDept: 'Choose a department',
     overallExperience: 'Overall experience (optional)',
@@ -109,6 +123,7 @@ export const translations: Record<Language, CloneTranslations> = {
     messagePlaceholder: 'Please add a bit more detail...',
     submitAnonymously: 'Submit anonymously',
     anonymousNote: 'We will not store your contact details.',
+    confidentialityNote: 'Handled with confidentiality and care.',
     nameLabel: 'Name',
     emailLabel: 'Email',
     phoneLabel: 'Phone',
@@ -136,9 +151,21 @@ export const translations: Record<Language, CloneTranslations> = {
     staffSignIn: 'Staff sign in',
     staffSignInDesc: 'Sign in with your staff account to review cases.',
     staffEmailPlaceholder: 'colleague@afranhospital.com',
-    signInBtn: 'Sign In',
-    demoAdminBtn: 'Demo Administrator',
-    demoStaffBtn: 'Demo Staff Member',
+    signInBtn: 'Email me a sign-in link',
+    sendingSignInLink: 'Sending sign-in link...',
+    passwordlessSignIn: 'We will send a secure sign-in link to your assigned email address.',
+    magicLinkSent: 'Check your email for a secure sign-in link.',
+    managerProvisionNote: 'Only accounts and roles pre-assigned in Supabase can access staff cases.',
+    saving: 'Saving...',
+    searching: 'Searching...',
+    roleStaff: 'Patient Relations staff',
+    roleDepartmentHead: 'Department head',
+    roleCeo: 'CEO',
+    managerScope: 'Customer Service Manager · full access to all cases',
+    ceoScope: 'Showing escalated issues only',
+    staffScope: 'No case access assigned',
+    escalated: 'Escalated',
+    markEscalated: 'Escalate this issue for CEO review',
     filterAll: 'All',
     filterReceived: 'Received',
     filterInReview: 'Under review',
@@ -152,8 +179,7 @@ export const translations: Record<Language, CloneTranslations> = {
     responseVisibleNote: 'Response (visible to the person on the tracking page)',
     statusLabel: 'Status',
     staffAccessTitle: 'Staff access',
-    staffAccessDesc: 'People must sign in once before you can add them.',
-    addStaffBtn: 'Add colleague',
+    staffAccessDesc: 'Create staff accounts in Supabase Auth, then assign each person a role and (for department heads) department in the staff_profiles table.',
 
     summaryDashboard: 'Analytics & Trends',
     categoriesDistribution: 'Feedback Categories Distribution',
@@ -181,6 +207,7 @@ export const translations: Record<Language, CloneTranslations> = {
     kindComplaint: 'ቅሬታ',
     kindSuggestion: 'የማሻሻያ ሀሳብ',
     kindCompliment: 'ምስጋና',
+    kindFeedback: 'አስተያየት',
     
     chooseDept: 'የሆስፒታሉን ክፍል ይምረጡ',
     overallExperience: 'አጠቃላይ ተሞክሮ (አማራጭ)',
@@ -190,6 +217,7 @@ export const translations: Record<Language, CloneTranslations> = {
     messagePlaceholder: 'እባክዎ የተወሰነ ዝርዝር ማብራሪያ ይጻፉ...',
     submitAnonymously: 'በሚስጥር (ያለ ስም) አቅርብ',
     anonymousNote: 'የእርስዎን የእውቂያ መረጃ አናስቀምጥም።',
+    confidentialityNote: 'በሚስጥራዊነትና በጥንቃቄ ይካሄዳል።',
     nameLabel: 'ስም',
     emailLabel: 'ኢሜይል',
     phoneLabel: 'ስልክ ቁጥር',
@@ -217,9 +245,21 @@ export const translations: Record<Language, CloneTranslations> = {
     staffSignIn: 'የሰራተኞች መግቢያ',
     staffSignInDesc: 'ጉዳዮችን ለመገምገም በሰራተኛ መለያዎ ይግቡ።',
     staffEmailPlaceholder: 'colleague@afranhospital.com',
-    signInBtn: 'ግባ',
-    demoAdminBtn: 'ዋና አስተዳዳሪ (ሞካሪ)',
-    demoStaffBtn: 'የሆስፒታል ሰራተኛ (ሞካሪ)',
+    signInBtn: 'የመግቢያ ሊንክ ላክልኝ',
+    sendingSignInLink: 'የመግቢያ ሊንኩን በመላክ ላይ...',
+    passwordlessSignIn: 'ወደ ተመደበው ኢሜይል ደህንነቱ የተጠበቀ የመግቢያ ሊንክ እንልካለን።',
+    magicLinkSent: 'ደህንነቱ የተጠበቀ የመግቢያ ሊንክ ኢሜይልዎን ይመልከቱ።',
+    managerProvisionNote: 'በSupabase ቀድሞ የተመደቡ መለያዎችና ሚናዎች ብቻ የሰራተኛ ጉዳዮችን ማየት ይችላሉ።',
+    saving: 'በማስቀመጥ ላይ...',
+    searching: 'በመፈለግ ላይ...',
+    roleStaff: 'የታካሚ ግንኙነት ሰራተኛ',
+    roleDepartmentHead: 'የክፍል ኃላፊ',
+    roleCeo: 'ዋና ሥራ አስፈጻሚ',
+    managerScope: 'የደንበኛ አገልግሎት አስተዳዳሪ · ሁሉንም ጉዳዮች የማየት ፈቃድ',
+    ceoScope: 'የተላለፉ ጉዳዮች ብቻ እየታዩ ነው',
+    staffScope: 'የጉዳይ መዳረሻ አልተመደበም',
+    escalated: 'የተላለፈ',
+    markEscalated: 'ለዋና ሥራ አስፈጻሚ ግምገማ ይህን ጉዳይ አስተላልፍ',
     filterAll: 'ሁሉም',
     filterReceived: 'የደረሱ',
     filterInReview: 'በማጣራት ላይ',
@@ -233,8 +273,7 @@ export const translations: Record<Language, CloneTranslations> = {
     responseVisibleNote: 'ምላሽ (በመከታተያ ገጹ ላይ ለተገልጋዩ የሚታይ)',
     statusLabel: 'ሁኔታ',
     staffAccessTitle: 'የሰራተኞች ፈቃድ',
-    staffAccessDesc: 'አዳዲስ የስራ ባልደረቦችን እዚህ ማከል ይችላሉ።',
-    addStaffBtn: 'ሰራተኛ ጨምር',
+    staffAccessDesc: 'በSupabase Auth የሰራተኛ መለያ ይፍጠሩ፤ ከዚያም በstaff_profiles ሰንጠረዥ ውስጥ ሚናና የክፍል ኃላፊ ክፍል ይመድቡ።',
 
     summaryDashboard: 'ትንታኔ እና የሂደት መረጃ',
     categoriesDistribution: 'የአስተያየት አይነቶች ስርጭት',
