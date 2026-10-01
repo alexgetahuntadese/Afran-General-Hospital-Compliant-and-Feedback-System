@@ -12,7 +12,7 @@ import { TrackView } from './components/TrackView';
 import { StaffView } from './components/StaffView';
 import { CaseSubmission, StaffRole, StaffUser } from './types/hospital';
 import type { Session } from '@supabase/supabase-js';
-import { createCase, getCases, getCurrentUserProfile, getStaffProfiles, updateCase, updateStaffProfile } from './lib/data';
+import { createCase, createStaffAccount, getCases, getCurrentUserProfile, getStaffProfiles, updateCase, updateStaffProfile } from './lib/data';
 import { supabase } from './lib/supabase';
 
 function HospitalFeedbackApp() {
@@ -123,10 +123,21 @@ function HospitalFeedbackApp() {
     setStaffList(await getStaffProfiles());
   };
 
+  const handleCreateStaffAccount = async (input: { email: string; fullName: string; role: StaffRole; department?: string }) => {
+    await createStaffAccount(input);
+    setStaffList(await getStaffProfiles());
+  };
+
   const handleSignIn = async (email: string) => {
     if (!supabase) throw new Error('Supabase is not configured.');
-    setAuthError('');
+
     const normalizedEmail = email.trim().toLowerCase();
+    const isEmailAddress = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!normalizedEmail || !isEmailAddress.test(normalizedEmail)) {
+      throw new Error('Please enter a valid email address to sign in.');
+    }
+
+    setAuthError('');
     const { error } = await supabase.auth.signInWithOtp({
       email: normalizedEmail,
       options: {
@@ -199,6 +210,7 @@ function HospitalFeedbackApp() {
             onSignOut={handleSignOut}
             staffList={staffList}
             onUpdateStaffProfile={handleUpdateStaffProfile}
+            onCreateStaffAccount={handleCreateStaffAccount}
             authError={authError}
             dataError={dataError}
           />

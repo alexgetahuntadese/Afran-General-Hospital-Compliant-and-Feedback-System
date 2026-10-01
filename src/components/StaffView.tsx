@@ -32,6 +32,7 @@ interface StaffViewProps {
   onSignOut: () => void;
   staffList: StaffUser[];
   onUpdateStaffProfile: (email: string, role: StaffRole, department?: string) => Promise<void>;
+  onCreateStaffAccount: (input: { email: string; fullName: string; role: StaffRole; department?: string }) => Promise<void>;
   authError: string;
   dataError: string;
 }
@@ -44,6 +45,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
   onSignOut,
   staffList,
   onUpdateStaffProfile,
+  onCreateStaffAccount,
   authError,
   dataError,
 }) => {
@@ -68,6 +70,11 @@ export const StaffView: React.FC<StaffViewProps> = ({
   const [staffRoleDrafts, setStaffRoleDrafts] = useState<Record<string, { role: StaffRole; department: string }>>({});
   const [staffSaveEmail, setStaffSaveEmail] = useState('');
   const [staffSaveError, setStaffSaveError] = useState('');
+  const [newStaffEmail, setNewStaffEmail] = useState('');
+  const [newStaffName, setNewStaffName] = useState('');
+  const [newStaffRole, setNewStaffRole] = useState<StaffRole>('staff');
+  const [newStaffDepartment, setNewStaffDepartment] = useState(DEPARTMENTS[0]);
+  const [isCreatingStaff, setIsCreatingStaff] = useState(false);
 
   // Editing case in modal
   const [editStatus, setEditStatus] = useState<SubmissionStatus>('received');
@@ -178,6 +185,36 @@ export const StaffView: React.FC<StaffViewProps> = ({
     }
   };
 
+  const handleCreateStaff = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!newStaffEmail.trim() || !newStaffName.trim()) {
+      setStaffSaveError('Enter the staff member’s name and email.');
+      return;
+    }
+    if (newStaffRole === 'department_head' && !newStaffDepartment) {
+      setStaffSaveError('Choose a department for department heads.');
+      return;
+    }
+    setIsCreatingStaff(true);
+    setStaffSaveError('');
+    try {
+      await onCreateStaffAccount({
+        email: newStaffEmail,
+        fullName: newStaffName,
+        role: newStaffRole,
+        department: newStaffRole === 'department_head' ? newStaffDepartment : undefined,
+      });
+      setNewStaffEmail('');
+      setNewStaffName('');
+      setNewStaffRole('staff');
+      setNewStaffDepartment(DEPARTMENTS[0]);
+    } catch (error) {
+      setStaffSaveError(error instanceof Error ? error.message : 'Unable to create this staff account.');
+    } finally {
+      setIsCreatingStaff(false);
+    }
+  };
+
   const getSignInErrorMessage = (error: unknown): string => {
     const message = error instanceof Error ? error.message : 'Unable to send a sign-in link.';
     if (/signups not allowed for otp/i.test(message)) {
@@ -223,12 +260,20 @@ export const StaffView: React.FC<StaffViewProps> = ({
           <form
             onSubmit={async (e) => {
               e.preventDefault();
-              if (!loginEmail.trim()) return;
+              const normalizedEmail = loginEmail.trim();
+              const isEmailAddress = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+              if (!normalizedEmail || !isEmailAddress.test(normalizedEmail)) {
+                setSignInError('Use a valid email address to sign in.');
+                setMagicLinkSent(false);
+                return;
+              }
+
               setIsSigningIn(true);
               setMagicLinkSent(false);
               setSignInError('');
               try {
-                await onSignIn(loginEmail);
+                await onSignIn(normalizedEmail);
                 setMagicLinkSent(true);
               } catch (error) {
                 setSignInError(getSignInErrorMessage(error));
@@ -244,6 +289,8 @@ export const StaffView: React.FC<StaffViewProps> = ({
               </label>
               <input
                 type="email"
+                inputMode="email"
+                autoComplete="email"
                 value={loginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
                 placeholder={t.staffEmailPlaceholder}
@@ -720,6 +767,31 @@ export const StaffView: React.FC<StaffViewProps> = ({
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 {t.staffAccessDesc}
               </p>
+
+              {canManageStaff && (
+                <form onSubmit={(event) => void handleCreateStaff(event)} className="space-y-2 rounded-xl border border-blue-100 bg-blue-50/60 p-3 dark:border-blue-900/60 dark:bg-blue-950/20">
+                  <span className="text-[11px] font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider block">Create staff account</span>
+                  <input value={newStaffName} onChange={(event) => setNewStaffName(event.target.value)} placeholder="Full name" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
+                  <input type="email" value={newStaffEmail} onChange={(event) => setNewStaffEmail(event.target.value)} placeholder="Work email" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
+                  <div className="flex gap-2">
+                    <select value={newStaffRole} onChange={(event) => setNewStaffRole(event.target.value as StaffRole)} className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-2 py-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white">
+                      <option value="staff">Staff</option>
+                      <option value="superadmin">Superadmin</option>
+                      <option value="department_head">Department head</option>
+                      <option value="customer_service_manager">Customer Service Manager</option>
+                      <option value="ceo">CEO</option>
+                    </select>
+                    {newStaffRole === 'department_head' && (
+                      <select value={newStaffDepartment} onChange={(event) => setNewStaffDepartment(event.target.value)} className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-2 py-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white">
+                        {DEPARTMENTS.map((department) => <option key={department} value={department}>{department}</option>)}
+                      </select>
+                    )}
+                  </div>
+                  <button type="submit" disabled={isCreatingStaff} className="min-h-9 rounded-lg bg-blue-700 px-3 text-[11px] font-bold text-white hover:bg-blue-800 disabled:opacity-60">
+                    {isCreatingStaff ? 'Creating...' : 'Create account'}
+                  </button>
+                </form>
+              )}
 
               <div className="space-y-2 pt-2">
                 <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">

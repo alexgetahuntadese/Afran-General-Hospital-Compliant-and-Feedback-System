@@ -217,3 +217,21 @@ export async function updateStaffProfile(email: string, role: StaffRole, departm
   if (error) throw error;
   if (!data) throw new Error('This account is not allowed to manage staff roles.');
 }
+
+export async function createStaffAccount(input: {
+  email: string;
+  fullName: string;
+  role: StaffRole;
+  department?: string;
+}): Promise<void> {
+  const client = requireSupabase();
+  const { error } = await client.functions.invoke('create-staff-account', {
+    body: {
+      email: input.email.trim().toLowerCase(),
+      fullName: input.fullName.trim(),
+      role: input.role,
+      department: input.role === 'department_head' ? input.department?.trim() : undefined,
+    },
+  });
+  if (error) throw error;
+}

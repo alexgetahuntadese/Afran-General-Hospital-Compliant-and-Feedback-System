@@ -5,6 +5,7 @@ begin
   select array_agg(requested.email)
   into missing_emails
   from (values
+    ('alexgetahuntadese@gmail.com'),
     ('alexgetahun@afran.com'),
     ('getahun@afran.com'),
     ('tamima@afranhospital.com'),
@@ -16,7 +17,7 @@ begin
     where lower(auth_user.email) = requested.email
   );
 
-  if cardinality(missing_emails) > 0 then
+  if coalesce(cardinality(missing_emails), 0) > 0 then
     raise exception 'Create these Auth users before provisioning their staff profiles: %',
       array_to_string(missing_emails, ', ');
   end if;
@@ -31,6 +32,7 @@ select
   requested.role,
   null
 from (values
+  ('alexgetahuntadese@gmail.com', 'Alex Getahun Tadesse', 'superadmin'),
   ('alexgetahun@afran.com', 'Alex Getahun', 'superadmin'),
   ('getahun@afran.com', 'Getahun', 'customer_service_manager'),
   ('tamima@afranhospital.com', 'Tamima', 'customer_service_manager'),

@@ -179,7 +179,7 @@ export const translations: Record<Language, CloneTranslations> = {
     responseVisibleNote: 'Response (visible to the person on the tracking page)',
     statusLabel: 'Status',
     staffAccessTitle: 'Staff access',
-    staffAccessDesc: 'Create staff accounts in Supabase Auth, then assign each person a role and (for department heads) department in the staff_profiles table.',
+    staffAccessDesc: 'Superadmins can create staff accounts and assign each person a role and (for department heads) department.',
 
     summaryDashboard: 'Analytics & Trends',
     categoriesDistribution: 'Feedback Categories Distribution',
