@@ -84,6 +84,7 @@ export interface CloneTranslations {
   roleDepartmentHead: string;
   roleCeo: string;
   managerScope: string;
+  departmentHeadScope: string;
   ceoScope: string;
   staffScope: string;
   escalated: string;
@@ -102,6 +103,7 @@ export interface CloneTranslations {
   statusLabel: string;
   staffAccessTitle: string;
   staffAccessDesc: string;
+  staffDepartmentAccessNote: string;
   staffAccessCreateTab: string;
   staffAccessDirectoryTab: string;
   staffAccessManagerDesc: string;
@@ -125,6 +127,26 @@ export interface CloneTranslations {
   staffDepartmentRequired: string;
   staffCreateError: string;
   staffRoleUpdateError: string;
+  staffEditAccount: string;
+  staffCancelEdit: string;
+  staffUpdateAccount: string;
+  staffUpdatingAccount: string;
+  staffNewUsername: string;
+  staffPasswordReset: string;
+  staffPasswordResetDone: string;
+  staffPasswordResetError: string;
+  staffResetPassword: string;
+  staffAccountActive: string;
+  staffAccountInactive: string;
+  staffActivate: string;
+  staffDeactivate: string;
+  staffConfirmActivate: string;
+  staffConfirmDeactivate: string;
+  staffDeleteAccount: string;
+  staffDeleteConfirm: string;
+  staffAccountDeleteError: string;
+  staffAccountUpdateError: string;
+  staffConfirmAction: string;
 
   // Analytics summary dashboard
   summaryDashboard: string;
@@ -223,6 +245,7 @@ export const translations: Record<Language, CloneTranslations> = {
     roleDepartmentHead: 'Department head',
     roleCeo: 'CEO',
     managerScope: 'Customer Service Manager · full access to all cases',
+    departmentHeadScope: 'Only cases for the assigned department',
     ceoScope: 'Showing escalated issues only',
     staffScope: 'No case access assigned',
     escalated: 'Escalated',
@@ -241,6 +264,7 @@ export const translations: Record<Language, CloneTranslations> = {
     statusLabel: 'Status',
     staffAccessTitle: 'Staff access',
     staffAccessDesc: 'Superadmins can create staff accounts and assign each person a role and (for department heads) department.',
+    staffDepartmentAccessNote: 'Department heads can only view and update cases for the department assigned to their account.',
     staffAccessCreateTab: 'Create account',
     staffAccessDirectoryTab: 'Staff directory',
     staffAccessManagerDesc: 'View active staff accounts and their assigned roles.',
@@ -264,6 +288,26 @@ export const translations: Record<Language, CloneTranslations> = {
     staffDepartmentRequired: 'Choose a department for department heads.',
     staffCreateError: 'Unable to create this staff account.',
     staffRoleUpdateError: 'Unable to update this staff role.',
+    staffEditAccount: 'Edit account',
+    staffCancelEdit: 'Cancel',
+    staffUpdateAccount: 'Save account changes',
+    staffUpdatingAccount: 'Saving account...',
+    staffNewUsername: 'Username',
+    staffPasswordReset: 'Set a new password (at least 12 characters)',
+    staffPasswordResetDone: 'Password reset successfully.',
+    staffPasswordResetError: 'Unable to reset this password.',
+    staffResetPassword: 'Reset password',
+    staffAccountActive: 'Active',
+    staffAccountInactive: 'Deactivated',
+    staffActivate: 'Reactivate',
+    staffDeactivate: 'Deactivate',
+    staffConfirmActivate: 'Reactivate this account?',
+    staffConfirmDeactivate: 'Deactivate this account?',
+    staffDeleteAccount: 'Delete account',
+    staffDeleteConfirm: 'Permanently delete this account?',
+    staffAccountDeleteError: 'Unable to delete this account.',
+    staffAccountUpdateError: 'Unable to update this account.',
+    staffConfirmAction: 'Confirm',
 
     summaryDashboard: 'Analytics & Trends',
     categoriesDistribution: 'Feedback Categories Distribution',
@@ -359,6 +403,7 @@ export const translations: Record<Language, CloneTranslations> = {
     roleDepartmentHead: 'የክፍል ኃላፊ',
     roleCeo: 'ዋና ሥራ አስፈጻሚ',
     managerScope: 'የደንበኛ አገልግሎት አስተዳዳሪ · ሁሉንም ጉዳዮች የማየት ፈቃድ',
+    departmentHeadScope: 'ለተመደበው መምሪያ የተመደቡ ጉዳዮችን ብቻ ያያሉ',
     ceoScope: 'የተላለፉ ጉዳዮች ብቻ እየታዩ ነው',
     staffScope: 'የጉዳይ መዳረሻ አልተመደበም',
     escalated: 'የተላለፈ',
@@ -377,6 +422,7 @@ export const translations: Record<Language, CloneTranslations> = {
     statusLabel: 'ሁኔታ',
     staffAccessTitle: 'የሰራተኞች ፈቃድ',
     staffAccessDesc: 'ሱፐር አስተዳዳሪዎች የሰራተኛ መለያ መፍጠርና ሚና እና ክፍል መመደብ ይችላሉ።',
+    staffDepartmentAccessNote: 'የክፍል ኃላፊዎች ለመለያቸው የተመደበውን መምሪያ ጉዳዮች ብቻ ማየትና ማዘመን ይችላሉ።',
     staffAccessCreateTab: 'መለያ ፍጠር',
     staffAccessDirectoryTab: 'የሰራተኞች ዝርዝር',
     staffAccessManagerDesc: 'ንቁ የሰራተኛ መለያዎችንና የተመደቡ ሚናዎችን ይመልከቱ።',
@@ -400,6 +446,26 @@ export const translations: Record<Language, CloneTranslations> = {
     staffDepartmentRequired: 'ለክፍል ኃላፊዎች ክፍል ይምረጡ።',
     staffCreateError: 'ይህን የሰራተኛ መለያ መፍጠር አልተቻለም።',
     staffRoleUpdateError: 'የዚህን ሰራተኛ ሚና ማዘመን አልተቻለም።',
+    staffEditAccount: 'መለያ አርትዕ',
+    staffCancelEdit: 'ሰርዝ',
+    staffUpdateAccount: 'የመለያ ለውጦችን አስቀምጥ',
+    staffUpdatingAccount: 'መለያውን በማስቀመጥ ላይ...',
+    staffNewUsername: 'የተጠቃሚ ስም',
+    staffPasswordReset: 'አዲስ የይለፍ ቃል ያስገቡ (ቢያንስ 12 ቁምፊዎች)',
+    staffPasswordResetDone: 'የይለፍ ቃሉ በተሳካ ሁኔታ ተቀይሯል።',
+    staffPasswordResetError: 'የይለፍ ቃሉን መቀየር አልተቻለም።',
+    staffResetPassword: 'የይለፍ ቃል ቀይር',
+    staffAccountActive: 'ንቁ',
+    staffAccountInactive: 'ቦዝኗል',
+    staffActivate: 'እንደገና አንቃ',
+    staffDeactivate: 'አቦዝን',
+    staffConfirmActivate: 'ይህን መለያ እንደገና ማንቃት ይፈልጋሉ?',
+    staffConfirmDeactivate: 'ይህን መለያ ማቦዘን ይፈልጋሉ?',
+    staffDeleteAccount: 'መለያ ሰርዝ',
+    staffDeleteConfirm: 'ይህን መለያ ለዘላለም መሰረዝ ይፈልጋሉ?',
+    staffAccountDeleteError: 'ይህን መለያ መሰረዝ አልተቻለም።',
+    staffAccountUpdateError: 'ይህን መለያ ማዘመን አልተቻለም።',
+    staffConfirmAction: 'እርግጠኛ ነዎት?',
 
     summaryDashboard: 'ትንታኔ እና የሂደት መረጃ',
     categoriesDistribution: 'የአስተያየት አይነቶች ስርጭት',
@@ -495,6 +561,7 @@ export const translations: Record<Language, CloneTranslations> = {
     roleDepartmentHead: 'Itti gaafatamaa kutaa',
     roleCeo: 'Hoogganaa Olaanaa',
     managerScope: 'Bulchaa Tajaajila Maamilaa · dhimmoota hunda arguu danda’a',
+    departmentHeadScope: 'Dhimmoota kutaa akkaawuntii irratti ramadame qofa arguu danda’a',
     ceoScope: 'Dhimmoota olitti dabarfaman qofa agarsiisaa jira',
     staffScope: 'Dhimmoonni akka argaman hin ramadamne',
     escalated: 'Olitti dabarfame',
@@ -513,6 +580,7 @@ export const translations: Record<Language, CloneTranslations> = {
     statusLabel: 'Haala',
     staffAccessTitle: 'Hayyama hojjettootaa',
     staffAccessDesc: 'Bulchitoonni olaanoon akkaawuntii hojjettootaa uumuu fi nama hundaaf gahee fi (itti gaafatamtoota kutaatiif) kutaa ramaduu danda’u.',
+    staffDepartmentAccessNote: 'Itti gaafatamtoonni kutaalee dhimmoota kutaa akkaawuntii isaanii irratti ramadame qofa ilaaluu fi haaromsuu danda’u.',
     staffAccessCreateTab: 'Akkaawuntii uumi',
     staffAccessDirectoryTab: 'Tarree hojjettootaa',
     staffAccessManagerDesc: 'Akkaawuntii hojjettootaa hojii irra jiran fi gahee isaanii ilaalaa.',
@@ -536,6 +604,26 @@ export const translations: Record<Language, CloneTranslations> = {
     staffDepartmentRequired: 'Itti gaafatamtoota kutaatiif kutaa filadhaa.',
     staffCreateError: 'Akkaawuntii hojjetaa kana uumuu hin dandeenye.',
     staffRoleUpdateError: 'Gahee hojjetaa kana haaromsuu hin dandeenye.',
+    staffEditAccount: 'Akkaawuntii gulaali',
+    staffCancelEdit: 'Dhiisi',
+    staffUpdateAccount: 'Jijjiirama akkaawuntii olkaa’i',
+    staffUpdatingAccount: 'Akkaawuntii olkaa’aa jira...',
+    staffNewUsername: 'Maqaa fayyadamaa',
+    staffPasswordReset: 'Jecha icciitii haaraa galchi (qubee ykn mallattoo yoo xiqqaate 12)',
+    staffPasswordResetDone: 'Jechi icciitii milkaa’inaan haaromfameera.',
+    staffPasswordResetError: 'Jecha icciitii haaromsuu hin dandeenye.',
+    staffResetPassword: 'Jecha icciitii haaromsi',
+    staffAccountActive: 'Hojii irra',
+    staffAccountInactive: 'Dhaabbateera',
+    staffActivate: 'Irra deebi’ii hojii jalqabi',
+    staffDeactivate: 'Dhaabi',
+    staffConfirmActivate: 'Akkaawuntii kana irra deebi’anii hojii jalqabsiisuu barbaadduu?',
+    staffConfirmDeactivate: 'Akkaawuntii kana dhaabuu barbaadduu?',
+    staffDeleteAccount: 'Akkaawuntii haqi',
+    staffDeleteConfirm: 'Akkaawuntii kana guutummaatti haquu barbaadduu?',
+    staffAccountDeleteError: 'Akkaawuntii kana haquu hin dandeenye.',
+    staffAccountUpdateError: 'Akkaawuntii kana haaromsuu hin dandeenye.',
+    staffConfirmAction: 'Mirkaneessaa',
 
     summaryDashboard: 'Xiinxala fi adeemsa',
     categoriesDistribution: 'Raabsa gosoota yaadaa',

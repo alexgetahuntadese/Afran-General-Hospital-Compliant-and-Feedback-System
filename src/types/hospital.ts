@@ -1,7 +1,7 @@
 export type SubmissionKind = 'complaint' | 'feedback' | 'compliment';
 
 export type SubmissionStatus = 'received' | 'in_review' | 'resolved';
-export type StaffRole = 'superadmin' | 'customer_service_manager' | 'staff' | 'department_head' | 'emergency_department_head' | 'ceo';
+export type StaffRole = 'superadmin' | 'customer_service_manager' | 'staff' | 'department_head' | 'ceo';
 export type QuestionnaireAnswers = Record<string, number>;
 
 export interface CaseSubmission {
@@ -32,5 +32,19 @@ export interface StaffUser {
   name: string;
   role: StaffRole;
   department?: string;
+  isActive: boolean;
   addedAt: string;
 }
+
+export type StaffAccountAction =
+  | {
+    action: 'update';
+    username: string;
+    fullName: string;
+    newUsername: string;
+    role: StaffRole;
+    department?: string;
+  }
+  | { action: 'reset_password'; username: string; password: string }
+  | { action: 'set_active'; username: string; isActive: boolean }
+  | { action: 'delete'; username: string };

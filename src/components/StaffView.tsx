@@ -15,9 +15,14 @@ import {
   User,
   Phone,
   BarChart3,
-  Mic
+  Mic,
+  Pencil,
+  KeyRound,
+  UserCheck,
+  UserX,
+  Trash2,
 } from 'lucide-react';
-import { CaseSubmission, StaffRole, StaffUser, SubmissionStatus } from '../types/hospital';
+import { CaseSubmission, StaffAccountAction, StaffRole, StaffUser, SubmissionStatus } from '../types/hospital';
 import { useLanguage } from '../context/LanguageContext';
 import { StaffAnalyticsSummary } from './StaffAnalyticsSummary';
 import { getDepartmentQuestions, LIKELIHOOD_OPTIONS, SATISFACTION_OPTIONS } from '../data/questionnaires';
@@ -31,7 +36,7 @@ interface StaffViewProps {
   onSignIn: (username: string, password: string) => Promise<void>;
   onSignOut: () => void;
   staffList: StaffUser[];
-  onUpdateStaffProfile: (username: string, role: StaffRole, department?: string) => Promise<void>;
+  onManageStaffAccount: (input: StaffAccountAction) => Promise<void>;
   onCreateStaffAccount: (input: { username: string; fullName: string; password: string; role: StaffRole; department?: string }) => Promise<void>;
   authError: string;
   dataError: string;
@@ -44,7 +49,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
   onSignIn,
   onSignOut,
   staffList,
-  onUpdateStaffProfile,
+  onManageStaffAccount,
   onCreateStaffAccount,
   authError,
   dataError,
@@ -68,9 +73,12 @@ export const StaffView: React.FC<StaffViewProps> = ({
   const [selectedCase, setSelectedCase] = useState<CaseSubmission | null>(null);
   const [isStaffAccessOpen, setIsStaffAccessOpen] = useState(false);
   const [staffAccessTab, setStaffAccessTab] = useState<'create' | 'directory'>('create');
-  const [staffRoleDrafts, setStaffRoleDrafts] = useState<Record<string, { role: StaffRole; department: string }>>({});
+  const [staffAccountDrafts, setStaffAccountDrafts] = useState<Record<string, { username: string; fullName: string; role: StaffRole; department: string }>>({});
+  const [staffPasswordDrafts, setStaffPasswordDrafts] = useState<Record<string, string>>({});
+  const [editingStaffUsername, setEditingStaffUsername] = useState('');
   const [staffSaveUsername, setStaffSaveUsername] = useState('');
   const [staffSaveError, setStaffSaveError] = useState('');
+  const [staffSaveSuccess, setStaffSaveSuccess] = useState('');
   const [newStaffUsername, setNewStaffUsername] = useState('');
   const [newStaffName, setNewStaffName] = useState('');
   const [newStaffPassword, setNewStaffPassword] = useState('');
@@ -166,23 +174,100 @@ export const StaffView: React.FC<StaffViewProps> = ({
     setEditEscalated(Boolean(c.escalated));
   };
 
-  const handleSaveStaffRole = async (staff: StaffUser) => {
-    const draft = staffRoleDrafts[staff.username] ?? { role: staff.role, department: staff.department ?? '' };
+  const getStaffDraft = (staff: StaffUser) => staffAccountDrafts[staff.username] ?? {
+    username: staff.username,
+    fullName: staff.name,
+    role: staff.role,
+    department: staff.department ?? '',
+  };
+
+  const handleSaveStaffAccount = async (staff: StaffUser) => {
+    const draft = getStaffDraft(staff);
+    const newUsername = draft.username.trim().toLowerCase();
+    if (!draft.fullName.trim()) {
+      setStaffSaveError(t.staffEnterNameUsername);
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newUsername)) {
+      setStaffSaveError(t.staffInvalidUsername);
+      return;
+    }
     if (draft.role === 'department_head' && !draft.department) {
       setStaffSaveError(t.staffDepartmentRequired);
       return;
     }
     setStaffSaveUsername(staff.username);
     setStaffSaveError('');
+    setStaffSaveSuccess('');
     try {
-      await onUpdateStaffProfile(staff.username, draft.role, draft.department || undefined);
-      setStaffRoleDrafts((drafts) => {
+      await onManageStaffAccount({
+        action: 'update',
+        username: staff.username,
+        newUsername,
+        fullName: draft.fullName.trim(),
+        role: draft.role,
+        department: draft.role === 'department_head' ? draft.department : undefined,
+      });
+      setStaffAccountDrafts((drafts) => {
         const next = { ...drafts };
         delete next[staff.username];
         return next;
       });
+      setEditingStaffUsername('');
+      setStaffSaveSuccess(t.staffUpdateAccount);
     } catch (error) {
-      setStaffSaveError(error instanceof Error ? error.message : t.staffRoleUpdateError);
+      setStaffSaveError(error instanceof Error ? error.message : t.staffAccountUpdateError);
+    } finally {
+      setStaffSaveUsername('');
+    }
+  };
+
+  const handleResetStaffPassword = async (staff: StaffUser) => {
+    const password = staffPasswordDrafts[staff.username] ?? '';
+    if (password.length < 12) {
+      setStaffSaveError(t.staffPasswordTooShort);
+      return;
+    }
+    setStaffSaveUsername(staff.username);
+    setStaffSaveError('');
+    setStaffSaveSuccess('');
+    try {
+      await onManageStaffAccount({ action: 'reset_password', username: staff.username, password });
+      setStaffPasswordDrafts((drafts) => ({ ...drafts, [staff.username]: '' }));
+      setStaffSaveSuccess(t.staffPasswordResetDone);
+    } catch (error) {
+      setStaffSaveError(error instanceof Error ? error.message : t.staffPasswordResetError);
+    } finally {
+      setStaffSaveUsername('');
+    }
+  };
+
+  const handleSetStaffActive = async (staff: StaffUser) => {
+    const confirmMessage = staff.isActive ? t.staffConfirmDeactivate : t.staffConfirmActivate;
+    if (!window.confirm(`${confirmMessage}\n${staff.name} (${staff.username})`)) return;
+    setStaffSaveUsername(staff.username);
+    setStaffSaveError('');
+    setStaffSaveSuccess('');
+    try {
+      await onManageStaffAccount({ action: 'set_active', username: staff.username, isActive: !staff.isActive });
+      setStaffSaveSuccess(staff.isActive ? t.staffAccountInactive : t.staffAccountActive);
+    } catch (error) {
+      setStaffSaveError(error instanceof Error ? error.message : t.staffAccountUpdateError);
+    } finally {
+      setStaffSaveUsername('');
+    }
+  };
+
+  const handleDeleteStaffAccount = async (staff: StaffUser) => {
+    if (!window.confirm(`${t.staffDeleteConfirm}\n${staff.name} (${staff.username})`)) return;
+    setStaffSaveUsername(staff.username);
+    setStaffSaveError('');
+    setStaffSaveSuccess('');
+    try {
+      await onManageStaffAccount({ action: 'delete', username: staff.username });
+      setStaffSaveSuccess(t.staffDeleteAccount);
+    } catch (error) {
+      setStaffSaveError(error instanceof Error ? error.message : t.staffAccountDeleteError);
     } finally {
       setStaffSaveUsername('');
     }
@@ -374,7 +459,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
               : currentUser.role === 'ceo'
               ? t.ceoScope
               : currentUser.role === 'department_head'
-              ? `${t.roleDepartmentHead}: ${getDeptName(currentUser.department || '')}`
+              ? `${t.roleDepartmentHead}: ${getDeptName(currentUser.department || '')} · ${t.departmentHeadScope}`
               : currentUser.role === 'customer_service_manager'
               ? t.managerScope
               : t.staffScope}
@@ -888,6 +973,11 @@ export const StaffView: React.FC<StaffViewProps> = ({
                       </label>
                     )}
                   </div>
+                  {newStaffRole === 'department_head' && (
+                    <p className="text-[10px] leading-relaxed text-slate-500 dark:text-slate-400">
+                      {t.staffDepartmentAccessNote}
+                    </p>
+                  )}
                   <button type="submit" disabled={isCreatingStaff} className="min-h-10 w-full rounded-lg bg-blue-700 px-4 text-xs font-bold text-white hover:bg-blue-800 disabled:opacity-60">
                     {isCreatingStaff ? t.staffCreatingAccount : t.staffCreateAccountButton}
                   </button>

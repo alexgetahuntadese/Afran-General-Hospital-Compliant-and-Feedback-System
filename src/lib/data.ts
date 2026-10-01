@@ -1,4 +1,4 @@
-import { CaseSubmission, StaffUser, SubmissionKind, SubmissionStatus, StaffRole } from '../types/hospital';
+import { CaseSubmission, StaffAccountAction, StaffUser, SubmissionKind, SubmissionStatus, StaffRole } from '../types/hospital';
 import { supabase } from './supabase';
 
 interface CaseRow {
@@ -30,6 +30,7 @@ interface StaffProfileRow {
   full_name: string;
   role: StaffRole;
   department: string | null;
+  is_active: boolean;
   created_at: string;
 }
 
@@ -75,6 +76,7 @@ function mapStaffProfile(row: StaffProfileRow): StaffUser {
     name: row.full_name,
     role: row.role,
     department: row.department ?? undefined,
+    isActive: row.is_active,
     addedAt: row.created_at,
   };
 }
@@ -190,7 +192,9 @@ export async function getCurrentUserProfile(userId: string): Promise<StaffUser |
     .eq('id', userId)
     .maybeSingle();
   if (error) throw error;
-  return data ? mapStaffProfile(data as StaffProfileRow) : null;
+  if (!data) return null;
+  const profile = mapStaffProfile(data as StaffProfileRow);
+  return profile.isActive ? profile : null;
 }
 
 export async function getStaffProfiles(): Promise<StaffUser[]> {
@@ -209,9 +213,7 @@ export async function updateStaffProfile(username: string, role: StaffRole, depa
     .from('staff_profiles')
     .update({
       role,
-      department: role === 'emergency_department_head'
-        ? 'Emergency'
-        : role === 'department_head' ? department ?? null : null,
+      department: role === 'department_head' ? department ?? null : null,
     })
     .eq('username', username.trim().toLowerCase())
     .select('id')
@@ -234,23 +236,42 @@ export async function createStaffAccount(input: {
       fullName: input.fullName.trim(),
       password: input.password,
       role: input.role,
-      department: input.role === 'emergency_department_head'
-        ? 'Emergency'
-        : input.role === 'department_head' ? input.department?.trim() : undefined,
+      department: input.role === 'department_head' ? input.department?.trim() : undefined,
     },
   });
   if (error) {
-    if (error.name === 'FunctionsHttpError' && error.context instanceof Response) {
-      const responseBody: unknown = await error.context.clone().json().catch(() => null);
-      if (
-        typeof responseBody === 'object'
-        && responseBody !== null
-        && 'error' in responseBody
-        && typeof responseBody.error === 'string'
-      ) {
-        throw new Error(responseBody.error);
-      }
-    }
-    throw error;
+    throw await getFunctionError(error);
   }
+}
+
+export async function manageStaffAccount(input: StaffAccountAction): Promise<void> {
+  const client = requireSupabase();
+  const body = input.action === 'update'
+    ? {
+      ...input,
+      username: input.username.trim().toLowerCase(),
+      newUsername: input.newUsername.trim().toLowerCase(),
+      fullName: input.fullName.trim(),
+      department: input.role === 'department_head' ? input.department?.trim() : undefined,
+    }
+    : input.action === 'reset_password'
+      ? { ...input, username: input.username.trim().toLowerCase() }
+      : { ...input, username: input.username.trim().toLowerCase() };
+  const { error } = await client.functions.invoke('manage-staff-account', { body });
+  if (error) throw await getFunctionError(error);
+}
+
+async function getFunctionError(error: Error): Promise<Error> {
+  if (error.name === 'FunctionsHttpError' && error.context instanceof Response) {
+    const responseBody: unknown = await error.context.clone().json().catch(() => null);
+    if (
+      typeof responseBody === 'object'
+      && responseBody !== null
+      && 'error' in responseBody
+      && typeof responseBody.error === 'string'
+    ) {
+      return new Error(responseBody.error);
+    }
+  }
+  return error;
 }

@@ -10,9 +10,9 @@ import { Header } from './components/Header';
 import { SubmitView } from './components/SubmitView';
 import { TrackView } from './components/TrackView';
 import { StaffView } from './components/StaffView';
-import { CaseSubmission, StaffRole, StaffUser } from './types/hospital';
+import { CaseSubmission, StaffAccountAction, StaffRole, StaffUser } from './types/hospital';
 import type { Session } from '@supabase/supabase-js';
-import { createCase, createStaffAccount, getCases, getCurrentUserProfile, getStaffProfiles, updateCase, updateStaffProfile } from './lib/data';
+import { createCase, createStaffAccount, getCases, getCurrentUserProfile, getStaffProfiles, manageStaffAccount, updateCase } from './lib/data';
 import { supabase } from './lib/supabase';
 
 function HospitalFeedbackApp() {
@@ -118,8 +118,8 @@ function HospitalFeedbackApp() {
     setCases(await getCases());
   };
 
-  const handleUpdateStaffProfile = async (username: string, role: StaffRole, department?: string) => {
-    await updateStaffProfile(username, role, department);
+  const handleManageStaffAccount = async (input: StaffAccountAction) => {
+    await manageStaffAccount(input);
     setStaffList(await getStaffProfiles());
   };
 
@@ -206,7 +206,7 @@ function HospitalFeedbackApp() {
             onSignIn={handleSignIn}
             onSignOut={handleSignOut}
             staffList={staffList}
-            onUpdateStaffProfile={handleUpdateStaffProfile}
+            onManageStaffAccount={handleManageStaffAccount}
             onCreateStaffAccount={handleCreateStaffAccount}
             authError={authError}
             dataError={dataError}
