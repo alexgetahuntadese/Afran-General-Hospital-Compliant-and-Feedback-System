@@ -775,9 +775,9 @@ export const StaffView: React.FC<StaffViewProps> = ({
 
       {/* Staff Access Modal */}
       {isStaffAccessOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
-            <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-900/60 p-3 backdrop-blur-xs sm:p-4">
+          <div className="flex max-h-[calc(100dvh-1.5rem)] w-full max-w-md flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900 sm:max-h-[calc(100dvh-2rem)]">
+            <div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-6 py-4 dark:border-slate-800">
               <h2 className="font-serif text-lg font-bold text-slate-900 dark:text-white">
                 {t.staffAccessTitle}
               </h2>
@@ -794,7 +794,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
               </button>
             </div>
 
-            <div className="p-6 space-y-4 text-xs sm:text-sm">
+            <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain p-6 text-xs sm:text-sm">
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 {t.staffAccessDesc}
               </p>
@@ -802,26 +802,44 @@ export const StaffView: React.FC<StaffViewProps> = ({
               {canManageStaff && (
                 <form onSubmit={(event) => void handleCreateStaff(event)} className="space-y-2 rounded-xl border border-blue-100 bg-blue-50/60 p-3 dark:border-blue-900/60 dark:bg-blue-950/20">
                   <span className="text-[11px] font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider block">Create staff account</span>
-                  <input value={newStaffName} onChange={(event) => setNewStaffName(event.target.value)} placeholder="Full name" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white" required />
-                  <input type="text" autoCapitalize="none" autoComplete="username" spellCheck={false} value={newStaffUsername} onChange={(event) => setNewStaffUsername(event.target.value)} placeholder="username@afran.com" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white" required />
-                  <input type="password" autoComplete="new-password" minLength={12} value={newStaffPassword} onChange={(event) => setNewStaffPassword(event.target.value)} placeholder="Initial password (12+ characters)" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white" required />
-                  <input type="password" autoComplete="new-password" minLength={12} value={newStaffPasswordConfirmation} onChange={(event) => setNewStaffPasswordConfirmation(event.target.value)} placeholder="Confirm initial password" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white" required />
+                  <label className="block space-y-1 text-[11px] font-medium text-slate-600 dark:text-slate-300">
+                    <span>Full name</span>
+                    <input value={newStaffName} onChange={(event) => setNewStaffName(event.target.value)} autoComplete="name" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white" required />
+                  </label>
+                  <label className="block space-y-1 text-[11px] font-medium text-slate-600 dark:text-slate-300">
+                    <span>Username</span>
+                    <input type="text" autoCapitalize="none" autoComplete="username" spellCheck={false} value={newStaffUsername} onChange={(event) => setNewStaffUsername(event.target.value)} placeholder="username@afran.com" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white" required />
+                  </label>
+                  <label className="block space-y-1 text-[11px] font-medium text-slate-600 dark:text-slate-300">
+                    <span>Initial password</span>
+                    <input type="password" autoComplete="new-password" minLength={12} value={newStaffPassword} onChange={(event) => setNewStaffPassword(event.target.value)} placeholder="At least 12 characters" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white" required />
+                  </label>
+                  <label className="block space-y-1 text-[11px] font-medium text-slate-600 dark:text-slate-300">
+                    <span>Confirm password</span>
+                    <input type="password" autoComplete="new-password" minLength={12} value={newStaffPasswordConfirmation} onChange={(event) => setNewStaffPasswordConfirmation(event.target.value)} placeholder="Re-enter initial password" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white" required />
+                  </label>
                   <p className="text-[10px] text-slate-500 dark:text-slate-400">Give the username and initial password to the staff member securely. Passwords are not shown again.</p>
                   <div className="flex gap-2">
-                    <select value={newStaffRole} onChange={(event) => setNewStaffRole(event.target.value as StaffRole)} className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-2 py-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white">
+                    <label className="min-w-0 flex-1 space-y-1 text-[11px] font-medium text-slate-600 dark:text-slate-300">
+                      <span>Role</span>
+                      <select value={newStaffRole} onChange={(event) => setNewStaffRole(event.target.value as StaffRole)} className="w-full rounded-lg border border-slate-200 bg-white px-2 py-2.5 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white">
                       <option value="staff">Staff</option>
                       <option value="superadmin">Superadmin</option>
                       <option value="department_head">Department head</option>
                       <option value="customer_service_manager">Customer Service Manager</option>
                       <option value="ceo">CEO</option>
-                    </select>
-                    {newStaffRole === 'department_head' && (
-                      <select value={newStaffDepartment} onChange={(event) => setNewStaffDepartment(event.target.value)} className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-2 py-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white">
-                        {DEPARTMENTS.map((department) => <option key={department} value={department}>{department}</option>)}
                       </select>
+                    </label>
+                    {newStaffRole === 'department_head' && (
+                      <label className="min-w-0 flex-1 space-y-1 text-[11px] font-medium text-slate-600 dark:text-slate-300">
+                        <span>Department</span>
+                        <select value={newStaffDepartment} onChange={(event) => setNewStaffDepartment(event.target.value)} className="w-full rounded-lg border border-slate-200 bg-white px-2 py-2.5 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white">
+                        {DEPARTMENTS.map((department) => <option key={department} value={department}>{department}</option>)}
+                        </select>
+                      </label>
                     )}
                   </div>
-                  <button type="submit" disabled={isCreatingStaff} className="min-h-9 rounded-lg bg-blue-700 px-3 text-[11px] font-bold text-white hover:bg-blue-800 disabled:opacity-60">
+                  <button type="submit" disabled={isCreatingStaff} className="min-h-10 w-full rounded-lg bg-blue-700 px-4 text-xs font-bold text-white hover:bg-blue-800 disabled:opacity-60">
                     {isCreatingStaff ? 'Creating...' : 'Create account'}
                   </button>
                 </form>
@@ -836,7 +854,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
                     {staffSaveError}
                   </p>
                 )}
-                <div className="divide-y divide-slate-100 dark:divide-slate-800 max-h-48 overflow-y-auto">
+                <div className="divide-y divide-slate-100 dark:divide-slate-800">
                   {staffList.map((st) => (
                     <div key={st.username} className="py-3 space-y-2 text-xs">
                       <div className="flex items-center justify-between gap-2">

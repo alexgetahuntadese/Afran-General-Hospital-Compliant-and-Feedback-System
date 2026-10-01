@@ -235,5 +235,18 @@ export async function createStaffAccount(input: {
       department: input.role === 'department_head' ? input.department?.trim() : undefined,
     },
   });
-  if (error) throw error;
+  if (error) {
+    if (error.name === 'FunctionsHttpError' && error.context instanceof Response) {
+      const responseBody: unknown = await error.context.clone().json().catch(() => null);
+      if (
+        typeof responseBody === 'object'
+        && responseBody !== null
+        && 'error' in responseBody
+        && typeof responseBody.error === 'string'
+      ) {
+        throw new Error(responseBody.error);
+      }
+    }
+    throw error;
+  }
 }
