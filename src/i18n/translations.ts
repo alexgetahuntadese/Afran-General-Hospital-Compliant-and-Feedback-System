@@ -7,6 +7,34 @@ export interface CloneTranslations {
   splashSubtitle: string;
   footerNotice: string;
   feedbackTypePrompt: string;
+  ratingPrompt: string;
+  starUnit: string;
+  starsUnit: string;
+  optionalLabel: string;
+  additionalCommentsLabel: string;
+  additionalCommentsPlaceholder: string;
+  questionnaireTitle: string;
+  questionnaireInstructions: string;
+  questionnaireMinimumError: string;
+  questionnaireAnswered: string;
+  voiceComplaintLabel: string;
+  recordingStart: string;
+  recordingStop: string;
+  recordingInProgress: string;
+  recordingReady: string;
+  recordingRemove: string;
+  recordingAttached: string;
+  recordingConsent: string;
+  recordingUnsupported: string;
+  recordingFailed: string;
+  recordingTooLarge: string;
+  microphoneUnavailable: string;
+  voiceRecordingSubmitted: string;
+  questionnaireSubmitted: string;
+  staffVoiceRecordingTitle: string;
+  secureAudioLoading: string;
+  audioPrivacyNotice: string;
+  staffQuestionnaireTitle: string;
   copyReference: string;
   submittedBy: string;
   undisclosedName: string;
@@ -202,6 +230,34 @@ export const translations: Record<Language, CloneTranslations> = {
     splashSubtitle: 'Patient Experience & Relations',
     footerNotice: 'Patient feedback is handled with confidentiality and care.',
     feedbackTypePrompt: 'Select the type of feedback you wish to provide.',
+    ratingPrompt: 'Select a rating from 1 to 5.',
+    starUnit: 'star',
+    starsUnit: 'stars',
+    optionalLabel: 'optional',
+    additionalCommentsLabel: 'Additional comments (optional)',
+    additionalCommentsPlaceholder: 'Share any other details relevant to your experience.',
+    questionnaireTitle: 'Department-specific questions',
+    questionnaireInstructions: 'Rate from 1 (Very poor) to 5 (Excellent). Answer at least {minimum} questions to submit.',
+    questionnaireMinimumError: 'Please answer at least {minimum} department-specific questions before submitting.',
+    questionnaireAnswered: 'answered',
+    voiceComplaintLabel: 'Voice recording (optional)',
+    recordingStart: 'Start recording',
+    recordingStop: 'Stop recording',
+    recordingInProgress: 'Recording · up to 3 minutes',
+    recordingReady: 'Recording ready',
+    recordingRemove: 'Remove recording',
+    recordingAttached: 'Voice recording attached',
+    recordingConsent: 'I consent to attaching this audio to my submission for review by authorized hospital staff.',
+    recordingUnsupported: 'Audio recording is not supported by this browser. Please use a supported browser.',
+    recordingFailed: 'The recording could not be completed. Please try again.',
+    recordingTooLarge: 'The recording exceeds the 10 MB limit. Please make a shorter recording.',
+    microphoneUnavailable: 'Microphone access is unavailable. Check your browser permissions and try again.',
+    voiceRecordingSubmitted: 'Voice recording attached.',
+    questionnaireSubmitted: 'Department questionnaire submitted.',
+    staffVoiceRecordingTitle: 'Voice recording',
+    secureAudioLoading: 'Loading protected audio...',
+    audioPrivacyNotice: 'This recording is private and may be accessed only by staff authorized to review this case.',
+    staffQuestionnaireTitle: 'Department questionnaire responses',
     copyReference: 'Copy reference number',
     submittedBy: 'Submitted by',
     undisclosedName: 'Name not provided',
@@ -280,7 +336,7 @@ export const translations: Record<Language, CloneTranslations> = {
     trackButton: 'Track',
     noCaseFound: 'No submission was found',
     checkRefAgain: 'Check the reference number and try again.',
-    responseFromPR: 'Response from Patient Relations',
+    responseFromPR: 'Response from the Patient Experience team',
     awaitingResponse: 'The Patient Experience team is reviewing your submission. Any updates will appear here.',
     submittedAnonymously: 'Submitted anonymously',
     statusReceived: 'Received',
@@ -295,7 +351,7 @@ export const translations: Record<Language, CloneTranslations> = {
     signInBtn: 'Sign In',
     signingIn: 'Signing in...',
     passwordSignIn: 'Sign in with your assigned username and password.',
-    managerProvisionNote: 'Only accounts created by a superadmin can access staff cases.',
+    managerProvisionNote: 'Only accounts created by a system administrator can access staff cases.',
     saving: 'Saving...',
     searching: 'Searching...',
     roleStaff: 'Patient Experience staff',
@@ -394,6 +450,34 @@ export const translations: Record<Language, CloneTranslations> = {
     splashSubtitle: 'የታካሚዎች ተሞክሮ እና ግንኙነት',
     footerNotice: 'የእርስዎ አስተያየት በሚስጥርና በጥንቃቄ ይያዛል።',
     feedbackTypePrompt: 'እባክዎ ማቅረብ የሚፈልጉትን የአስተያየት አይነት ይምረጡ።',
+    ratingPrompt: 'ከ1 እስከ 5 ያለውን ደረጃ ይምረጡ።',
+    starUnit: 'ኮከብ',
+    starsUnit: 'ኮከቦች',
+    optionalLabel: 'አማራጭ',
+    additionalCommentsLabel: 'ተጨማሪ አስተያየት (አማራጭ)',
+    additionalCommentsPlaceholder: 'ከተሞክሮዎ ጋር የተያያዙ ተጨማሪ ዝርዝሮችን ያጋሩ።',
+    questionnaireTitle: 'ለመምሪያው የተዘጋጁ ጥያቄዎች',
+    questionnaireInstructions: 'ከ1 (በጣም ደካማ) እስከ 5 (በጣም ጥሩ) ድረስ ደረጃ ይስጡ። ለማቅረብ ቢያንስ {minimum} ጥያቄዎችን ይመልሱ።',
+    questionnaireMinimumError: 'ማመልከቻዎን ከማቅረብዎ በፊት ቢያንስ {minimum} የመምሪያውን ጥያቄዎች ይመልሱ።',
+    questionnaireAnswered: 'ተመልሰዋል',
+    voiceComplaintLabel: 'የድምጽ ቅጂ (አማራጭ)',
+    recordingStart: 'ቅጂ ጀምር',
+    recordingStop: 'ቅጂ አቁም',
+    recordingInProgress: 'ቅጂ በመካሄድ ላይ · እስከ 3 ደቂቃ',
+    recordingReady: 'ቅጂው ዝግጁ ነው',
+    recordingRemove: 'ቅጂውን አስወግድ',
+    recordingAttached: 'የድምጽ ቅጂ ተያይዟል',
+    recordingConsent: 'ይህ የድምጽ ቅጂ ለጉዳዩ ግምገማ በተፈቀደላቸው የሆስፒታሉ ሰራተኞች እንዲያያዝ ፈቃዴን እሰጣለሁ።',
+    recordingUnsupported: 'ይህ አሳሽ የድምጽ ቅጂን አይደግፍም። እባክዎ ቅጂን የሚደግፍ አሳሽ ይጠቀሙ።',
+    recordingFailed: 'ቅጂውን ማጠናቀቅ አልተቻለም። እባክዎ እንደገና ይሞክሩ።',
+    recordingTooLarge: 'ቅጂው ከ10 ሜባ ገደብ በላይ ነው። እባክዎ አጭር ቅጂ ያድርጉ።',
+    microphoneUnavailable: 'ማይክሮፎኑን መጠቀም አልተቻለም። የአሳሽዎን ፈቃድ ያረጋግጡና እንደገና ይሞክሩ።',
+    voiceRecordingSubmitted: 'የድምጽ ቅጂ ተያይዟል።',
+    questionnaireSubmitted: 'የመምሪያ ጥያቄዎች ቀርበዋል።',
+    staffVoiceRecordingTitle: 'የቅሬታ ድምጽ ቅጂ',
+    secureAudioLoading: 'የተጠበቀው ድምጽ በመጫን ላይ...',
+    audioPrivacyNotice: 'ይህ ቅጂ በግል የተጠበቀ ሲሆን ጉዳዩን ለመገምገም ፈቃድ ያላቸው ሰራተኞች ብቻ ሊያዳምጡት ይችላሉ።',
+    staffQuestionnaireTitle: 'የመምሪያ ጥያቄ ምላሾች',
     copyReference: 'የመለያ ቁጥሩን ቅዳ',
     submittedBy: 'ያቀረበው',
     undisclosedName: 'ስም አልተገለጸም',
@@ -472,7 +556,7 @@ export const translations: Record<Language, CloneTranslations> = {
     trackButton: 'ፈልግ',
     noCaseFound: 'ጉዳዩ አልተገኘም',
     checkRefAgain: 'እባክዎ የመለያ ቁጥሩን አረጋግጠው በድጋሚ ይሞክሩ።',
-    responseFromPR: 'ከታካሚዎች ተሞክሮ የተሰጠ ይፋዊ ምላሽ',
+    responseFromPR: 'ከታካሚዎች ተሞክሮ ቡድን የተሰጠ ምላሽ',
     awaitingResponse: 'የታካሚዎች ተሞክሮ ቡድናችን ማመልከቻዎን እየተመለከተው ነው። ምላሹ እዚህ ይለጠፋል።',
     submittedAnonymously: 'ማንነት ሳይገለጽ የቀረበ',
     statusReceived: 'ደርሷል',
@@ -491,7 +575,7 @@ export const translations: Record<Language, CloneTranslations> = {
     saving: 'በማስቀመጥ ላይ...',
     searching: 'በመፈለግ ላይ...',
     roleStaff: 'የታካሚ ግንኙነት ሰራተኛ',
-    roleSuperadmin: 'ሱፐር አስተዳዳሪ',
+    roleSuperadmin: 'የስርዓት አስተዳዳሪ',
     roleCustomerServiceManager: 'የደንበኛ አገልግሎት አስተዳዳሪ',
     roleDepartmentHead: 'የክፍል ኃላፊ',
     roleCeo: 'ዋና ሥራ አስፈጻሚ',
@@ -586,6 +670,34 @@ export const translations: Record<Language, CloneTranslations> = {
     splashSubtitle: 'Muuxannoo fi Hariiroo Dhukkubsattootaa',
     footerNotice: 'Yaadni keessan iccitiidhaan fi of eeggannoodhaan ni ilaalama.',
     feedbackTypePrompt: 'Maaloo gosa yaada dhiyeessuu barbaaddan filadhaa.',
+    ratingPrompt: 'Sadarkaa 1 hanga 5 filadhaa.',
+    starUnit: 'urjii',
+    starsUnit: 'urjii',
+    optionalLabel: 'filannoo',
+    additionalCommentsLabel: 'Yaada dabalataa (filannoo)',
+    additionalCommentsPlaceholder: 'Odeeffannoo dabalataa muuxannoo keessan ibsu dhiyeessaa.',
+    questionnaireTitle: 'Gaaffilee kutaa kanaaf qophaa’an',
+    questionnaireInstructions: 'Sadarkaa 1 (baay’ee gadhee) hanga 5 (baay’ee gaarii)tti kennaa. Dhiyeessuuf yoo xiqqaate gaaffii {minimum} deebisaa.',
+    questionnaireMinimumError: 'Dhiyeessii keessan dura gaaffilee kutaa kanaa yoo xiqqaate {minimum} deebisaa.',
+    questionnaireAnswered: 'deebifaman',
+    voiceComplaintLabel: 'Waraabbii sagalee (filannoo)',
+    recordingStart: 'Waraabbii jalqabi',
+    recordingStop: 'Waraabbii dhaabi',
+    recordingInProgress: 'Waraabbiin gaggeeffamaa jira · hanga daqiiqaa 3',
+    recordingReady: 'Waraabbiin qophaa’eera',
+    recordingRemove: 'Waraabbii haqi',
+    recordingAttached: 'Waraabbii sagalee itti dabalameera',
+    recordingConsent: 'Waraabbiin sagalee kun gamaaggamaaf hojjettoota hospitaalaa hayyama qaban bira akka ga’u itti dabaluuf hayyama nan kenna.',
+    recordingUnsupported: 'Biraawzari kun waraabbii sagalee hin deeggaru. Maaloo biraawzara deeggaru fayyadamaa.',
+    recordingFailed: 'Waraabbii xumuruu hin dandeenye. Maaloo irra deebi’ii yaali.',
+    recordingTooLarge: 'Waraabbiin kun daangaa 10 MB caaleera. Maaloo waraabbii gabaabaa qopheessi.',
+    microphoneUnavailable: 'Mikirofoonii fayyadamuun hin danda’amu. Hayyama biraawzaraa keessanii mirkaneessaa; achiis irra deebi’aa yaalaa.',
+    voiceRecordingSubmitted: 'Waraabbii sagalee itti dabalameera.',
+    questionnaireSubmitted: 'Gaaffileen kutaa dhiyaataniiru.',
+    staffVoiceRecordingTitle: 'Waraabbii sagalee komii',
+    secureAudioLoading: 'Sagaleen eegame fe’amaa jira…',
+    audioPrivacyNotice: 'Waraabbiin kun iccitiidha; hojjettoonni dhimma kana gamaaggamuuf hayyama qaban qofatu dhaggeeffachuu danda’a.',
+    staffQuestionnaireTitle: 'Deebii gaaffilee kutaa',
     copyReference: 'Lakkoofsa wabii waraabi',
     submittedBy: 'Kan dhiyeesse',
     undisclosedName: 'Maqaan hin ibsamne',
@@ -664,7 +776,7 @@ export const translations: Record<Language, CloneTranslations> = {
     trackButton: 'Hordofi',
     noCaseFound: 'Dhimmi hin argamne',
     checkRefAgain: 'Lakkoofsa wabii mirkaneessaa, irra deebi’aatii yaalaa.',
-    responseFromPR: 'Deebii garee Hariiroo Dhukkubsattootaa',
+    responseFromPR: 'Deebii garee Muuxannoo Dhukkubsattootaa',
     awaitingResponse: 'Gareen Hariiroo Dhukkubsattootaa ergaa keessan ilaalaa jira. Haaromsi asitti ni mul’ata.',
     submittedAnonymously: 'Maqaa malee dhiyaate',
     statusReceived: 'Fudhatame',
@@ -683,7 +795,7 @@ export const translations: Record<Language, CloneTranslations> = {
     saving: 'Olkaa’aa jira...',
     searching: 'Barbaadaa jira...',
     roleStaff: 'Hojjetaa Hariiroo Dhukkubsattootaa',
-    roleSuperadmin: 'Bulchaa olaanaa',
+    roleSuperadmin: 'Bulchaa sirnaa',
     roleCustomerServiceManager: 'Bulchaa Tajaajila Maamilaa',
     roleDepartmentHead: 'Itti gaafatamaa kutaa',
     roleCeo: 'Hoogganaa Olaanaa',

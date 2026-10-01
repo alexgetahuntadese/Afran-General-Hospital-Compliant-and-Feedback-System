@@ -455,7 +455,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
           </h1>
           <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
             {currentUser.role === 'superadmin'
-              ? (language === 'am' ? 'ሱፐር አስተዳዳሪ · ሙሉ የስርዓት መዳረሻ' : 'Superadmin · full system administration')
+              ? t.roleSuperadmin
               : currentUser.role === 'ceo'
               ? t.ceoScope
               : currentUser.role === 'department_head'
@@ -710,11 +710,11 @@ export const StaffView: React.FC<StaffViewProps> = ({
                 <section className="space-y-2 rounded-xl border border-sky-200 bg-sky-50/70 p-4 dark:border-sky-900/60 dark:bg-sky-950/25">
                   <h3 className="flex items-center gap-2 text-xs font-bold text-slate-800 dark:text-slate-100">
                     <Mic className="h-4 w-4 text-blue-700 dark:text-blue-300" />
-                    {language === 'am' ? 'የቅሬታ ድምጽ ቅጂ' : 'Voice complaint recording'}
+                    {t.staffVoiceRecordingTitle}
                   </h3>
                   {isLoadingComplaintAudio && (
                     <p className="text-xs text-slate-500 dark:text-slate-400">
-                      {language === 'am' ? 'ድምጹ በመጫን ላይ...' : 'Loading secure audio...'}
+                      {t.secureAudioLoading}
                     </p>
                   )}
                   {complaintAudioError && (
@@ -726,9 +726,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
                     <audio controls preload="none" src={complaintAudioUrl} className="w-full" />
                   )}
                   <p className="text-[10px] leading-relaxed text-slate-500 dark:text-slate-400">
-                    {language === 'am'
-                      ? 'ይህ ቅጂ በግል የተጠበቀ ሲሆን ለዚህ ጉዳይ የተፈቀደላቸው ሰራተኞች ብቻ ያዳምጡታል።'
-                      : 'Private recording. Access is limited to staff authorized to review this case.'}
+                    {t.audioPrivacyNotice}
                   </p>
                 </section>
               )}
@@ -736,7 +734,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
               {selectedCase.questionnaireAnswers && (
                 <section className="space-y-3">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
-                    {language === 'am' ? 'የመምሪያ ጥያቄ ምላሾች' : 'Department questionnaire'}
+                    {t.staffQuestionnaireTitle}
                   </h3>
                   <div className="divide-y divide-slate-100 rounded-xl border border-slate-200 dark:divide-slate-800 dark:border-slate-700">
                     {getDepartmentQuestions(selectedCase.department)
@@ -744,15 +742,11 @@ export const StaffView: React.FC<StaffViewProps> = ({
                       .map((question, index) => (
                         <div key={question.id} className="flex items-start justify-between gap-4 p-3">
                           <span className="text-xs leading-relaxed text-slate-700 dark:text-slate-300">
-                            {index + 1}. {language === 'am' ? question.am : question.en}
+                            {index + 1}. {question[language]}
                           </span>
                           <span className="shrink-0 rounded-lg bg-blue-50 px-2 py-1 text-xs font-bold text-blue-800 dark:bg-blue-950/50 dark:text-blue-200">
-                            {language === 'am' ? question.scale === 'likelihood'
-                              ? LIKELIHOOD_OPTIONS.find(({ value }) => value === selectedCase.questionnaireAnswers?.[question.id])?.am
-                              : SATISFACTION_OPTIONS.find(({ value }) => value === selectedCase.questionnaireAnswers?.[question.id])?.am
-                              : question.scale === 'likelihood'
-                              ? LIKELIHOOD_OPTIONS.find(({ value }) => value === selectedCase.questionnaireAnswers?.[question.id])?.en
-                              : SATISFACTION_OPTIONS.find(({ value }) => value === selectedCase.questionnaireAnswers?.[question.id])?.en}
+                            {(question.scale === 'likelihood' ? LIKELIHOOD_OPTIONS : SATISFACTION_OPTIONS)
+                              .find(({ value }) => value === selectedCase.questionnaireAnswers?.[question.id])?.[language]}
                           </span>
                         </div>
                       ))}

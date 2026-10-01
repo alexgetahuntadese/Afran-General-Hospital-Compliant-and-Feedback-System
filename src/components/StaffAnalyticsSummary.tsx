@@ -117,7 +117,7 @@ export const StaffAnalyticsSummary: React.FC<StaffAnalyticsSummaryProps> = ({ ca
             {data.name || data.payload?.name}
           </p>
           <p className="text-slate-500 dark:text-slate-400 font-mono">
-            {data.value ?? data.payload?.count} {language === 'am' ? 'ጉዳዮች' : 'cases'}
+            {data.value ?? data.payload?.count} {t.casesUnit}
           </p>
         </div>
       );

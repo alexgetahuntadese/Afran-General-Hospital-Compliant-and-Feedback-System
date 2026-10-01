@@ -210,9 +210,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
   const startRecording = async () => {
     setRecordingError('');
     if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
-      setRecordingError(language === 'am'
-        ? 'ይህ አሳሽ የድምጽ ቅጂን አይደግፍም። እባክዎ የተዘመነ አሳሽ ይጠቀሙ።'
-        : 'Audio recording is not supported by this browser. Please use a modern browser.');
+      setRecordingError(t.recordingUnsupported);
       return;
     }
 
@@ -233,7 +231,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
         if (event.data.size > 0) chunks.push(event.data);
       };
       recorder.onerror = () => {
-        setRecordingError(language === 'am' ? 'ቅጂው አልተሳካም። እባክዎ እንደገና ይሞክሩ።' : 'Recording failed. Please try again.');
+        setRecordingError(t.recordingFailed);
         setIsRecording(false);
         stream.getTracks().forEach((track) => track.stop());
         mediaStreamRef.current = null;
@@ -244,9 +242,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
           setAudioBlob(null);
         } else if (recording.size > maxRecordingBytes) {
           setAudioBlob(null);
-          setRecordingError(language === 'am'
-            ? 'ቅጂው ከ10 ሜባ በላይ ነው። እባክዎ አጭር ቅጂ ያድርጉ።'
-            : 'Recording exceeds the 10 MB limit. Please make a shorter recording.');
+          setRecordingError(t.recordingTooLarge);
         } else if (recording.size > 0) {
           setAudioBlob(recording);
           setRecordingError('');
@@ -264,7 +260,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
       mediaStreamRef.current = null;
       setRecordingError(error instanceof Error
         ? error.message
-        : (language === 'am' ? 'ማይክሮፎኑን መጠቀም አልተቻለም።' : 'Could not access the microphone.'));
+        : t.microphoneUnavailable);
     }
   };
 
@@ -301,11 +297,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
     }
     if (usesQuestionnaire) {
       if (answeredQuestionCount < minimumQuestionnaireAnswers) {
-        setSubmitError(language === 'am'
-          ? `ለማስገባት ቢያንስ ${minimumQuestionnaireAnswers} የመምሪያ ጥያቄዎችን ይመልሱ።`
-          : language === 'om'
-            ? `Dhiyeessuuf gaaffilee kutaa yoo xiqqaate ${minimumQuestionnaireAnswers} deebisaa.`
-            : `Please answer at least ${minimumQuestionnaireAnswers} department questions to submit.`);
+        setSubmitError(t.questionnaireMinimumError.replace('{minimum}', String(minimumQuestionnaireAnswers)));
         return;
       }
     } else if (!message.trim() && !audioBlob) {
@@ -496,7 +488,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
             </div>
             <h2 className="text-xl font-black text-slate-900 dark:text-white">{t.submitButton}</h2>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              {language === 'am' ? 'የሚፈልጉትን የግብረመልስ አይነት ይምረጡ።' : 'Choose how you would like to share your experience.'}
+              {t.feedbackTypePrompt}
             </p>
           </div>
           <span className="hidden rounded-full bg-gradient-to-r from-blue-100 to-sky-100 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-blue-800 dark:from-blue-950/60 dark:to-sky-950/60 dark:text-blue-200 sm:inline-flex">
@@ -622,21 +614,19 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
           {usesQuestionnaire && (
             <fieldset className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50/70 p-4 dark:border-slate-700 dark:bg-slate-800/40 sm:p-5">
               <legend className="sr-only">
-                {language === 'am' ? 'የመምሪያ ጥያቄዎች' : `${department} questionnaire`}
+                {t.questionnaireTitle}
               </legend>
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
                   <h3 className="text-sm font-black text-slate-900 dark:text-white">
-                    {language === 'am' ? 'የመምሪያ ጥያቄዎች' : `${department} questionnaire`}
+                    {t.questionnaireTitle}
                   </h3>
                   <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-                    {language === 'am'
-                      ? `ከ1 (በጣም ደካማ) እስከ 5 (በጣም ጥሩ) ይምረጡ፤ ለማስገባት ቢያንስ ${minimumQuestionnaireAnswers} ጥያቄዎችን ይመልሱ።`
-                      : `Rate from 1 (Very poor) to 5 (Excellent). Answer at least ${minimumQuestionnaireAnswers} questions to submit.`}
+                    {t.questionnaireInstructions.replace('{minimum}', String(minimumQuestionnaireAnswers))}
                   </p>
                 </div>
                 <span className="rounded-full border border-blue-200 bg-white px-3 py-1 text-[10px] font-bold text-blue-800 dark:border-blue-900 dark:bg-slate-900 dark:text-blue-200">
-                  {answeredQuestionCount}/{departmentQuestions.length} {language === 'am' ? 'ተመልሷል' : 'answered'}
+                  {answeredQuestionCount}/{departmentQuestions.length} {t.questionnaireAnswered}
                 </span>
               </div>
               <div className="h-1.5 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
@@ -657,17 +647,17 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
                           {index + 1}
                         </span>
                         <span className="pt-0.5 text-xs font-semibold leading-relaxed text-slate-800 dark:text-slate-100">
-                          {language === 'am' ? question.am : question.en}
+                          {question[language]}
                         </span>
                       </div>
-                      <div className="grid grid-cols-5 gap-1.5" role="group" aria-label={language === 'am' ? question.am : question.en}>
+                      <div className="grid grid-cols-5 gap-1.5" role="group" aria-label={question[language]}>
                         {options.map((option) => {
                           const isSelected = selectedValue === option.value;
                           return (
                             <button
                               key={option.value}
                               type="button"
-                              aria-label={`${option.value}: ${language === 'am' ? option.am : option.en}`}
+                              aria-label={`${option.value}: ${option[language]}`}
                               aria-pressed={isSelected}
                               onClick={() => {
                                 setQuestionnaireAnswers((answers) => ({
@@ -684,7 +674,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
                                 isSelected ? 'bg-white/20 ring-1 ring-white/30' : 'bg-white/80 shadow-sm dark:bg-slate-950/50'
                               }`}>{option.value}</span>
                               <span className="text-[9px] font-bold leading-tight break-words">
-                                {language === 'am' ? option.am : option.en}
+                                {option[language]}
                               </span>
                             </button>
                           );
@@ -703,7 +693,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
             </legend>
             <div className="flex items-center justify-between gap-2">
               <span className="text-[11px] text-slate-500 dark:text-slate-400">
-                {language === 'am' ? 'ከ1 እስከ 5 ይምረጡ' : language === 'om' ? '1 hanga 5 filadhaa' : 'Tap to rate from 1 to 5'}
+                {t.ratingPrompt}
               </span>
               {rating > 0 && (
                 <span className="rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-bold text-amber-800 dark:bg-amber-950/70 dark:text-amber-200" aria-live="polite">
@@ -717,14 +707,14 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
                   key={star}
                   type="button"
                   onClick={() => setRating(rating === star ? 0 : star)}
-                  aria-label={`${star} ${language === 'am' ? 'ኮከብ' : language === 'om' ? 'urjii' : star === 1 ? 'star' : 'stars'}`}
+                  aria-label={`${star} ${star === 1 ? t.starUnit : t.starsUnit}`}
                   aria-pressed={rating === star}
                   className={`flex min-h-11 min-w-11 items-center justify-center rounded-xl transition-all focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-400/30 ${
                     star <= rating
                       ? 'bg-amber-100 text-amber-500 dark:bg-amber-950/50'
                       : 'text-slate-300 hover:bg-amber-50 hover:text-amber-400 dark:text-slate-600 dark:hover:bg-amber-950/30'
                   }`}
-                  title={`${star} ${language === 'am' ? 'ኮከብ' : language === 'om' ? 'urjii' : star === 1 ? 'star' : 'stars'}`}
+                  title={`${star} ${star === 1 ? t.starUnit : t.starsUnit}`}
                 >
                   <Star className={`h-6 w-6 transition-transform ${star <= rating ? 'fill-current scale-110' : ''}`} />
                 </button>
@@ -738,7 +728,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
         <div className="space-y-3 pt-1">
           <div>
             <label htmlFor="feedback-subject" className="mb-2 block text-xs font-bold text-slate-800 dark:text-slate-200">
-              {language === 'am' ? 'ርዕስ (አማራጭ)' : 'Subject (optional)'}
+              {t.subjectLabel} ({t.optionalLabel})
             </label>
             <input
               id="feedback-subject"
@@ -746,8 +736,8 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
               placeholder={usesQuestionnaire
-                ? (language === 'am' ? 'አጭር ርዕስ' : 'Add a short summary')
-                : (language === 'am' ? 'አጭር ርዕስ' : 'Add a short subject (optional)')}
+                ? t.subjectPlaceholder
+                : t.subjectPlaceholder}
               className="premium-input w-full border text-slate-900 dark:text-white"
             />
           </div>
@@ -755,7 +745,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
           <div>
             <label htmlFor="feedback-message" className="mb-2 block text-xs font-bold text-slate-800 dark:text-slate-200">
               {usesQuestionnaire || (kind === 'complaint' && audioBlob)
-                ? (language === 'am' ? 'ተጨማሪ አስተያየት (አማራጭ)' : 'Additional comments (optional)')
+                ? t.additionalCommentsLabel
                 : t.messageLabel}
             </label>
             <textarea
@@ -764,7 +754,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder={usesQuestionnaire
-                ? (language === 'am' ? 'ሌላ ማካፈል የሚፈልጉት ነገር ካለ...' : 'Share any other details you would like us to know...')
+                ? t.additionalCommentsPlaceholder
                 : t.messagePlaceholder}
               className="premium-input min-h-36 w-full resize-y border text-slate-900 dark:text-white"
             />
@@ -779,12 +769,10 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
               </span>
               <div className="min-w-0 flex-1">
                 <h3 className="text-sm font-black text-slate-900 dark:text-white">
-                  {language === 'am' ? 'የድምጽ ቅሬታ (አማራጭ)' : 'Voice complaint (optional)'}
+                  {t.voiceComplaintLabel}
                 </h3>
                 <p className="mt-1 text-[11px] leading-relaxed text-slate-600 dark:text-slate-300">
-                  {language === 'am'
-                    ? 'እስከ 3 ደቂቃ የሚቆይ ድምጽ ይቅረጹ። ቅጂው በግል ማከማቻ ይጠበቃል፤ ጉዳዩን ማየት የሚፈቀድላቸው ሰራተኞች ብቻ ማዳመጥ ይችላሉ።'
-                    : 'Record up to 3 minutes. Audio is stored privately and only staff authorized to view this case can listen.'}
+                  {t.audioPrivacyNotice}
                 </p>
               </div>
             </div>
@@ -800,16 +788,14 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
                 }`}
               >
                 {isRecording ? <Square className="h-4 w-4 fill-current" /> : <Mic className="h-4 w-4" />}
-                {isRecording
-                  ? (language === 'am' ? 'ቅጂውን አቁም' : 'Stop recording')
-                  : (language === 'am' ? 'ቅጂ ጀምር' : 'Start recording')}
+                {isRecording ? t.recordingStop : t.recordingStart}
               </button>
             )}
 
             {isRecording && (
               <p className="flex items-center gap-2 text-xs font-semibold text-rose-700 dark:text-rose-300" role="status">
                 <span className="h-2 w-2 animate-pulse rounded-full bg-rose-500" />
-                {language === 'am' ? 'እየቀረጸ ነው · እስከ 3 ደቂቃ' : 'Recording · up to 3 minutes'}
+                {t.recordingInProgress}
               </p>
             )}
 
@@ -823,7 +809,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
               <div className="space-y-3 rounded-xl border border-blue-200 bg-white/80 p-3 dark:border-blue-900 dark:bg-slate-900/80">
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-xs font-bold text-blue-800 dark:text-blue-200">
-                    {language === 'am' ? 'ቅጂ ዝግጁ ነው' : 'Recording ready'}
+                    {t.recordingReady}
                     <span className="ml-2 font-medium text-slate-500">({Math.ceil(audioBlob.size / 1024)} KB)</span>
                   </span>
                   <button
@@ -832,7 +818,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
                     className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-semibold text-rose-700 hover:bg-rose-50 dark:text-rose-300 dark:hover:bg-rose-950/50"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
-                    {language === 'am' ? 'ሰርዝ' : 'Remove'}
+                    {t.recordingRemove}
                   </button>
                 </div>
                 <audio controls src={audioPreviewUrl} className="w-full" />
@@ -844,9 +830,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
                     className="mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
                   />
                   <span>
-                    {language === 'am'
-                      ? 'ይህንን የድምጽ ቅጂ ከቅሬታዬ ጋር ለጉዳዩ ግምገማ እንዲያያዝ እፈቅዳለሁ።'
-                      : 'I consent to attaching this audio to my complaint for review by authorized hospital staff.'}
+                    {t.recordingConsent}
                   </span>
                 </label>
               </div>
@@ -864,7 +848,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
             <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{getDeptName(department)}</p>
             <h3 className="mt-3 text-xs font-bold text-slate-800 dark:text-slate-100">{t.wizardReviewMessage}</h3>
             <p className="mt-1 whitespace-pre-wrap break-words text-sm text-slate-600 dark:text-slate-300">
-              {message.trim() || (audioBlob ? (language === 'am' ? 'የድምጽ ቅጂ ተያይዟል' : language === 'om' ? 'Sagaleen waraabame itti dabalameera' : 'Voice recording attached') : t.wizardNoMessage)}
+              {message.trim() || (audioBlob ? t.recordingAttached : t.wizardNoMessage)}
             </p>
             <h3 className="mt-3 text-xs font-bold text-slate-800 dark:text-slate-100">{t.wizardReviewContact}</h3>
             <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">

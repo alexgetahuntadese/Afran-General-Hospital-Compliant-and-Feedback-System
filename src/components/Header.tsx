@@ -37,7 +37,7 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <img
             src={hospitalLogo}
-            alt="Afran General Hospital"
+            alt={t.hospitalName}
             className="h-12 w-auto max-w-[6.5rem] object-contain shrink-0 transition-transform group-hover:scale-[1.02] sm:max-w-[8rem]"
           />
         </button>
