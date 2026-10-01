@@ -10,53 +10,150 @@ import { Header } from './components/Header';
 import { SubmitView } from './components/SubmitView';
 import { TrackView } from './components/TrackView';
 import { StaffView } from './components/StaffView';
-import { CaseSubmission, StaffUser } from './types/hospital';
-import { 
-  getStoredCases, 
-  addCase, 
-  updateCase, 
-  getStoredStaff, 
-  addStaff, 
-  getCurrentUser, 
-  setCurrentUser,
-  resetDemoData 
-} from './utils/storage';
+import { CaseSubmission, StaffRole, StaffUser } from './types/hospital';
+import type { Session } from '@supabase/supabase-js';
+import { createCase, getCases, getCurrentUserProfile, getStaffProfiles, updateCase, updateStaffProfile } from './lib/data';
+import { supabase } from './lib/supabase';
 
 function HospitalFeedbackApp() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   const [currentView, setCurrentView] = useState<'submit' | 'track' | 'staff'>('submit');
   const [cases, setCases] = useState<CaseSubmission[]>([]);
   const [staffList, setStaffList] = useState<StaffUser[]>([]);
   const [currentUser, setCurrentUserState] = useState<StaffUser | null>(null);
-  const [trackTargetRef, setTrackTargetRef] = useState<string>('AGH-7K2P9Q');
+  const [trackTargetRef, setTrackTargetRef] = useState('');
+  const [dataError, setDataError] = useState('');
+  const [authError, setAuthError] = useState('');
 
   useEffect(() => {
-    setCases(getStoredCases());
-    setStaffList(getStoredStaff());
-    setCurrentUserState(getCurrentUser());
+    const client = supabase;
+    if (!client) {
+      setAuthError('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.');
+      return;
+    }
+
+    let active = true;
+    const loadUser = async (session: Session | null) => {
+      if (!session?.user) {
+        if (active) setCurrentUserState(null);
+        return;
+      }
+
+      try {
+        const profile = await getCurrentUserProfile(session.user.id);
+        if (!active) return;
+        if (!profile) {
+          await client.auth.signOut();
+          setAuthError('This email does not have an assigned staff role. Contact the Customer Service Manager.');
+          return;
+        }
+        setAuthError('');
+        setCurrentUserState(profile);
+      } catch (error) {
+        if (active) {
+          setAuthError(error instanceof Error ? error.message : 'Unable to load the staff profile.');
+        }
+      }
+    };
+
+    void client.auth.getSession().then(({ data, error }) => {
+      if (error) {
+        setAuthError(error.message);
+        return;
+      }
+      void loadUser(data.session);
+    });
+
+    const { data: { subscription } } = client.auth.onAuthStateChange((_event, session) => {
+      queueMicrotask(() => void loadUser(session));
+    });
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
-  const handleCreateCase = (newCase: CaseSubmission) => {
-    addCase(newCase);
-    setCases([newCase, ...cases]);
+  useEffect(() => {
+    if (!currentUser) {
+      setCases([]);
+      setStaffList([]);
+      setDataError('');
+      return;
+    }
+
+    let active = true;
+    const loadDashboardData = async () => {
+      try {
+        const loadedCases = await getCases();
+        if (active) setCases(loadedCases);
+        if (currentUser.role === 'customer_service_manager' || currentUser.role === 'superadmin') {
+          const loadedStaff = await getStaffProfiles();
+          if (active) setStaffList(loadedStaff);
+        } else if (active) {
+          setStaffList([]);
+        }
+        if (active) setDataError('');
+      } catch (error) {
+        if (active) {
+          setDataError(error instanceof Error ? error.message : 'Unable to load dashboard data.');
+        }
+      }
+    };
+
+    void loadDashboardData();
+    return () => {
+      active = false;
+    };
+  }, [currentUser]);
+
+  const handleCreateCase = async (newCase: CaseSubmission) => {
+    await createCase(newCase);
+    if (currentUser) setCases(await getCases());
   };
 
-  const handleUpdateCase = (updated: CaseSubmission) => {
-    updateCase(updated);
-    setCases(cases.map(c => c.id === updated.id ? updated : c));
+  const handleUpdateCase = async (updated: CaseSubmission) => {
+    await updateCase(updated);
+    setCases(await getCases());
   };
 
-  const handleSignIn = (user: StaffUser) => {
-    setCurrentUser(user);
-    setCurrentUserState(user);
-    addStaff(user);
-    setStaffList(getStoredStaff());
+  const handleUpdateStaffProfile = async (email: string, role: StaffRole, department?: string) => {
+    await updateStaffProfile(email, role, department);
+    setStaffList(await getStaffProfiles());
   };
 
-  const handleSignOut = () => {
-    setCurrentUser(null);
-    setCurrentUserState(null);
+  const handleSignIn = async (email: string) => {
+    if (!supabase) throw new Error('Supabase is not configured.');
+    setAuthError('');
+    const normalizedEmail = email.trim().toLowerCase();
+    const { error } = await supabase.auth.signInWithOtp({
+      email: normalizedEmail,
+      options: {
+        shouldCreateUser: false,
+        emailRedirectTo: window.location.origin,
+      },
+    });
+    if (error) throw error;
+  };
+
+  const handleSignOut = async () => {
+    if (!supabase) {
+      setAuthError('');
+      setCurrentUserState(null);
+      setCases([]);
+      setStaffList([]);
+      return;
+    }
+
+    const { error } = await supabase.auth.signOut();
+    if (error) setAuthError(error.message);
+    else {
+      setAuthError('');
+      setCurrentUserState(null);
+      setCases([]);
+      setStaffList([]);
+    }
   };
 
   const handleNavigateTrack = (ref: string) => {
@@ -90,7 +187,6 @@ function HospitalFeedbackApp() {
         {currentView === 'track' && (
           <TrackView
             initialRef={trackTargetRef}
-            cases={cases}
           />
         )}
 
@@ -102,10 +198,9 @@ function HospitalFeedbackApp() {
             onSignIn={handleSignIn}
             onSignOut={handleSignOut}
             staffList={staffList}
-            onAddStaff={(user) => {
-              addStaff(user);
-              setStaffList(getStoredStaff());
-            }}
+            onUpdateStaffProfile={handleUpdateStaffProfile}
+            authError={authError}
+            dataError={dataError}
           />
         )}
       </main>

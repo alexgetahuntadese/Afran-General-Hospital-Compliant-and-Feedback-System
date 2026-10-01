@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Shield, 
   Search, 
@@ -14,21 +14,26 @@ import {
   Mail,
   User,
   Phone,
-  BarChart3
+  BarChart3,
+  Mic
 } from 'lucide-react';
-import { CaseSubmission, StaffUser, SubmissionStatus } from '../types/hospital';
-import { DEPARTMENTS } from '../data/seedData';
+import { CaseSubmission, StaffRole, StaffUser, SubmissionStatus } from '../types/hospital';
 import { useLanguage } from '../context/LanguageContext';
 import { StaffAnalyticsSummary } from './StaffAnalyticsSummary';
+import { getDepartmentQuestions, LIKELIHOOD_OPTIONS, SATISFACTION_OPTIONS } from '../data/questionnaires';
+import { DEPARTMENTS } from '../data/seedData';
+import { getComplaintAudioUrl } from '../lib/data';
 
 interface StaffViewProps {
   cases: CaseSubmission[];
-  onUpdateCase: (updated: CaseSubmission) => void;
+  onUpdateCase: (updated: CaseSubmission) => Promise<void>;
   currentUser: StaffUser | null;
-  onSignIn: (user: StaffUser) => void;
+  onSignIn: (email: string) => Promise<void>;
   onSignOut: () => void;
   staffList: StaffUser[];
-  onAddStaff: (user: StaffUser) => void;
+  onUpdateStaffProfile: (email: string, role: StaffRole, department?: string) => Promise<void>;
+  authError: string;
+  dataError: string;
 }
 
 export const StaffView: React.FC<StaffViewProps> = ({
@@ -38,12 +43,19 @@ export const StaffView: React.FC<StaffViewProps> = ({
   onSignIn,
   onSignOut,
   staffList,
-  onAddStaff,
+  onUpdateStaffProfile,
+  authError,
+  dataError,
 }) => {
   const { t, language, getDeptName } = useLanguage();
+  const canManageStaff = currentUser?.role === 'superadmin';
+  const canReadStaffDirectory = canManageStaff || currentUser?.role === 'customer_service_manager';
 
   // Login form state
   const [loginEmail, setLoginEmail] = useState('');
+  const [isSigningIn, setIsSigningIn] = useState(false);
+  const [magicLinkSent, setMagicLinkSent] = useState(false);
+  const [signInError, setSignInError] = useState('');
   
   // Dashboard states
   const [statusFilter, setStatusFilter] = useState<'all' | 'received' | 'in_review' | 'resolved'>('all');
@@ -53,24 +65,77 @@ export const StaffView: React.FC<StaffViewProps> = ({
   // Modals
   const [selectedCase, setSelectedCase] = useState<CaseSubmission | null>(null);
   const [isStaffAccessOpen, setIsStaffAccessOpen] = useState(false);
-  const [newColleagueEmail, setNewColleagueEmail] = useState('');
+  const [staffRoleDrafts, setStaffRoleDrafts] = useState<Record<string, { role: StaffRole; department: string }>>({});
+  const [staffSaveEmail, setStaffSaveEmail] = useState('');
+  const [staffSaveError, setStaffSaveError] = useState('');
 
   // Editing case in modal
   const [editStatus, setEditStatus] = useState<SubmissionStatus>('received');
   const [editResponse, setEditResponse] = useState('');
+  const [editEscalated, setEditEscalated] = useState(false);
+  const [saveError, setSaveError] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  const [complaintAudioUrl, setComplaintAudioUrl] = useState('');
+  const [complaintAudioError, setComplaintAudioError] = useState('');
+  const [isLoadingComplaintAudio, setIsLoadingComplaintAudio] = useState(false);
+
+  useEffect(() => {
+    setSelectedCase(null);
+    setStatusFilter('all');
+    setSearchQuery('');
+    setSaveError('');
+  }, [currentUser?.email, currentUser?.role, currentUser?.department]);
+
+  useEffect(() => {
+    let active = true;
+    setComplaintAudioUrl('');
+    setComplaintAudioError('');
+    if (!selectedCase?.audioPath) {
+      setIsLoadingComplaintAudio(false);
+      return () => {
+        active = false;
+      };
+    }
+
+    setIsLoadingComplaintAudio(true);
+    void getComplaintAudioUrl(selectedCase.audioPath)
+      .then((url) => {
+        if (active) setComplaintAudioUrl(url);
+      })
+      .catch((error: unknown) => {
+        if (active) {
+          setComplaintAudioError(error instanceof Error ? error.message : 'Unable to load the complaint recording.');
+        }
+      })
+      .finally(() => {
+        if (active) setIsLoadingComplaintAudio(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [selectedCase?.audioPath]);
+
+  const visibleCases = useMemo(() => {
+    if (currentUser?.role === 'ceo') return cases.filter((c) => c.escalated);
+    if (currentUser?.role === 'department_head') {
+      return cases.filter((c) => c.department === currentUser.department);
+    }
+    return currentUser?.role === 'customer_service_manager' || currentUser?.role === 'superadmin' ? cases : [];
+  }, [cases, currentUser]);
 
   const counts = useMemo(() => {
     return {
-      all: cases.length,
-      received: cases.filter(c => c.status === 'received').length,
-      in_review: cases.filter(c => c.status === 'in_review').length,
-      resolved: cases.filter(c => c.status === 'resolved').length,
+      all: visibleCases.length,
+      received: visibleCases.filter(c => c.status === 'received').length,
+      in_review: visibleCases.filter(c => c.status === 'in_review').length,
+      resolved: visibleCases.filter(c => c.status === 'resolved').length,
     };
-  }, [cases]);
+  }, [visibleCases]);
 
   const filteredCases = useMemo(() => {
-    return cases.filter(c => {
-      if (statusFilter !== 'all' && c.status !== statusFilter) return false;
+    return visibleCases.filter(c => {
+      if (currentUser?.role !== 'ceo' && statusFilter !== 'all' && c.status !== statusFilter) return false;
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
         const matchRef = c.reference.toLowerCase().includes(q);
@@ -82,29 +147,45 @@ export const StaffView: React.FC<StaffViewProps> = ({
       }
       return true;
     });
-  }, [cases, statusFilter, searchQuery]);
+  }, [visibleCases, statusFilter, searchQuery, currentUser?.role]);
 
   const handleOpenReview = (c: CaseSubmission) => {
     setSelectedCase(c);
     setEditStatus(c.status);
     setEditResponse(c.response || '');
+    setEditEscalated(Boolean(c.escalated));
   };
 
-  const handleSaveReview = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedCase) return;
+  const handleSaveStaffRole = async (staff: StaffUser) => {
+    const draft = staffRoleDrafts[staff.email] ?? { role: staff.role, department: staff.department ?? '' };
+    if (draft.role === 'department_head' && !draft.department) {
+      setStaffSaveError('Choose a department for department heads.');
+      return;
+    }
+    setStaffSaveEmail(staff.email);
+    setStaffSaveError('');
+    try {
+      await onUpdateStaffProfile(staff.email, draft.role, draft.department || undefined);
+      setStaffRoleDrafts((drafts) => {
+        const next = { ...drafts };
+        delete next[staff.email];
+        return next;
+      });
+    } catch (error) {
+      setStaffSaveError(error instanceof Error ? error.message : 'Unable to update this staff role.');
+    } finally {
+      setStaffSaveEmail('');
+    }
+  };
 
-    const now = new Date().toISOString();
-    const updated: CaseSubmission = {
-      ...selectedCase,
-      status: editStatus,
-      response: editResponse.trim() || undefined,
-      respondedAt: editResponse.trim() ? now : selectedCase.respondedAt,
-      updatedAt: now,
-    };
-
-    onUpdateCase(updated);
-    setSelectedCase(null);
+  const getSignInErrorMessage = (error: unknown): string => {
+    const message = error instanceof Error ? error.message : 'Unable to send a sign-in link.';
+    if (/signups not allowed for otp/i.test(message)) {
+      return language === 'am'
+        ? 'ይህ ኢሜይል በSupabase Authentication ውስጥ አልተፈጠረም። የሆስፒታሉ አስተዳዳሪ መጀመሪያ በAuthentication → Users ውስጥ መለያውን መፍጠርና የሰራተኛ ሚና መመደብ አለበት።'
+        : 'This email is not registered in Supabase Authentication. A hospital administrator must first create it under Authentication → Users and assign its staff role. Public sign-ups remain disabled.';
+    }
+    return message;
   };
 
   const handleApplyTemplate = (type: 'received' | 'investigating' | 'resolved') => {
@@ -119,19 +200,6 @@ export const StaffView: React.FC<StaffViewProps> = ({
         setEditResponse('Thank you for your patience. A comprehensive clinical review was conducted and corrective action has been implemented to resolve this concern.');
         break;
     }
-  };
-
-  const handleAddStaffMember = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newColleagueEmail.trim()) return;
-    const email = newColleagueEmail.trim().toLowerCase();
-    onAddStaff({
-      email,
-      name: email.split('@')[0],
-      role: 'staff',
-      addedAt: new Date().toISOString(),
-    });
-    setNewColleagueEmail('');
   };
 
   // If NOT signed in, show Staff Sign In Card
@@ -153,15 +221,19 @@ export const StaffView: React.FC<StaffViewProps> = ({
           </div>
 
           <form
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
-              if (loginEmail.trim()) {
-                onSignIn({
-                  email: loginEmail.trim().toLowerCase(),
-                  name: loginEmail.split('@')[0],
-                  role: 'staff',
-                  addedAt: new Date().toISOString(),
-                });
+              if (!loginEmail.trim()) return;
+              setIsSigningIn(true);
+              setMagicLinkSent(false);
+              setSignInError('');
+              try {
+                await onSignIn(loginEmail);
+                setMagicLinkSent(true);
+              } catch (error) {
+                setSignInError(getSignInErrorMessage(error));
+              } finally {
+                setIsSigningIn(false);
               }
             }}
             className="space-y-3 text-left"
@@ -181,31 +253,20 @@ export const StaffView: React.FC<StaffViewProps> = ({
             </div>
             <button
               type="submit"
+              disabled={isSigningIn}
               className="w-full py-2.5 min-h-[44px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs sm:text-sm rounded-xl transition-colors shadow-xs"
             >
-              {t.signInBtn}
+              {isSigningIn ? t.sendingSignInLink : t.signInBtn}
             </button>
           </form>
 
-          <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-2">
-            <span className="text-[11px] text-slate-400 block">Quick Demo Sign-In:</span>
-            <div className="flex flex-col gap-2">
-              <button
-                type="button"
-                onClick={() => onSignIn({ email: 'admin@afranhospital.com', name: 'Patient Relations Lead', role: 'admin', addedAt: new Date().toISOString() })}
-                className="w-full py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
-              >
-                {t.demoAdminBtn} (admin@afranhospital.com)
-              </button>
-              <button
-                type="button"
-                onClick={() => onSignIn({ email: 'colleague@afranhospital.com', name: 'Quality Officer', role: 'staff', addedAt: new Date().toISOString() })}
-                className="w-full py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
-              >
-                {t.demoStaffBtn} (colleague@afranhospital.com)
-              </button>
-            </div>
-          </div>
+          <p className="text-xs text-slate-500 dark:text-slate-400">{t.passwordlessSignIn}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">{t.managerProvisionNote}</p>
+          {(magicLinkSent || authError || signInError) && (
+            <p className={`rounded-lg p-3 text-xs ${signInError || authError ? 'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300' : 'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300'}`}>
+              {signInError || authError || t.magicLinkSent}
+            </p>
+          )}
         </div>
       </div>
     );
@@ -219,13 +280,30 @@ export const StaffView: React.FC<StaffViewProps> = ({
           <span className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 block">
             {t.patientRelations}
           </span>
-          <h1 className="font-serif text-3xl sm:text-4xl font-semibold text-slate-900 dark:text-white leading-tight">
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white leading-tight">
             {t.caseDashboard}
           </h1>
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+            {currentUser.role === 'superadmin'
+              ? (language === 'am' ? 'ሱፐር አስተዳዳሪ · ሙሉ የስርዓት መዳረሻ' : 'Superadmin · full system administration')
+              : currentUser.role === 'ceo'
+              ? t.ceoScope
+              : currentUser.role === 'department_head'
+              ? `${t.roleDepartmentHead}: ${getDeptName(currentUser.department || '')}`
+              : currentUser.role === 'customer_service_manager'
+              ? t.managerScope
+              : t.staffScope}
+          </p>
         </div>
 
+        {dataError && (
+          <p role="alert" className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/30 dark:text-rose-300">
+            {dataError}
+          </p>
+        )}
+
         <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
-          <button
+          {(currentUser.role === 'superadmin' || currentUser.role === 'customer_service_manager' || currentUser.role === 'department_head') && <button
             onClick={() => setShowCharts(!showCharts)}
             className={`px-3 py-2 min-h-[40px] text-xs font-semibold rounded-xl border transition-colors flex items-center gap-1.5 shadow-2xs ${
               showCharts
@@ -235,15 +313,15 @@ export const StaffView: React.FC<StaffViewProps> = ({
           >
             <BarChart3 className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
             <span>{showCharts ? t.hideCharts : t.showCharts}</span>
-          </button>
+          </button>}
 
-          <button
+          {canReadStaffDirectory && <button
             onClick={() => setIsStaffAccessOpen(true)}
             className="px-3.5 py-2 min-h-[40px] text-xs font-semibold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-1.5 shadow-2xs"
           >
             <UserPlus className="w-3.5 h-3.5 text-slate-500" />
             <span>{t.staffAccessTitle}</span>
-          </button>
+          </button>}
 
           <button
             onClick={onSignOut}
@@ -256,15 +334,15 @@ export const StaffView: React.FC<StaffViewProps> = ({
       </div>
 
       {/* Analytics Summary Dashboard (Recharts Visualization) */}
-      {showCharts && (
-        <StaffAnalyticsSummary cases={cases} />
+      {showCharts && (currentUser.role === 'superadmin' || currentUser.role === 'customer_service_manager' || currentUser.role === 'department_head') && (
+        <StaffAnalyticsSummary cases={visibleCases} />
       )}
 
       {/* Filter Tabs & Search Bar */}
       <div className="space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           {/* Status Tabs */}
-          <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800/90 rounded-xl overflow-x-auto no-scrollbar">
+          {currentUser.role !== 'ceo' && <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800/90 rounded-xl overflow-x-auto no-scrollbar">
             {(['all', 'received', 'in_review', 'resolved'] as const).map((st) => (
               <button
                 key={st}
@@ -286,7 +364,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
                 </span>
               </button>
             ))}
-          </div>
+          </div>}
 
           {/* Search Box */}
           <div className="relative flex-1 sm:max-w-xs">
@@ -308,8 +386,8 @@ export const StaffView: React.FC<StaffViewProps> = ({
           filteredCases.map((c) => (
             <div
               key={c.id}
-              onClick={() => handleOpenReview(c)}
-              className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs hover:border-indigo-500 dark:hover:border-indigo-500 transition-all p-5 cursor-pointer space-y-3"
+              onClick={() => currentUser.role !== 'ceo' && handleOpenReview(c)}
+              className={`bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs transition-all p-5 space-y-3 ${currentUser.role !== 'ceo' ? 'cursor-pointer hover:border-indigo-500 dark:hover:border-indigo-500' : ''}`}
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
@@ -327,8 +405,13 @@ export const StaffView: React.FC<StaffViewProps> = ({
                 </div>
 
                 <div className="flex items-center gap-2 self-start sm:self-auto">
+                  {c.escalated && (
+                    <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
+                      {t.escalated}
+                    </span>
+                  )}
                   <span className="text-[11px] font-semibold capitalize px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                    {c.kind}
+                    {c.kind === 'complaint' ? t.kindComplaint : t.kindFeedback}
                   </span>
                   <span
                     className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${
@@ -336,7 +419,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
                         ? 'bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800'
                         : c.status === 'in_review'
                         ? 'bg-blue-50 dark:bg-blue-950/50 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800'
-                        : 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
+                        : 'bg-blue-50 dark:bg-blue-950/50 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800'
                     }`}
                   >
                     {c.status === 'received' && t.statusReceived}
@@ -368,21 +451,23 @@ export const StaffView: React.FC<StaffViewProps> = ({
 
                 <div className="flex items-center gap-2">
                   {c.response && (
-                    <span className="text-[11px] text-teal-600 dark:text-teal-400 font-semibold flex items-center gap-1">
+                    <span className="text-[11px] text-blue-600 dark:text-blue-400 font-semibold flex items-center gap-1">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       <span>Responded</span>
                     </span>
                   )}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleOpenReview(c);
-                    }}
-                    className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
-                  >
-                    {t.reviewCase}
-                  </button>
+                  {currentUser.role !== 'ceo' && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenReview(c);
+                      }}
+                      className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
+                    >
+                      {t.reviewCase}
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -409,7 +494,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
                   {selectedCase.reference}
                 </span>
                 <span className="text-xs capitalize text-slate-500">
-                  ({selectedCase.kind})
+                  ({selectedCase.kind === 'complaint' ? t.kindComplaint : t.kindFeedback})
                 </span>
               </div>
               <button
@@ -448,8 +533,95 @@ export const StaffView: React.FC<StaffViewProps> = ({
                 </div>
               </div>
 
+              {selectedCase.audioPath && (
+                <section className="space-y-2 rounded-xl border border-sky-200 bg-sky-50/70 p-4 dark:border-sky-900/60 dark:bg-sky-950/25">
+                  <h3 className="flex items-center gap-2 text-xs font-bold text-slate-800 dark:text-slate-100">
+                    <Mic className="h-4 w-4 text-blue-700 dark:text-blue-300" />
+                    {language === 'am' ? 'የቅሬታ ድምጽ ቅጂ' : 'Voice complaint recording'}
+                  </h3>
+                  {isLoadingComplaintAudio && (
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      {language === 'am' ? 'ድምጹ በመጫን ላይ...' : 'Loading secure audio...'}
+                    </p>
+                  )}
+                  {complaintAudioError && (
+                    <p role="alert" className="text-xs text-rose-700 dark:text-rose-300">
+                      {complaintAudioError}
+                    </p>
+                  )}
+                  {complaintAudioUrl && (
+                    <audio controls preload="none" src={complaintAudioUrl} className="w-full" />
+                  )}
+                  <p className="text-[10px] leading-relaxed text-slate-500 dark:text-slate-400">
+                    {language === 'am'
+                      ? 'ይህ ቅጂ በግል የተጠበቀ ሲሆን ለዚህ ጉዳይ የተፈቀደላቸው ሰራተኞች ብቻ ያዳምጡታል።'
+                      : 'Private recording. Access is limited to staff authorized to review this case.'}
+                  </p>
+                </section>
+              )}
+
+              {selectedCase.questionnaireAnswers && (
+                <section className="space-y-3">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+                    {language === 'am' ? 'የመምሪያ ጥያቄ ምላሾች' : 'Department questionnaire'}
+                  </h3>
+                  <div className="divide-y divide-slate-100 rounded-xl border border-slate-200 dark:divide-slate-800 dark:border-slate-700">
+                    {getDepartmentQuestions(selectedCase.department)
+                      .filter(({ id }) => selectedCase.questionnaireAnswers?.[id] !== undefined)
+                      .map((question, index) => (
+                        <div key={question.id} className="flex items-start justify-between gap-4 p-3">
+                          <span className="text-xs leading-relaxed text-slate-700 dark:text-slate-300">
+                            {index + 1}. {language === 'am' ? question.am : question.en}
+                          </span>
+                          <span className="shrink-0 rounded-lg bg-blue-50 px-2 py-1 text-xs font-bold text-blue-800 dark:bg-blue-950/50 dark:text-blue-200">
+                            {language === 'am' ? question.scale === 'likelihood'
+                              ? LIKELIHOOD_OPTIONS.find(({ value }) => value === selectedCase.questionnaireAnswers?.[question.id])?.am
+                              : SATISFACTION_OPTIONS.find(({ value }) => value === selectedCase.questionnaireAnswers?.[question.id])?.am
+                              : question.scale === 'likelihood'
+                              ? LIKELIHOOD_OPTIONS.find(({ value }) => value === selectedCase.questionnaireAnswers?.[question.id])?.en
+                              : SATISFACTION_OPTIONS.find(({ value }) => value === selectedCase.questionnaireAnswers?.[question.id])?.en}
+                          </span>
+                        </div>
+                      ))}
+                  </div>
+                </section>
+              )}
+
               {/* Status Update */}
-              <form onSubmit={handleSaveReview} className="space-y-4">
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                setSaveError('');
+                setIsSaving(true);
+                try {
+                  await onUpdateCase({
+                    ...selectedCase,
+                    status: editStatus,
+                    escalated: editEscalated,
+                    response: editResponse.trim() || undefined,
+                    respondedAt: editResponse.trim() ? new Date().toISOString() : selectedCase.respondedAt,
+                    updatedAt: new Date().toISOString(),
+                  });
+                  setSelectedCase(null);
+                } catch (error) {
+                  setSaveError(error instanceof Error ? error.message : 'Unable to save case changes.');
+                } finally {
+                  setIsSaving(false);
+                }
+              }} className="space-y-4">
+                {saveError && (
+                  <p role="alert" className="rounded-lg bg-rose-50 p-3 text-xs text-rose-700 dark:bg-rose-950/40 dark:text-rose-300">
+                    {saveError}
+                  </p>
+                )}
+                <label className="flex items-center gap-2.5 rounded-xl border border-rose-200 bg-rose-50/70 p-3 text-xs font-semibold text-rose-800 dark:border-rose-900/60 dark:bg-rose-950/30 dark:text-rose-300">
+                  <input
+                    type="checkbox"
+                    checked={editEscalated}
+                    onChange={(e) => setEditEscalated(e.target.checked)}
+                    className="h-4 w-4 rounded border-rose-300 text-rose-600 focus:ring-rose-500"
+                  />
+                  {t.markEscalated}
+                </label>
                 <div>
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
                     {t.statusLabel}
@@ -516,9 +688,10 @@ export const StaffView: React.FC<StaffViewProps> = ({
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 min-h-[40px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl transition-colors shadow-xs"
+                    disabled={isSaving}
+                    className="px-5 py-2 min-h-[40px] bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-semibold text-xs rounded-xl transition-colors shadow-xs"
                   >
-                    {t.saveChanges}
+                    {isSaving ? t.saving : t.saveChanges}
                   </button>
                 </div>
               </form>
@@ -548,37 +721,93 @@ export const StaffView: React.FC<StaffViewProps> = ({
                 {t.staffAccessDesc}
               </p>
 
-              <form onSubmit={handleAddStaffMember} className="flex gap-2">
-                <input
-                  type="email"
-                  value={newColleagueEmail}
-                  onChange={(e) => setNewColleagueEmail(e.target.value)}
-                  placeholder="colleague@afranhospital.com"
-                  className="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-indigo-600 min-h-[40px]"
-                  required
-                />
-                <button
-                  type="submit"
-                  className="px-4 py-2 min-h-[40px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl transition-colors shrink-0"
-                >
-                  {t.addStaffBtn}
-                </button>
-              </form>
-
               <div className="space-y-2 pt-2">
                 <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
                   Active Staff Directory
                 </span>
+                {staffSaveError && (
+                  <p role="alert" className="rounded-lg border border-rose-200 bg-rose-50 p-2 text-xs text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-300">
+                    {staffSaveError}
+                  </p>
+                )}
                 <div className="divide-y divide-slate-100 dark:divide-slate-800 max-h-48 overflow-y-auto">
                   {staffList.map((st) => (
-                    <div key={st.email} className="py-2 flex items-center justify-between text-xs">
-                      <div>
-                        <span className="font-semibold text-slate-900 dark:text-white block">{st.name}</span>
-                        <span className="text-[11px] text-slate-400">{st.email}</span>
+                    <div key={st.email} className="py-3 space-y-2 text-xs">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="min-w-0">
+                          <span className="font-semibold text-slate-900 dark:text-white block">{st.name}</span>
+                          <span className="text-[11px] text-slate-400">{st.email}</span>
+                        </div>
+                        {!canManageStaff && (
+                          <span className="shrink-0 text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 uppercase font-semibold">
+                            {st.role.replaceAll('_', ' ')}
+                          </span>
+                        )}
                       </div>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 uppercase font-semibold">
-                        {st.role}
-                      </span>
+                      {canManageStaff && (
+                        <div className="flex flex-wrap items-center gap-2">
+                          {(() => {
+                            const draft = staffRoleDrafts[st.email] ?? { role: st.role, department: st.department ?? '' };
+                            const isSelf = st.email === currentUser?.email;
+                            return (
+                              <>
+                                <select
+                                  aria-label={`Role for ${st.email}`}
+                                  value={draft.role}
+                                  disabled={isSelf || staffSaveEmail === st.email}
+                                  onChange={(event) => {
+                                    const role = event.target.value as StaffRole;
+                                    setStaffRoleDrafts((drafts) => ({
+                                      ...drafts,
+                                      [st.email]: {
+                                        role,
+                                        department: role === 'department_head' ? draft.department || DEPARTMENTS[0] : '',
+                                      },
+                                    }));
+                                    setStaffSaveError('');
+                                  }}
+                                  className="min-h-9 flex-1 rounded-lg border border-slate-200 bg-white px-2 text-[11px] text-slate-700 disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                                >
+                                  <option value="superadmin">Superadmin</option>
+                                  <option value="customer_service_manager">Customer Service Manager</option>
+                                  <option value="department_head">Department Head</option>
+                                  <option value="ceo">CEO</option>
+                                  <option value="staff">Staff</option>
+                                </select>
+                                {draft.role === 'department_head' && (
+                                  <select
+                                    aria-label={`Department for ${st.email}`}
+                                    value={draft.department}
+                                    disabled={isSelf || staffSaveEmail === st.email}
+                                    onChange={(event) => {
+                                      setStaffRoleDrafts((drafts) => ({
+                                        ...drafts,
+                                        [st.email]: { ...draft, department: event.target.value },
+                                      }));
+                                      setStaffSaveError('');
+                                    }}
+                                    className="min-h-9 flex-1 rounded-lg border border-slate-200 bg-white px-2 text-[11px] text-slate-700 disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                                  >
+                                    {DEPARTMENTS.map((department) => (
+                                      <option key={department} value={department}>{getDeptName(department)}</option>
+                                    ))}
+                                  </select>
+                                )}
+                                {!isSelf && (
+                                  <button
+                                    type="button"
+                                    disabled={staffSaveEmail === st.email || (draft.role === st.role && draft.department === (st.department ?? ''))}
+                                    onClick={() => void handleSaveStaffRole(st)}
+                                    className="min-h-9 rounded-lg bg-blue-700 px-3 text-[11px] font-bold text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
+                                  >
+                                    {staffSaveEmail === st.email ? t.saving : t.saveChanges}
+                                  </button>
+                                )}
+                              </>
+                            );
+                          })()}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

@@ -1,6 +1,8 @@
 export type SubmissionKind = 'complaint' | 'feedback' | 'compliment';
 
 export type SubmissionStatus = 'received' | 'in_review' | 'resolved';
+export type StaffRole = 'superadmin' | 'customer_service_manager' | 'staff' | 'department_head' | 'ceo';
+export type QuestionnaireAnswers = Record<string, number>;
 
 export interface CaseSubmission {
   id: string; // e.g. "AGH-7K2P9Q"
@@ -15,15 +17,20 @@ export interface CaseSubmission {
   email?: string;
   phone?: string;
   status: SubmissionStatus;
+  escalated?: boolean;
   submittedAt: string;
   updatedAt: string;
   response?: string;
   respondedAt?: string;
+  questionnaireVersion?: string;
+  questionnaireAnswers?: QuestionnaireAnswers;
+  audioPath?: string;
 }
 
 export interface StaffUser {
   email: string;
   name: string;
-  role: 'admin' | 'staff';
+  role: StaffRole;
+  department?: string;
   addedAt: string;
 }

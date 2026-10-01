@@ -13,7 +13,6 @@ import {
 import { 
   AlertCircle, 
   Lightbulb, 
-  Heart, 
   CheckCircle2, 
   Clock, 
   ShieldCheck, 
@@ -43,10 +42,9 @@ export const StaffAnalyticsSummary: React.FC<StaffAnalyticsSummaryProps> = ({ ca
   const anonymousCount = cases.filter(c => c.anonymous).length;
   const anonymousRate = total > 0 ? Math.round((anonymousCount / total) * 100) : 0;
 
-  // Category Distribution (Complaint, Suggestion, Compliment)
+  // Legacy compliment cases are grouped with suggestions as unified feedback.
   const complaints = cases.filter(c => c.kind === 'complaint').length;
-  const suggestions = cases.filter(c => c.kind === 'feedback').length;
-  const compliments = cases.filter(c => c.kind === 'compliment').length;
+  const feedbackCount = cases.filter(c => c.kind === 'feedback' || c.kind === 'compliment').length;
 
   const categoryData = [
     {
@@ -56,16 +54,10 @@ export const StaffAnalyticsSummary: React.FC<StaffAnalyticsSummaryProps> = ({ ca
       icon: AlertCircle,
     },
     {
-      name: t.kindSuggestion,
-      value: suggestions,
-      color: '#f59e0b', // amber-500
+      name: t.kindFeedback,
+      value: feedbackCount,
+      color: '#1d4ed8', // blue-700
       icon: Lightbulb,
-    },
-    {
-      name: t.kindCompliment,
-      value: compliments,
-      color: '#10b981', // emerald-500
-      icon: Heart,
     },
   ].filter(d => d.value > 0);
 
@@ -87,7 +79,7 @@ export const StaffAnalyticsSummary: React.FC<StaffAnalyticsSummaryProps> = ({ ca
     {
       name: t.statusResolved,
       count: resolvedCount,
-      fill: '#10b981', // emerald-500
+      fill: '#0ea5e9', // sky-500
     },
   ];
 
@@ -134,7 +126,7 @@ export const StaffAnalyticsSummary: React.FC<StaffAnalyticsSummaryProps> = ({ ca
             {t.resolutionRate}
           </span>
           <div className="flex items-baseline gap-1.5">
-            <span className="text-2xl font-bold font-mono text-emerald-600 dark:text-emerald-400 tabular-nums">
+            <span className="text-2xl font-bold font-mono text-sky-600 dark:text-sky-400 tabular-nums">
               {resolutionRate}%
             </span>
             <span className="text-[11px] text-slate-400">
@@ -214,7 +206,7 @@ export const StaffAnalyticsSummary: React.FC<StaffAnalyticsSummaryProps> = ({ ca
           </div>
 
           {/* Clean Legend */}
-          <div className="grid grid-cols-3 gap-2 pt-1">
+          <div className="grid grid-cols-2 gap-2 pt-1">
             <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 text-center">
               <span className="text-[10px] text-rose-600 dark:text-rose-400 font-semibold block truncate">
                 {t.kindComplaint}
@@ -225,20 +217,11 @@ export const StaffAnalyticsSummary: React.FC<StaffAnalyticsSummaryProps> = ({ ca
             </div>
 
             <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 text-center">
-              <span className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold block truncate">
-                {t.kindSuggestion}
+              <span className="text-[10px] text-blue-700 dark:text-blue-300 font-semibold block truncate">
+                {t.kindFeedback}
               </span>
               <span className="text-sm font-bold font-mono text-slate-800 dark:text-slate-200">
-                {suggestions}
-              </span>
-            </div>
-
-            <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 text-center">
-              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold block truncate">
-                {t.kindCompliment}
-              </span>
-              <span className="text-sm font-bold font-mono text-slate-800 dark:text-slate-200">
-                {compliments}
+                {feedbackCount}
               </span>
             </div>
           </div>
@@ -308,7 +291,7 @@ export const StaffAnalyticsSummary: React.FC<StaffAnalyticsSummaryProps> = ({ ca
             </div>
 
             <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 text-center">
-              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold block truncate">
+              <span className="text-[10px] text-sky-600 dark:text-sky-400 font-semibold block truncate">
                 {t.statusResolved}
               </span>
               <span className="text-sm font-bold font-mono text-slate-800 dark:text-slate-200">
