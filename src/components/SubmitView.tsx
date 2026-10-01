@@ -437,14 +437,14 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
   return (
     <div className="max-w-5xl mx-auto py-5 sm:py-12 px-4 space-y-4 sm:space-y-6">
       {/* Welcome panel */}
-      <section className="premium-hero hero-float relative overflow-hidden rounded-[28px] border border-sky-900/20 bg-gradient-to-br from-[#082f49] via-[#075985] to-[#0f766e] px-4 py-5 text-white shadow-[0_30px_80px_rgba(7,89,133,0.2)] sm:rounded-[32px] sm:px-8 sm:py-9">
-        <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-cyan-400/25 blur-3xl" aria-hidden="true" />
+      <section className="premium-hero hero-float relative overflow-hidden rounded-[28px] border border-[#90e0ef]/30 px-4 py-5 text-white shadow-[0_30px_80px_rgba(3,4,94,0.2)] sm:rounded-[32px] sm:px-8 sm:py-9">
+        <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-[#90e0ef]/35 blur-3xl" aria-hidden="true" />
         <div className="absolute -bottom-20 left-1/4 h-48 w-48 rounded-full bg-teal-400/25 blur-3xl" aria-hidden="true" />
         <div className="absolute -right-8 bottom-2 h-24 w-24 rounded-full bg-amber-400/10 blur-2xl" aria-hidden="true" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.14),transparent_35%)]" aria-hidden="true" />
         <div className="relative grid gap-4 sm:gap-7 md:grid-cols-[1fr_auto] md:items-end">
           <div className="max-w-2xl space-y-2 sm:space-y-3">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-teal-100 sm:text-[11px] sm:tracking-[0.24em]">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#caf0f8] sm:text-[11px] sm:tracking-[0.24em]">
               {t.patientRelations}
             </p>
             <h1 className="font-serif text-2xl font-black tracking-tight text-white sm:text-5xl">
@@ -464,7 +464,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
             <ArrowRight className="h-3.5 w-3.5" />
           </button>
         </div>
-        <div className="relative mt-4 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/15 pt-3 text-[10px] font-medium text-cyan-100 sm:mt-7 sm:pt-4 sm:text-[11px]">
+        <div className="relative mt-4 flex flex-wrap gap-x-5 gap-y-2 border-t border-[#90e0ef]/30 pt-3 text-[10px] font-medium text-[#caf0f8] sm:mt-7 sm:pt-4 sm:text-[11px]">
           <span className="inline-flex items-center gap-1.5">
             <ShieldCheck className="h-3.5 w-3.5" />
             {t.confidentialityNote}
@@ -482,8 +482,8 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
       >
         <div className="flex items-center justify-between gap-3 border-b border-slate-200 pb-5 dark:border-slate-800">
           <div>
-            <div className="mb-1.5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-blue-700 dark:text-blue-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
+            <div className="mb-1.5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#0077b6] dark:text-[#90e0ef]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#90e0ef] ring-2 ring-[#90e0ef]/25" />
               {t.patientRelations}
             </div>
             <h2 className="text-xl font-black text-slate-900 dark:text-white">{t.submitButton}</h2>
@@ -491,7 +491,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
               {t.feedbackTypePrompt}
             </p>
           </div>
-          <span className="hidden rounded-full bg-gradient-to-r from-blue-100 to-sky-100 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-blue-800 dark:from-blue-950/60 dark:to-sky-950/60 dark:text-blue-200 sm:inline-flex">
+          <span className="hidden rounded-full bg-[#caf0f8] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#03045e] dark:bg-[#023e8a]/50 dark:text-[#caf0f8] sm:inline-flex">
             {t.patientRelations}
           </span>
         </div>
@@ -502,8 +502,8 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
               const isCurrent = index === wizardStep;
               return (
                 <li key={label} aria-current={isCurrent ? 'step' : undefined} className="min-w-0">
-                  <div className={`mb-1 h-1.5 rounded-full transition-colors ${isComplete || isCurrent ? 'bg-teal-600' : 'bg-slate-200 dark:bg-slate-700'}`} />
-                  <span className={`block truncate text-center text-[10px] font-semibold ${isCurrent ? 'text-teal-800 dark:text-teal-300' : isComplete ? 'text-slate-700 dark:text-slate-300' : 'text-slate-400'}`}>
+                  <div className={`mb-1 h-1.5 rounded-full transition-colors ${isComplete || isCurrent ? 'bg-[#0077b6]' : 'bg-slate-200 dark:bg-slate-700'}`} />
+                  <span className={`block truncate text-center text-[10px] font-semibold ${isCurrent ? 'text-[#03045e] dark:text-[#90e0ef]' : isComplete ? 'text-slate-700 dark:text-slate-300' : 'text-slate-400'}`}>
                     {index + 1}. {label}
                   </span>
                 </li>
@@ -944,7 +944,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
                   event.preventDefault();
                   handleWizardContinue();
                 }}
-                className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-sky-800 via-cyan-700 to-teal-600 px-4 text-sm font-black text-white shadow-[0_18px_36px_rgba(13,148,136,0.25)] transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal-500/30"
+                className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#03045e] via-[#0077b6] to-[#023e8a] px-4 text-sm font-black text-white shadow-[0_18px_36px_rgba(0,119,182,0.28)] transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#90e0ef]/60"
               >
                 {t.wizardContinue}
                 <ArrowRight className="h-4 w-4" />
@@ -954,7 +954,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
                 key="submit"
                 type="submit"
                 disabled={isSubmitting}
-                className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-sky-800 via-cyan-700 to-teal-600 px-4 text-sm font-black text-white shadow-[0_18px_36px_rgba(13,148,136,0.3)] transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-[0_22px_40px_rgba(13,148,136,0.4)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal-500/30 disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#03045e] via-[#0077b6] to-[#023e8a] px-4 text-sm font-black text-white shadow-[0_18px_36px_rgba(0,119,182,0.3)] transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-[0_22px_40px_rgba(0,119,182,0.4)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#90e0ef]/60 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <span>{isSubmitting ? t.submitting : t.submitButton}</span>
               </button>

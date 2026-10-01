@@ -21,7 +21,7 @@ export const Header: React.FC<HeaderProps> = ({
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-sky-100 dark:border-slate-800 transition-colors shadow-[0_4px_18px_rgba(7,89,133,0.04)]">
+    <header className="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-[#90e0ef]/50 dark:border-slate-800 transition-colors shadow-[0_4px_18px_rgba(0,119,182,0.07)]">
       {/* Subtle Emergency Advisory Strip */}
       <div className="bg-slate-50 dark:bg-slate-800/40 border-b border-slate-200/60 dark:border-slate-800/60 px-4 py-1 text-center text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1.5">
         <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />

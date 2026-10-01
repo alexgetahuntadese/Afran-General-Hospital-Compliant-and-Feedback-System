@@ -3,9 +3,9 @@
 @layer base {
   :root {
     --radius: 0.75rem;
-    --primary: #075985;
-    --primary-hover: #0c4a6e;
-    --accent: #0d9488;
+    --primary: #0077b6;
+    --primary-hover: #03045e;
+    --accent: #90e0ef;
     --warm-accent: #d97706;
   }
 
@@ -29,6 +29,16 @@
     transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
   }
 
+  select.premium-input {
+    color: #0f172a;
+    color-scheme: light;
+  }
+
+  select.premium-input option {
+    background-color: #fff;
+    color: #0f172a;
+  }
+
   .premium-input::placeholder {
     color: #94a3b8;
     opacity: 1;
@@ -41,7 +51,7 @@
   .premium-input:focus-visible {
     border-color: var(--primary);
     background-color: #fff;
-    outline: 3px solid rgb(14 165 233 / 18%);
+    outline: 3px solid rgb(144 224 239 / 55%);
     outline-offset: 1px;
   }
 
@@ -56,14 +66,38 @@
     color: #f8fafc;
   }
 
+  .dark select.premium-input {
+    color: #f8fafc;
+    color-scheme: dark;
+  }
+
+  .dark select.premium-input option {
+    background-color: #1e293b;
+    color: #f8fafc;
+  }
+
   .dark .premium-input::placeholder {
     color: #94a3b8;
   }
 
   .dark .premium-input:focus-visible {
-    border-color: #38bdf8;
+    border-color: var(--accent);
     background-color: #0f172a;
-    outline-color: rgb(13 148 136 / 24%);
+    outline-color: rgb(144 224 239 / 35%);
+  }
+
+  .premium-hero {
+    background-image:
+      radial-gradient(circle at 88% 15%, rgb(144 224 239 / 24%), transparent 30%),
+      linear-gradient(125deg, #03045e 0%, #0077b6 58%, #023e8a 100%);
+  }
+
+  .premium-form {
+    box-shadow: 0 24px 60px rgb(2 62 138 / 10%);
+  }
+
+  .dark .premium-form {
+    box-shadow: 0 24px 60px rgb(0 0 0 / 22%);
   }
 
   .hospital-splash {

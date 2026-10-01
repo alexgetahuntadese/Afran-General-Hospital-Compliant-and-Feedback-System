@@ -99,7 +99,7 @@ export const TrackView: React.FC<TrackViewProps> = ({ initialRef }) => {
         />
         <button
           type="submit"
-          className="px-5 py-2.5 min-h-[48px] bg-gradient-to-r from-sky-800 to-teal-700 hover:from-sky-900 hover:to-teal-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal-500/25 text-white font-semibold text-xs sm:text-sm rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-sm shadow-sky-900/15 shrink-0"
+          className="px-5 py-2.5 min-h-[48px] bg-gradient-to-r from-[#03045e] to-[#0077b6] hover:from-[#023e8a] hover:to-[#0096c7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#90e0ef]/60 text-white font-semibold text-xs sm:text-sm rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-sm shadow-sky-900/15 shrink-0"
         >
           <Search className="w-4 h-4" />
           <span>{isSearching ? t.searching : t.trackButton}</span>

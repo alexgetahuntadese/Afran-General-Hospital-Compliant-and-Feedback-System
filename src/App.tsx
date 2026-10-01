@@ -237,7 +237,7 @@ function HospitalFeedbackApp() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f2f8fb] dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors selection:bg-teal-100 dark:selection:bg-teal-950 selection:text-teal-900 dark:selection:text-teal-200">
+    <div className="min-h-screen bg-[#effbff] dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors selection:bg-[#90e0ef] dark:selection:bg-cyan-950 selection:text-[#03045e] dark:selection:text-teal-200">
       {/* Target Site Header */}
       <Header
         currentView={currentView}
