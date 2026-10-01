@@ -21,102 +21,109 @@ export const Header: React.FC<HeaderProps> = ({
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-[#90e0ef]/50 dark:border-slate-800 transition-colors shadow-[0_4px_18px_rgba(0,119,182,0.07)]">
-      {/* Subtle Emergency Advisory Strip */}
-      <div className="bg-slate-50 dark:bg-slate-800/40 border-b border-slate-200/60 dark:border-slate-800/60 px-4 py-1 text-center text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1.5">
-        <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
-        <span className="truncate">{t.emergencyBanner}</span>
+    <header className="sticky top-0 z-40 border-b border-[#90e0ef]/50 bg-white/95 shadow-[0_8px_24px_rgba(3,4,94,0.07)] backdrop-blur-xl transition-colors dark:border-slate-800 dark:bg-slate-950/95">
+      <div className="border-b border-[#90e0ef]/30 bg-[#caf0f8]/55 px-3 py-1.5 dark:border-slate-800 dark:bg-slate-900/80 sm:px-4">
+        <div className="mx-auto flex max-w-5xl items-center justify-center gap-2 text-center text-[10px] font-medium leading-snug text-[#03045e] dark:text-slate-200 sm:text-[11px]">
+          <AlertCircle className="h-3.5 w-3.5 shrink-0 text-rose-600 dark:text-rose-400" aria-hidden="true" />
+          <span className="min-w-0">{t.emergencyBanner}</span>
+        </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
-        {/* Brand & Wordmark */}
+      <div className="mx-auto flex h-[4.25rem] max-w-5xl items-center justify-between gap-2 px-3 sm:h-[4.75rem] sm:px-6">
         <button
           onClick={() => onNavigate('submit')}
-          className="text-left flex items-center group focus:outline-none"
+          className="group flex min-w-0 shrink-0 items-center gap-2 rounded-xl text-left outline-none focus-visible:ring-4 focus-visible:ring-[#90e0ef]/60 sm:gap-3"
           aria-label={t.hospitalName}
         >
           <img
             src={hospitalLogo}
             alt={t.hospitalName}
-            className="h-12 w-auto max-w-[6.5rem] object-contain shrink-0 transition-transform group-hover:scale-[1.02] sm:max-w-[8rem]"
+            className="h-10 w-auto max-w-[5.75rem] shrink-0 object-contain transition-transform group-hover:scale-[1.02] sm:h-12 sm:max-w-[7.5rem]"
           />
+          <span className="hidden min-w-0 border-l border-slate-200 pl-3 dark:border-slate-700 md:block">
+            <span className="block truncate text-xs font-extrabold leading-tight text-[#03045e] dark:text-white">
+              {t.hospitalName}
+            </span>
+            <span className="mt-1 block truncate text-[10px] font-medium text-slate-500 dark:text-slate-400">
+              {t.patientRelations}
+            </span>
+          </span>
         </button>
 
-        {/* Navigation & Clean Controls */}
-        <div className="flex items-center gap-1 sm:gap-2">
-          {/* Submit */}
+        <nav aria-label={t.mainNavigation} className="flex min-w-0 items-center gap-0.5 sm:gap-1.5">
           <button
+            type="button"
             onClick={() => onNavigate('submit')}
             aria-label={t.navSubmit}
             aria-current={currentView === 'submit' ? 'page' : undefined}
-            className={`px-2.5 py-1.5 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 ${
+            className={`flex min-h-10 items-center justify-center gap-1.5 rounded-xl px-2 text-[11px] font-semibold transition-all focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#90e0ef]/60 sm:px-3 sm:text-xs ${
               currentView === 'submit'
-                ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-[#caf0f8] text-[#03045e] shadow-sm dark:bg-[#023e8a]/45 dark:text-[#caf0f8]'
+                : 'text-slate-600 hover:bg-[#caf0f8]/55 hover:text-[#03045e] dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
             }`}
           >
-            <FileEdit className="w-3.5 h-3.5" />
+            <FileEdit className="h-4 w-4 shrink-0" aria-hidden="true" />
             <span className="hidden sm:inline">{t.navSubmit}</span>
           </button>
 
-          {/* Track */}
           <button
+            type="button"
             onClick={() => onNavigate('track')}
             aria-label={t.navTrack}
             aria-current={currentView === 'track' ? 'page' : undefined}
-            className={`px-2.5 py-1.5 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 ${
+            className={`flex min-h-10 items-center justify-center gap-1.5 rounded-xl px-2 text-[11px] font-semibold transition-all focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#90e0ef]/60 sm:px-3 sm:text-xs ${
               currentView === 'track'
-                ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-[#caf0f8] text-[#03045e] shadow-sm dark:bg-[#023e8a]/45 dark:text-[#caf0f8]'
+                : 'text-slate-600 hover:bg-[#caf0f8]/55 hover:text-[#03045e] dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
             }`}
           >
-            <Search className="w-3.5 h-3.5" />
+            <Search className="h-4 w-4 shrink-0" aria-hidden="true" />
             <span className="hidden sm:inline">{t.navTrack}</span>
           </button>
 
-          {/* Staff */}
           <button
+            type="button"
             onClick={() => onNavigate('staff')}
             aria-label={currentUser ? t.navStaff : t.navStaffLogin}
             aria-current={currentView === 'staff' ? 'page' : undefined}
-            className={`px-2.5 py-1.5 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 ${
+            className={`flex min-h-10 items-center justify-center gap-1.5 rounded-xl px-2 text-[11px] font-semibold transition-all focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#90e0ef]/60 sm:px-3 sm:text-xs ${
               currentView === 'staff'
-                ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 font-semibold'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-[#caf0f8] text-[#03045e] shadow-sm dark:bg-[#023e8a]/45 dark:text-[#caf0f8]'
+                : 'text-slate-600 hover:bg-[#caf0f8]/55 hover:text-[#03045e] dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
             }`}
           >
-            <Shield className="w-3.5 h-3.5" />
+            <Shield className="h-4 w-4 shrink-0" aria-hidden="true" />
             <span className="hidden sm:inline">{currentUser ? t.navStaff : t.navStaffLogin}</span>
           </button>
 
-          <div className="h-4 w-px bg-slate-200 dark:bg-slate-700 mx-1" aria-hidden="true" />
+          <span className="mx-1 h-6 w-px shrink-0 bg-slate-200 dark:bg-slate-700 sm:mx-2" aria-hidden="true" />
 
-          {/* Language Switcher Toggle */}
-          <button
-            type="button"
-            onClick={toggleLanguage}
-            className="px-2 py-1 rounded-md text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-            title={language === 'en' ? t.switchToAmharic : language === 'am' ? t.switchToOromo : t.switchToEnglish}
-            aria-label={language === 'en' ? t.switchToAmharic : language === 'am' ? t.switchToOromo : t.switchToEnglish}
-          >
-            {language === 'en' ? 'AM' : language === 'am' ? 'OM' : 'EN'}
-          </button>
+          <div className="flex shrink-0 items-center gap-0.5 rounded-xl border border-slate-200/80 bg-white/80 p-0.5 dark:border-slate-700 dark:bg-slate-900">
+            <button
+              type="button"
+              onClick={toggleLanguage}
+              className="flex min-h-9 min-w-9 items-center justify-center rounded-lg px-1.5 text-[10px] font-extrabold tracking-wide text-[#03045e] transition-colors hover:bg-[#caf0f8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0077b6] dark:text-[#caf0f8] dark:hover:bg-slate-800 sm:min-w-10 sm:text-[11px]"
+              title={language === 'en' ? t.switchToAmharic : language === 'am' ? t.switchToOromo : t.switchToEnglish}
+              aria-label={language === 'en' ? t.switchToAmharic : language === 'am' ? t.switchToOromo : t.switchToEnglish}
+            >
+              {language === 'en' ? 'AM' : language === 'am' ? 'OM' : 'EN'}
+            </button>
 
-          {/* Theme Toggle */}
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="p-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-            title={theme === 'dark' ? t.lightMode : t.darkMode}
-            aria-label={theme === 'dark' ? t.lightMode : t.darkMode}
-          >
-            {theme === 'dark' ? (
-              <Sun className="w-4 h-4 text-amber-400" />
-            ) : (
-              <Moon className="w-4 h-4 text-slate-600" />
-            )}
-          </button>
-        </div>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="flex min-h-9 min-w-9 items-center justify-center rounded-lg transition-colors hover:bg-[#caf0f8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0077b6] dark:hover:bg-slate-800 sm:min-w-10"
+              title={theme === 'dark' ? t.lightMode : t.darkMode}
+              aria-label={theme === 'dark' ? t.lightMode : t.darkMode}
+            >
+              {theme === 'dark' ? (
+                <Sun className="h-4 w-4 text-amber-500 dark:text-amber-300" aria-hidden="true" />
+              ) : (
+                <Moon className="h-4 w-4 text-[#0077b6]" aria-hidden="true" />
+              )}
+            </button>
+          </div>
+        </nav>
       </div>
     </header>
   );

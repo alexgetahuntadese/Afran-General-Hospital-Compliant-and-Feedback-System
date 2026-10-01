@@ -56,6 +56,7 @@ export interface CloneTranslations {
   lightMode: string;
   darkMode: string;
   patientRelations: string;
+  mainNavigation: string;
   navSubmit: string;
   navTrack: string;
   navStaffLogin: string;
@@ -279,6 +280,7 @@ export const translations: Record<Language, CloneTranslations> = {
     lightMode: 'Switch to light mode',
     darkMode: 'Switch to dark mode',
     patientRelations: 'Patient Experience',
+    mainNavigation: 'Main navigation',
     navSubmit: 'Share feedback',
     navTrack: 'Track a case',
     navStaffLogin: 'Staff sign in',
@@ -499,6 +501,7 @@ export const translations: Record<Language, CloneTranslations> = {
     lightMode: 'ወደ ብርሃን ገጽታ ቀይር',
     darkMode: 'ወደ ጨለማ ገጽታ ቀይር',
     patientRelations: 'የታካሚዎች ተሞክሮ',
+    mainNavigation: 'ዋና ማሰሻ',
     navSubmit: 'ቅሬታ/አስተያየት',
     navTrack: 'ጉዳይ መከታተያ',
     navStaffLogin: 'የሰራተኞች መግቢያ',
@@ -719,6 +722,7 @@ export const translations: Record<Language, CloneTranslations> = {
     lightMode: 'Gara bifa ifaatti jijjiiri',
     darkMode: 'Gara bifa dukkanaatti jijjiiri',
     patientRelations: 'Muuxannoo Dhukkubsattootaa',
+    mainNavigation: 'Navigeeshinii ijoo',
     navSubmit: 'Yaada dhiyeessi',
     navTrack: 'Hordofi',
     navStaffLogin: 'Seensa hojjettootaa',
