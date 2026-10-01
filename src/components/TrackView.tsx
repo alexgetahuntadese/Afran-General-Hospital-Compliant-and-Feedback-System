@@ -59,14 +59,14 @@ export const TrackView: React.FC<TrackViewProps> = ({ initialRef }) => {
         );
       case 'in_review':
         return (
-          <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-blue-50 dark:bg-blue-950/50 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800 flex items-center gap-1">
+          <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-sky-50 dark:bg-sky-950/50 text-sky-800 dark:text-sky-300 border border-sky-200 dark:border-sky-800 flex items-center gap-1">
             <ShieldCheck className="w-3 h-3" />
             <span>{t.statusInReview}</span>
           </span>
         );
       case 'resolved':
         return (
-          <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-blue-50 dark:bg-blue-950/50 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800 flex items-center gap-1">
+          <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 flex items-center gap-1">
             <CheckCircle2 className="w-3 h-3" />
             <span>{t.statusResolved}</span>
           </span>
@@ -95,11 +95,11 @@ export const TrackView: React.FC<TrackViewProps> = ({ initialRef }) => {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={t.trackPlaceholder}
-          className="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 min-h-[44px] text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-indigo-600 font-mono uppercase tracking-wider transition-colors shadow-2xs"
+          className="premium-input flex-1 font-mono uppercase tracking-wider"
         />
         <button
           type="submit"
-          className="px-5 py-2.5 min-h-[44px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs sm:text-sm rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-2xs shrink-0"
+          className="px-5 py-2.5 min-h-[48px] bg-gradient-to-r from-sky-800 to-teal-700 hover:from-sky-900 hover:to-teal-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal-500/25 text-white font-semibold text-xs sm:text-sm rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-sm shadow-sky-900/15 shrink-0"
         >
           <Search className="w-4 h-4" />
           <span>{isSearching ? t.searching : t.trackButton}</span>
@@ -116,7 +116,7 @@ export const TrackView: React.FC<TrackViewProps> = ({ initialRef }) => {
           {/* Top Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
             <div>
-              <span className="font-mono text-lg font-bold text-indigo-600 dark:text-indigo-400 block tracking-wider">
+              <span className="font-mono text-lg font-bold text-blue-700 dark:text-blue-300 block tracking-wider">
                 {activeCase.reference}
               </span>
               <div className="flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500 mt-0.5">
@@ -169,7 +169,7 @@ export const TrackView: React.FC<TrackViewProps> = ({ initialRef }) => {
           {/* Response from Patient Relations */}
           <div className="p-4 sm:p-5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-2">
             <div className="flex items-center gap-2 text-xs font-bold text-slate-900 dark:text-white">
-              <ShieldCheck className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+              <ShieldCheck className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               <span>{t.responseFromPR}</span>
             </div>
 

@@ -3,10 +3,10 @@
 @layer base {
   :root {
     --radius: 0.75rem;
-    --primary: #0284c7;
-    --primary-hover: #0369a1;
-    --accent: #06b6d4;
-    --warm-accent: #e88c3a;
+    --primary: #075985;
+    --primary-hover: #0c4a6e;
+    --accent: #0d9488;
+    --warm-accent: #d97706;
   }
 
   html {
@@ -39,7 +39,7 @@
   }
 
   .premium-input:focus-visible {
-    border-color: #0284c7;
+    border-color: var(--primary);
     background-color: #fff;
     outline: 3px solid rgb(14 165 233 / 18%);
     outline-offset: 1px;
@@ -63,7 +63,195 @@
   .dark .premium-input:focus-visible {
     border-color: #38bdf8;
     background-color: #0f172a;
-    outline-color: rgb(56 189 248 / 22%);
+    outline-color: rgb(13 148 136 / 24%);
+  }
+
+  .hospital-splash {
+    position: fixed;
+    z-index: 100;
+    inset: 0;
+    display: grid;
+    min-height: 100vh;
+    min-height: 100dvh;
+    place-items: center;
+    overflow: hidden;
+    background: linear-gradient(145deg, #082f49 0%, #075985 52%, #0f766e 100%);
+    opacity: 1;
+    transition: opacity 350ms ease, visibility 350ms ease;
+  }
+
+  .hospital-splash__city {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.94;
+  }
+
+  .hospital-splash::before {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 44%, rgb(13 148 136 / 14%), transparent 48%),
+      linear-gradient(145deg, rgb(8 47 73 / 82%), rgb(7 89 133 / 70%) 52%, rgb(15 118 110 / 76%));
+    content: "";
+    pointer-events: none;
+  }
+
+  .hospital-splash::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(78vw, 25rem);
+    aspect-ratio: 1;
+    border: 1px solid rgb(255 255 255 / 12%);
+    border-radius: 50%;
+    content: "";
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(1.45);
+  }
+
+  .hospital-splash--exiting {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  .hospital-splash__content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    width: min(88vw, 26rem);
+    flex-direction: column;
+    align-items: center;
+    gap: 0.7rem;
+    text-align: center;
+    animation: hospital-splash-enter 650ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  }
+
+  .hospital-splash__location {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 0.35rem;
+    color: rgb(240 253 250 / 92%);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-shadow: 0 2px 14px rgb(2 20 34 / 28%);
+  }
+
+  .hospital-splash__location span {
+    width: 0.45rem;
+    height: 0.45rem;
+    border: 1px solid rgb(255 255 255 / 80%);
+    border-radius: 50%;
+    background: #fbbf24;
+    box-shadow: 0 0 12px rgb(251 191 36 / 68%);
+  }
+
+  .hospital-splash__logo {
+    display: grid;
+    width: min(70vw, 20rem);
+    aspect-ratio: 1.62;
+    place-items: center;
+    overflow: hidden;
+    border: 1px solid rgb(255 255 255 / 60%);
+    border-radius: 1.65rem;
+    background: white;
+    padding: clamp(0.75rem, 4vw, 1.5rem);
+    box-shadow: 0 28px 80px rgb(2 20 34 / 32%), 0 0 0 8px rgb(255 255 255 / 8%);
+  }
+
+  .hospital-splash__logo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .hospital-splash__name {
+    max-width: 100%;
+    padding-inline: 0.5rem;
+    color: white;
+    font-family: 'Noto Serif Ethiopic', 'Noto Serif', Georgia, serif;
+    margin-top: 0.45rem;
+    font-size: clamp(1.4rem, 5.4vw, 2.15rem);
+    font-weight: 700;
+    line-height: 1.3;
+    text-wrap: balance;
+    text-shadow: 0 2px 18px rgb(2 20 34 / 18%);
+  }
+
+  .hospital-splash__subtitle {
+    color: rgb(224 242 254 / 88%);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .hospital-splash__ecg {
+    width: min(8rem, 32vw);
+    height: 1.8rem;
+    margin-top: 0.3rem;
+    overflow: visible;
+  }
+
+  .hospital-splash__ecg-track,
+  .hospital-splash__ecg-pulse {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2;
+  }
+
+  .hospital-splash__ecg-track {
+    stroke: rgb(255 255 255 / 32%);
+  }
+
+  .hospital-splash__ecg-pulse {
+    stroke: #99f6e4;
+    stroke-dasharray: 190;
+    stroke-dashoffset: 190;
+    animation: hospital-splash-ecg 1.4s ease-in-out 350ms infinite;
+  }
+
+  @keyframes hospital-splash-enter {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes hospital-splash-ecg {
+    0% {
+      stroke-dashoffset: 190;
+      opacity: 0.35;
+    }
+    55%,
+    85% {
+      stroke-dashoffset: 0;
+      opacity: 1;
+    }
+    100% {
+      stroke-dashoffset: -190;
+      opacity: 0.35;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hospital-splash,
+    .hospital-splash__content,
+    .hospital-splash__ecg-pulse {
+      animation: none;
+      transition: none;
+    }
   }
 
   /* Custom scrollbar */

@@ -3,6 +3,7 @@ export type Language = 'en' | 'am' | 'om';
 export interface CloneTranslations {
   emergencyBanner: string;
   hospitalName: string;
+  splashLocation: string;
   patientRelations: string;
   navSubmit: string;
   navTrack: string;
@@ -72,6 +73,7 @@ export interface CloneTranslations {
   staffSignIn: string;
   staffSignInDesc: string;
   staffUsernamePlaceholder: string;
+  staffPassword: string;
   signInBtn: string;
   signingIn: string;
   passwordSignIn: string;
@@ -173,6 +175,7 @@ export const translations: Record<Language, CloneTranslations> = {
   en: {
     emergencyBanner: 'For medical emergencies, go to the Emergency Department immediately.',
     hospitalName: 'Afran General Hospital',
+    splashLocation: 'Addis Ababa · Ethiopia',
     patientRelations: 'Patient Relations',
     navSubmit: 'Submit',
     navTrack: 'Track',
@@ -242,7 +245,8 @@ export const translations: Record<Language, CloneTranslations> = {
     staffSignIn: 'Staff sign in',
     staffSignInDesc: 'Sign in with your staff account to review cases.',
     staffUsernamePlaceholder: 'username@afran.com',
-    signInBtn: 'Sign in',
+    staffPassword: 'Password',
+    signInBtn: 'Sign In',
     signingIn: 'Signing in...',
     passwordSignIn: 'Sign in with your assigned username and password.',
     managerProvisionNote: 'Only accounts created by a superadmin can access staff cases.',
@@ -340,6 +344,7 @@ export const translations: Record<Language, CloneTranslations> = {
   am: {
     emergencyBanner: 'ለአስቸኳይ የህክምና ድንገተኛ አደጋ፣ ወዲያውኑ ወደ ድንገተኛ ክፍል ይሂዱ።',
     hospitalName: 'አፍራን አጠቃላይ ሆስፒታል',
+    splashLocation: 'አዲስ አበባ · ኢትዮጵያ',
     patientRelations: 'የታካሚዎች ተሞክሮ',
     navSubmit: 'ቅሬታ/አስተያየት',
     navTrack: 'ጉዳይ መከታተያ',
@@ -409,6 +414,7 @@ export const translations: Record<Language, CloneTranslations> = {
     staffSignIn: 'የሰራተኞች መግቢያ',
     staffSignInDesc: 'ጉዳዮችን ለመገምገም በሰራተኛ መለያዎ ይግቡ።',
     staffUsernamePlaceholder: 'username@afran.com',
+    staffPassword: 'የይለፍ ቃል',
     signInBtn: 'ግባ',
     signingIn: 'በመግባት ላይ...',
     passwordSignIn: 'በተመደበልዎት የተጠቃሚ ስምና የይለፍ ቃል ይግቡ።',
@@ -507,6 +513,7 @@ export const translations: Record<Language, CloneTranslations> = {
   om: {
     emergencyBanner: 'Yeroo yaala hatattamaa, battalumatti gara Kutaa Balaa deemaa.',
     hospitalName: 'Hospitaala Waliigalaa Afran',
+    splashLocation: 'Finfinnee · Itoophiyaa',
     patientRelations: 'Hariiroo Dhukkubsattootaa',
     navSubmit: 'Yaada dhiyeessi',
     navTrack: 'Hordofi',
@@ -576,6 +583,7 @@ export const translations: Record<Language, CloneTranslations> = {
     staffSignIn: 'Seensa hojjettootaa',
     staffSignInDesc: 'Dhimmoota ilaaluuf akkaawuntii hojjettootaa keessaniin seenaa.',
     staffUsernamePlaceholder: 'username@afran.com',
+    staffPassword: 'Jecha icciitii',
     signInBtn: 'Seeni',
     signingIn: 'Seenaa jira...',
     passwordSignIn: 'Maqaa fayyadamaa fi jecha icciitii isinif kennameen seenaa.',

@@ -388,7 +388,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
     return (
       <div className="max-w-md mx-auto py-12 px-4">
         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-xs p-6 sm:p-8 text-center space-y-5">
-          <div className="w-12 h-12 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 rounded-full flex items-center justify-center mx-auto">
+          <div className="w-12 h-12 bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mx-auto">
             <CheckCircle2 className="w-6 h-6" />
         </div>
 
@@ -402,7 +402,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
           </div>
 
           <div className="py-3 px-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/80 dark:border-slate-700/60 flex items-center justify-center gap-3">
-            <span className="font-mono text-xl font-bold tracking-wider text-indigo-600 dark:text-indigo-400">
+            <span className="font-mono text-xl font-bold tracking-wider text-blue-700 dark:text-blue-300">
               {submittedCase.reference}
             </span>
             <button
@@ -417,7 +417,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 pt-2">
             <button
               onClick={() => onNavigateTrack(submittedCase.reference)}
-              className="w-full sm:w-auto px-4 py-2 min-h-[40px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-2xs"
+              className="w-full sm:w-auto px-4 py-2 min-h-[44px] bg-blue-600 hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/20 text-white font-semibold text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-2xs"
             >
               <span>{t.trackThisCase}</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -444,13 +444,14 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
   return (
     <div className="max-w-5xl mx-auto py-5 sm:py-12 px-4 space-y-4 sm:space-y-6">
       {/* Welcome panel */}
-      <section className="premium-hero hero-float relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-gradient-to-br from-slate-950 via-blue-950 to-sky-900 px-4 py-5 text-white shadow-[0_30px_80px_rgba(15,23,42,0.18)] sm:rounded-[32px] sm:px-8 sm:py-9">
+      <section className="premium-hero hero-float relative overflow-hidden rounded-[28px] border border-sky-900/20 bg-gradient-to-br from-[#082f49] via-[#075985] to-[#0f766e] px-4 py-5 text-white shadow-[0_30px_80px_rgba(7,89,133,0.2)] sm:rounded-[32px] sm:px-8 sm:py-9">
         <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-cyan-400/25 blur-3xl" aria-hidden="true" />
-        <div className="absolute -bottom-20 left-1/4 h-48 w-48 rounded-full bg-blue-400/25 blur-3xl" aria-hidden="true" />
+        <div className="absolute -bottom-20 left-1/4 h-48 w-48 rounded-full bg-teal-400/25 blur-3xl" aria-hidden="true" />
+        <div className="absolute -right-8 bottom-2 h-24 w-24 rounded-full bg-amber-400/10 blur-2xl" aria-hidden="true" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.14),transparent_35%)]" aria-hidden="true" />
         <div className="relative grid gap-4 sm:gap-7 md:grid-cols-[1fr_auto] md:items-end">
           <div className="max-w-2xl space-y-2 sm:space-y-3">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-cyan-100 sm:text-[11px] sm:tracking-[0.24em]">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-teal-100 sm:text-[11px] sm:tracking-[0.24em]">
               {t.patientRelations}
             </p>
             <h1 className="font-serif text-2xl font-black tracking-tight text-white sm:text-5xl">
@@ -508,8 +509,8 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
               const isCurrent = index === wizardStep;
               return (
                 <li key={label} aria-current={isCurrent ? 'step' : undefined} className="min-w-0">
-                  <div className={`mb-1 h-1.5 rounded-full transition-colors ${isComplete || isCurrent ? 'bg-blue-600' : 'bg-slate-200 dark:bg-slate-700'}`} />
-                  <span className={`block truncate text-center text-[10px] font-semibold ${isCurrent ? 'text-blue-700 dark:text-blue-300' : isComplete ? 'text-slate-700 dark:text-slate-300' : 'text-slate-400'}`}>
+                  <div className={`mb-1 h-1.5 rounded-full transition-colors ${isComplete || isCurrent ? 'bg-teal-600' : 'bg-slate-200 dark:bg-slate-700'}`} />
+                  <span className={`block truncate text-center text-[10px] font-semibold ${isCurrent ? 'text-teal-800 dark:text-teal-300' : isComplete ? 'text-slate-700 dark:text-slate-300' : 'text-slate-400'}`}>
                     {index + 1}. {label}
                   </span>
                 </li>
@@ -958,7 +959,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
                   event.preventDefault();
                   handleWizardContinue();
                 }}
-                className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-sky-600 px-4 text-sm font-black text-white shadow-[0_18px_36px_rgba(37,99,235,0.25)] transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30"
+                className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-sky-800 via-cyan-700 to-teal-600 px-4 text-sm font-black text-white shadow-[0_18px_36px_rgba(13,148,136,0.25)] transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal-500/30"
               >
                 {t.wizardContinue}
                 <ArrowRight className="h-4 w-4" />
@@ -968,7 +969,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
                 key="submit"
                 type="submit"
                 disabled={isSubmitting}
-                className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-sky-600 px-4 text-sm font-black text-white shadow-[0_18px_36px_rgba(37,99,235,0.35)] transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-[0_22px_40px_rgba(37,99,235,0.45)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30 disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-sky-800 via-cyan-700 to-teal-600 px-4 text-sm font-black text-white shadow-[0_18px_36px_rgba(13,148,136,0.3)] transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-[0_22px_40px_rgba(13,148,136,0.4)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal-500/30 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <span>{isSubmitting ? t.submitting : t.submitButton}</span>
               </button>

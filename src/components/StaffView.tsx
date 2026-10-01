@@ -354,8 +354,8 @@ export const StaffView: React.FC<StaffViewProps> = ({
   if (!currentUser) {
     return (
       <div className="max-w-md mx-auto py-12 px-4">
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-8 space-y-6 text-center">
-          <div className="w-12 h-12 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center mx-auto">
+        <div className="bg-gradient-to-br from-white via-white to-sky-50 dark:from-slate-900 dark:via-slate-900 dark:to-sky-950/30 rounded-2xl border border-sky-100 dark:border-slate-800 shadow-[0_20px_50px_rgba(7,89,133,0.08)] p-6 sm:p-8 space-y-6 text-center">
+          <div className="w-12 h-12 bg-gradient-to-br from-sky-700 to-teal-600 text-white rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-teal-900/15">
             <Lock className="w-6 h-6" />
           </div>
 
@@ -394,7 +394,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
           >
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Username
+                {t.staffUsername}
               </label>
               <input
                 type="text"
@@ -404,27 +404,27 @@ export const StaffView: React.FC<StaffViewProps> = ({
                 value={loginUsername}
                 onChange={(e) => setLoginUsername(e.target.value)}
                 placeholder={t.staffUsernamePlaceholder}
-                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 min-h-[44px] text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-indigo-600"
+                className="premium-input w-full"
                 required
               />
             </div>
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Password
+                {t.staffPassword}
               </label>
               <input
                 type="password"
                 autoComplete="current-password"
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
-                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 min-h-[44px] text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-indigo-600"
+                className="premium-input w-full"
                 required
               />
             </div>
             <button
               type="submit"
               disabled={isSigningIn}
-              className="w-full py-2.5 min-h-[44px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs sm:text-sm rounded-xl transition-colors shadow-xs"
+              className="w-full py-2.5 min-h-[48px] bg-gradient-to-r from-sky-800 to-teal-700 hover:from-sky-900 hover:to-teal-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal-500/25 text-white font-semibold text-xs sm:text-sm rounded-xl transition-colors shadow-sm shadow-sky-900/15"
             >
               {isSigningIn ? t.signingIn : t.signInBtn}
             </button>
@@ -447,7 +447,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
       {/* Dashboard Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 block">
+          <span className="text-xs font-semibold uppercase tracking-wider text-blue-700 dark:text-blue-300 block">
             {t.patientRelations}
           </span>
           <h1 className="font-serif text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white leading-tight">
@@ -477,11 +477,11 @@ export const StaffView: React.FC<StaffViewProps> = ({
             onClick={() => setShowCharts(!showCharts)}
             className={`px-3 py-2 min-h-[40px] text-xs font-semibold rounded-xl border transition-colors flex items-center gap-1.5 shadow-2xs ${
               showCharts
-                ? 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800'
+                ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800'
                 : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700'
             }`}
           >
-            <BarChart3 className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+            <BarChart3 className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
             <span>{showCharts ? t.hideCharts : t.showCharts}</span>
           </button>}
 
@@ -547,7 +547,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t.searchCasesPlaceholder}
-              className="w-full pl-9 pr-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-indigo-600 min-h-[40px]"
+              className="premium-input w-full pl-9"
             />
           </div>
         </div>
@@ -560,11 +560,11 @@ export const StaffView: React.FC<StaffViewProps> = ({
             <div
               key={c.id}
               onClick={() => currentUser.role !== 'ceo' && handleOpenReview(c)}
-              className={`bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs transition-all p-5 space-y-3 ${currentUser.role !== 'ceo' ? 'cursor-pointer hover:border-indigo-500 dark:hover:border-indigo-500' : ''}`}
+              className={`bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs transition-all p-5 space-y-3 ${currentUser.role !== 'ceo' ? 'cursor-pointer hover:border-blue-500 dark:hover:border-blue-500' : ''}`}
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-sm font-bold text-indigo-600 dark:text-indigo-400 tracking-wider">
+                  <span className="font-mono text-sm font-bold text-blue-700 dark:text-blue-300 tracking-wider">
                     {c.reference}
                   </span>
                   <span aria-hidden="true" className="text-slate-300 dark:text-slate-700">·</span>
@@ -636,7 +636,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
                         e.stopPropagation();
                         handleOpenReview(c);
                       }}
-                      className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
+                      className="text-xs font-semibold text-blue-700 dark:text-blue-300 hover:underline"
                     >
                       {t.reviewCase}
                     </button>
@@ -663,7 +663,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
           <div className="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[92vh]">
             <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="font-mono text-base font-bold text-indigo-600 dark:text-indigo-400">
+                <span className="font-mono text-base font-bold text-blue-700 dark:text-blue-300">
                   {selectedCase.reference}
                 </span>
                 <span className="text-xs capitalize text-slate-500">
@@ -802,7 +802,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
                   <select
                     value={editStatus}
                     onChange={(e) => setEditStatus(e.target.value as SubmissionStatus)}
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-indigo-600"
+                    className="premium-input w-full"
                   >
                     <option value="received">{t.statusReceived}</option>
                     <option value="in_review">{t.statusInReview}</option>
@@ -847,7 +847,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
                     value={editResponse}
                     onChange={(e) => setEditResponse(e.target.value)}
                     placeholder="Write a clear, courteous update or resolution..."
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-indigo-600"
+                    className="premium-input w-full"
                   />
                 </div>
 
@@ -862,7 +862,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
                   <button
                     type="submit"
                     disabled={isSaving}
-                    className="px-5 py-2 min-h-[40px] bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-semibold text-xs rounded-xl transition-colors shadow-xs"
+                    className="px-5 py-2 min-h-[44px] bg-blue-600 hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/20 disabled:opacity-60 text-white font-semibold text-xs rounded-xl transition-colors shadow-xs"
                   >
                     {isSaving ? t.saving : t.saveChanges}
                   </button>
