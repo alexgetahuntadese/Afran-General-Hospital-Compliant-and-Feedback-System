@@ -28,7 +28,7 @@ export interface CaseSubmission {
 }
 
 export interface StaffUser {
-  email: string;
+  username: string;
   name: string;
   role: StaffRole;
   department?: string;

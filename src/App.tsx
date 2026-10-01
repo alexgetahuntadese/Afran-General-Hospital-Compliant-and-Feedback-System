@@ -118,32 +118,29 @@ function HospitalFeedbackApp() {
     setCases(await getCases());
   };
 
-  const handleUpdateStaffProfile = async (email: string, role: StaffRole, department?: string) => {
-    await updateStaffProfile(email, role, department);
+  const handleUpdateStaffProfile = async (username: string, role: StaffRole, department?: string) => {
+    await updateStaffProfile(username, role, department);
     setStaffList(await getStaffProfiles());
   };
 
-  const handleCreateStaffAccount = async (input: { email: string; fullName: string; role: StaffRole; department?: string }) => {
+  const handleCreateStaffAccount = async (input: { username: string; fullName: string; password: string; role: StaffRole; department?: string }) => {
     await createStaffAccount(input);
     setStaffList(await getStaffProfiles());
   };
 
-  const handleSignIn = async (email: string) => {
+  const handleSignIn = async (username: string, password: string) => {
     if (!supabase) throw new Error('Supabase is not configured.');
 
-    const normalizedEmail = email.trim().toLowerCase();
-    const isEmailAddress = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!normalizedEmail || !isEmailAddress.test(normalizedEmail)) {
-      throw new Error('Please enter a valid email address to sign in.');
+    const normalizedUsername = username.trim().toLowerCase();
+    const isUsernameFormatValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedUsername);
+    if (!isUsernameFormatValid || !password) {
+      throw new Error('Enter your username and password.');
     }
 
     setAuthError('');
-    const { error } = await supabase.auth.signInWithOtp({
-      email: normalizedEmail,
-      options: {
-        shouldCreateUser: false,
-        emailRedirectTo: window.location.origin,
-      },
+    const { error } = await supabase.auth.signInWithPassword({
+      email: normalizedUsername,
+      password,
     });
     if (error) throw error;
   };

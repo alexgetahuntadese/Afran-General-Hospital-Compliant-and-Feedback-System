@@ -28,11 +28,11 @@ interface StaffViewProps {
   cases: CaseSubmission[];
   onUpdateCase: (updated: CaseSubmission) => Promise<void>;
   currentUser: StaffUser | null;
-  onSignIn: (email: string) => Promise<void>;
+  onSignIn: (username: string, password: string) => Promise<void>;
   onSignOut: () => void;
   staffList: StaffUser[];
-  onUpdateStaffProfile: (email: string, role: StaffRole, department?: string) => Promise<void>;
-  onCreateStaffAccount: (input: { email: string; fullName: string; role: StaffRole; department?: string }) => Promise<void>;
+  onUpdateStaffProfile: (username: string, role: StaffRole, department?: string) => Promise<void>;
+  onCreateStaffAccount: (input: { username: string; fullName: string; password: string; role: StaffRole; department?: string }) => Promise<void>;
   authError: string;
   dataError: string;
 }
@@ -54,9 +54,9 @@ export const StaffView: React.FC<StaffViewProps> = ({
   const canReadStaffDirectory = canManageStaff || currentUser?.role === 'customer_service_manager';
 
   // Login form state
-  const [loginEmail, setLoginEmail] = useState('');
+  const [loginUsername, setLoginUsername] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
   const [isSigningIn, setIsSigningIn] = useState(false);
-  const [magicLinkSent, setMagicLinkSent] = useState(false);
   const [signInError, setSignInError] = useState('');
   
   // Dashboard states
@@ -68,10 +68,12 @@ export const StaffView: React.FC<StaffViewProps> = ({
   const [selectedCase, setSelectedCase] = useState<CaseSubmission | null>(null);
   const [isStaffAccessOpen, setIsStaffAccessOpen] = useState(false);
   const [staffRoleDrafts, setStaffRoleDrafts] = useState<Record<string, { role: StaffRole; department: string }>>({});
-  const [staffSaveEmail, setStaffSaveEmail] = useState('');
+  const [staffSaveUsername, setStaffSaveUsername] = useState('');
   const [staffSaveError, setStaffSaveError] = useState('');
-  const [newStaffEmail, setNewStaffEmail] = useState('');
+  const [newStaffUsername, setNewStaffUsername] = useState('');
   const [newStaffName, setNewStaffName] = useState('');
+  const [newStaffPassword, setNewStaffPassword] = useState('');
+  const [newStaffPasswordConfirmation, setNewStaffPasswordConfirmation] = useState('');
   const [newStaffRole, setNewStaffRole] = useState<StaffRole>('staff');
   const [newStaffDepartment, setNewStaffDepartment] = useState(DEPARTMENTS[0]);
   const [isCreatingStaff, setIsCreatingStaff] = useState(false);
@@ -91,7 +93,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
     setStatusFilter('all');
     setSearchQuery('');
     setSaveError('');
-  }, [currentUser?.email, currentUser?.role, currentUser?.department]);
+  }, [currentUser?.username, currentUser?.role, currentUser?.department]);
 
   useEffect(() => {
     let active = true;
@@ -164,31 +166,44 @@ export const StaffView: React.FC<StaffViewProps> = ({
   };
 
   const handleSaveStaffRole = async (staff: StaffUser) => {
-    const draft = staffRoleDrafts[staff.email] ?? { role: staff.role, department: staff.department ?? '' };
+    const draft = staffRoleDrafts[staff.username] ?? { role: staff.role, department: staff.department ?? '' };
     if (draft.role === 'department_head' && !draft.department) {
       setStaffSaveError('Choose a department for department heads.');
       return;
     }
-    setStaffSaveEmail(staff.email);
+    setStaffSaveUsername(staff.username);
     setStaffSaveError('');
     try {
-      await onUpdateStaffProfile(staff.email, draft.role, draft.department || undefined);
+      await onUpdateStaffProfile(staff.username, draft.role, draft.department || undefined);
       setStaffRoleDrafts((drafts) => {
         const next = { ...drafts };
-        delete next[staff.email];
+        delete next[staff.username];
         return next;
       });
     } catch (error) {
       setStaffSaveError(error instanceof Error ? error.message : 'Unable to update this staff role.');
     } finally {
-      setStaffSaveEmail('');
+      setStaffSaveUsername('');
     }
   };
 
   const handleCreateStaff = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!newStaffEmail.trim() || !newStaffName.trim()) {
-      setStaffSaveError('Enter the staff member’s name and email.');
+    const username = newStaffUsername.trim().toLowerCase();
+    if (!username || !newStaffName.trim()) {
+      setStaffSaveError('Enter the staff member’s name and username.');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username)) {
+      setStaffSaveError('Enter a username in the format name@afran.com.');
+      return;
+    }
+    if (newStaffPassword.length < 12) {
+      setStaffSaveError('Set an initial password with at least 12 characters.');
+      return;
+    }
+    if (newStaffPassword !== newStaffPasswordConfirmation) {
+      setStaffSaveError('The passwords do not match.');
       return;
     }
     if (newStaffRole === 'department_head' && !newStaffDepartment) {
@@ -199,13 +214,16 @@ export const StaffView: React.FC<StaffViewProps> = ({
     setStaffSaveError('');
     try {
       await onCreateStaffAccount({
-        email: newStaffEmail,
+        username,
         fullName: newStaffName,
+        password: newStaffPassword,
         role: newStaffRole,
         department: newStaffRole === 'department_head' ? newStaffDepartment : undefined,
       });
-      setNewStaffEmail('');
+      setNewStaffUsername('');
       setNewStaffName('');
+      setNewStaffPassword('');
+      setNewStaffPasswordConfirmation('');
       setNewStaffRole('staff');
       setNewStaffDepartment(DEPARTMENTS[0]);
     } catch (error) {
@@ -216,12 +234,8 @@ export const StaffView: React.FC<StaffViewProps> = ({
   };
 
   const getSignInErrorMessage = (error: unknown): string => {
-    const message = error instanceof Error ? error.message : 'Unable to send a sign-in link.';
-    if (/signups not allowed for otp/i.test(message)) {
-      return language === 'am'
-        ? 'ይህ ኢሜይል በSupabase Authentication ውስጥ አልተፈጠረም። የሆስፒታሉ አስተዳዳሪ መጀመሪያ በAuthentication → Users ውስጥ መለያውን መፍጠርና የሰራተኛ ሚና መመደብ አለበት።'
-        : 'This email is not registered in Supabase Authentication. A hospital administrator must first create it under Authentication → Users and assign its staff role. Public sign-ups remain disabled.';
-    }
+    const message = error instanceof Error ? error.message : 'Unable to sign in.';
+    if (/invalid login credentials/i.test(message)) return 'Invalid username or password.';
     return message;
   };
 
@@ -260,21 +274,19 @@ export const StaffView: React.FC<StaffViewProps> = ({
           <form
             onSubmit={async (e) => {
               e.preventDefault();
-              const normalizedEmail = loginEmail.trim();
-              const isEmailAddress = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+              const normalizedUsername = loginUsername.trim().toLowerCase();
+              const isUsername = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedUsername);
 
-              if (!normalizedEmail || !isEmailAddress.test(normalizedEmail)) {
-                setSignInError('Use a valid email address to sign in.');
-                setMagicLinkSent(false);
+              if (!isUsername || !loginPassword) {
+                setSignInError('Enter a valid username and password.');
                 return;
               }
 
               setIsSigningIn(true);
-              setMagicLinkSent(false);
               setSignInError('');
               try {
-                await onSignIn(normalizedEmail);
-                setMagicLinkSent(true);
+                await onSignIn(normalizedUsername, loginPassword);
+                setLoginPassword('');
               } catch (error) {
                 setSignInError(getSignInErrorMessage(error));
               } finally {
@@ -285,15 +297,29 @@ export const StaffView: React.FC<StaffViewProps> = ({
           >
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Email
+                Username
               </label>
               <input
-                type="email"
-                inputMode="email"
-                autoComplete="email"
-                value={loginEmail}
-                onChange={(e) => setLoginEmail(e.target.value)}
-                placeholder={t.staffEmailPlaceholder}
+                type="text"
+                autoCapitalize="none"
+                autoComplete="username"
+                spellCheck={false}
+                value={loginUsername}
+                onChange={(e) => setLoginUsername(e.target.value)}
+                placeholder={t.staffUsernamePlaceholder}
+                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 min-h-[44px] text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-indigo-600"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                Password
+              </label>
+              <input
+                type="password"
+                autoComplete="current-password"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
                 className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 min-h-[44px] text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-indigo-600"
                 required
               />
@@ -303,15 +329,15 @@ export const StaffView: React.FC<StaffViewProps> = ({
               disabled={isSigningIn}
               className="w-full py-2.5 min-h-[44px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs sm:text-sm rounded-xl transition-colors shadow-xs"
             >
-              {isSigningIn ? t.sendingSignInLink : t.signInBtn}
+              {isSigningIn ? t.signingIn : t.signInBtn}
             </button>
           </form>
 
-          <p className="text-xs text-slate-500 dark:text-slate-400">{t.passwordlessSignIn}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">{t.passwordSignIn}</p>
           <p className="text-xs text-slate-500 dark:text-slate-400">{t.managerProvisionNote}</p>
-          {(magicLinkSent || authError || signInError) && (
-            <p className={`rounded-lg p-3 text-xs ${signInError || authError ? 'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300' : 'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300'}`}>
-              {signInError || authError || t.magicLinkSent}
+          {(authError || signInError) && (
+            <p className="rounded-lg bg-rose-50 p-3 text-xs text-rose-700 dark:bg-rose-950/40 dark:text-rose-300">
+              {signInError || authError}
             </p>
           )}
         </div>
@@ -756,7 +782,12 @@ export const StaffView: React.FC<StaffViewProps> = ({
                 {t.staffAccessTitle}
               </h2>
               <button
-                onClick={() => setIsStaffAccessOpen(false)}
+                onClick={() => {
+                  setIsStaffAccessOpen(false);
+                  setNewStaffPassword('');
+                  setNewStaffPasswordConfirmation('');
+                }}
+                disabled={isCreatingStaff}
                 className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
               >
                 <X className="w-5 h-5" />
@@ -771,8 +802,11 @@ export const StaffView: React.FC<StaffViewProps> = ({
               {canManageStaff && (
                 <form onSubmit={(event) => void handleCreateStaff(event)} className="space-y-2 rounded-xl border border-blue-100 bg-blue-50/60 p-3 dark:border-blue-900/60 dark:bg-blue-950/20">
                   <span className="text-[11px] font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider block">Create staff account</span>
-                  <input value={newStaffName} onChange={(event) => setNewStaffName(event.target.value)} placeholder="Full name" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
-                  <input type="email" value={newStaffEmail} onChange={(event) => setNewStaffEmail(event.target.value)} placeholder="Work email" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
+                  <input value={newStaffName} onChange={(event) => setNewStaffName(event.target.value)} placeholder="Full name" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white" required />
+                  <input type="text" autoCapitalize="none" autoComplete="username" spellCheck={false} value={newStaffUsername} onChange={(event) => setNewStaffUsername(event.target.value)} placeholder="username@afran.com" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white" required />
+                  <input type="password" autoComplete="new-password" minLength={12} value={newStaffPassword} onChange={(event) => setNewStaffPassword(event.target.value)} placeholder="Initial password (12+ characters)" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white" required />
+                  <input type="password" autoComplete="new-password" minLength={12} value={newStaffPasswordConfirmation} onChange={(event) => setNewStaffPasswordConfirmation(event.target.value)} placeholder="Confirm initial password" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white" required />
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">Give the username and initial password to the staff member securely. Passwords are not shown again.</p>
                   <div className="flex gap-2">
                     <select value={newStaffRole} onChange={(event) => setNewStaffRole(event.target.value as StaffRole)} className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-2 py-2 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white">
                       <option value="staff">Staff</option>
@@ -804,11 +838,11 @@ export const StaffView: React.FC<StaffViewProps> = ({
                 )}
                 <div className="divide-y divide-slate-100 dark:divide-slate-800 max-h-48 overflow-y-auto">
                   {staffList.map((st) => (
-                    <div key={st.email} className="py-3 space-y-2 text-xs">
+                    <div key={st.username} className="py-3 space-y-2 text-xs">
                       <div className="flex items-center justify-between gap-2">
                         <div className="min-w-0">
                           <span className="font-semibold text-slate-900 dark:text-white block">{st.name}</span>
-                          <span className="text-[11px] text-slate-400">{st.email}</span>
+                          <span className="text-[11px] text-slate-400">{st.username}</span>
                         </div>
                         {!canManageStaff && (
                           <span className="shrink-0 text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 uppercase font-semibold">
@@ -819,19 +853,19 @@ export const StaffView: React.FC<StaffViewProps> = ({
                       {canManageStaff && (
                         <div className="flex flex-wrap items-center gap-2">
                           {(() => {
-                            const draft = staffRoleDrafts[st.email] ?? { role: st.role, department: st.department ?? '' };
-                            const isSelf = st.email === currentUser?.email;
+                            const draft = staffRoleDrafts[st.username] ?? { role: st.role, department: st.department ?? '' };
+                            const isSelf = st.username === currentUser?.username;
                             return (
                               <>
                                 <select
-                                  aria-label={`Role for ${st.email}`}
+                                  aria-label={`Role for ${st.username}`}
                                   value={draft.role}
-                                  disabled={isSelf || staffSaveEmail === st.email}
+                                  disabled={isSelf || staffSaveUsername === st.username}
                                   onChange={(event) => {
                                     const role = event.target.value as StaffRole;
                                     setStaffRoleDrafts((drafts) => ({
                                       ...drafts,
-                                      [st.email]: {
+                                      [st.username]: {
                                         role,
                                         department: role === 'department_head' ? draft.department || DEPARTMENTS[0] : '',
                                       },
@@ -848,13 +882,13 @@ export const StaffView: React.FC<StaffViewProps> = ({
                                 </select>
                                 {draft.role === 'department_head' && (
                                   <select
-                                    aria-label={`Department for ${st.email}`}
+                                    aria-label={`Department for ${st.username}`}
                                     value={draft.department}
-                                    disabled={isSelf || staffSaveEmail === st.email}
+                                    disabled={isSelf || staffSaveUsername === st.username}
                                     onChange={(event) => {
                                       setStaffRoleDrafts((drafts) => ({
                                         ...drafts,
-                                        [st.email]: { ...draft, department: event.target.value },
+                                        [st.username]: { ...draft, department: event.target.value },
                                       }));
                                       setStaffSaveError('');
                                     }}
@@ -868,11 +902,11 @@ export const StaffView: React.FC<StaffViewProps> = ({
                                 {!isSelf && (
                                   <button
                                     type="button"
-                                    disabled={staffSaveEmail === st.email || (draft.role === st.role && draft.department === (st.department ?? ''))}
+                                    disabled={staffSaveUsername === st.username || (draft.role === st.role && draft.department === (st.department ?? ''))}
                                     onClick={() => void handleSaveStaffRole(st)}
                                     className="min-h-9 rounded-lg bg-blue-700 px-3 text-[11px] font-bold text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
                                   >
-                                    {staffSaveEmail === st.email ? t.saving : t.saveChanges}
+                                    {staffSaveUsername === st.username ? t.saving : t.saveChanges}
                                   </button>
                                 )}
                               </>

@@ -53,11 +53,10 @@ export interface CloneTranslations {
   caseDashboard: string;
   staffSignIn: string;
   staffSignInDesc: string;
-  staffEmailPlaceholder: string;
+  staffUsernamePlaceholder: string;
   signInBtn: string;
-  sendingSignInLink: string;
-  passwordlessSignIn: string;
-  magicLinkSent: string;
+  signingIn: string;
+  passwordSignIn: string;
   managerProvisionNote: string;
   saving: string;
   searching: string;
@@ -150,12 +149,11 @@ export const translations: Record<Language, CloneTranslations> = {
     caseDashboard: 'Case dashboard',
     staffSignIn: 'Staff sign in',
     staffSignInDesc: 'Sign in with your staff account to review cases.',
-    staffEmailPlaceholder: 'colleague@afranhospital.com',
-    signInBtn: 'Email me a sign-in link',
-    sendingSignInLink: 'Sending sign-in link...',
-    passwordlessSignIn: 'We will send a secure sign-in link to your assigned email address.',
-    magicLinkSent: 'Check your email for a secure sign-in link.',
-    managerProvisionNote: 'Only accounts and roles pre-assigned in Supabase can access staff cases.',
+    staffUsernamePlaceholder: 'username@afran.com',
+    signInBtn: 'Sign in',
+    signingIn: 'Signing in...',
+    passwordSignIn: 'Sign in with your assigned username and password.',
+    managerProvisionNote: 'Only accounts created by a superadmin can access staff cases.',
     saving: 'Saving...',
     searching: 'Searching...',
     roleStaff: 'Patient Relations staff',
@@ -244,12 +242,11 @@ export const translations: Record<Language, CloneTranslations> = {
     caseDashboard: 'የጉዳዮች ዳሽቦርድ',
     staffSignIn: 'የሰራተኞች መግቢያ',
     staffSignInDesc: 'ጉዳዮችን ለመገምገም በሰራተኛ መለያዎ ይግቡ።',
-    staffEmailPlaceholder: 'colleague@afranhospital.com',
-    signInBtn: 'የመግቢያ ሊንክ ላክልኝ',
-    sendingSignInLink: 'የመግቢያ ሊንኩን በመላክ ላይ...',
-    passwordlessSignIn: 'ወደ ተመደበው ኢሜይል ደህንነቱ የተጠበቀ የመግቢያ ሊንክ እንልካለን።',
-    magicLinkSent: 'ደህንነቱ የተጠበቀ የመግቢያ ሊንክ ኢሜይልዎን ይመልከቱ።',
-    managerProvisionNote: 'በSupabase ቀድሞ የተመደቡ መለያዎችና ሚናዎች ብቻ የሰራተኛ ጉዳዮችን ማየት ይችላሉ።',
+    staffUsernamePlaceholder: 'username@afran.com',
+    signInBtn: 'ግባ',
+    signingIn: 'በመግባት ላይ...',
+    passwordSignIn: 'በተመደበልዎት የተጠቃሚ ስምና የይለፍ ቃል ይግቡ።',
+    managerProvisionNote: 'በሱፐር አስተዳዳሪ የተፈጠሩ መለያዎች ብቻ የሰራተኛ ጉዳዮችን ማየት ይችላሉ።',
     saving: 'በማስቀመጥ ላይ...',
     searching: 'በመፈለግ ላይ...',
     roleStaff: 'የታካሚ ግንኙነት ሰራተኛ',

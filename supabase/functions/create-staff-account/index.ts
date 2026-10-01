@@ -42,25 +42,28 @@ Deno.serve(async (request) => {
   if (requester?.role !== 'superadmin') return json({ error: 'Only superadmins can create staff accounts.' }, 403);
 
   const body = await request.json().catch(() => null) as {
-    email?: unknown;
+    username?: unknown;
     fullName?: unknown;
+    password?: unknown;
     role?: unknown;
     department?: unknown;
   } | null;
-  const email = typeof body?.email === 'string' ? body.email.trim().toLowerCase() : '';
+  const username = typeof body?.username === 'string' ? body.username.trim().toLowerCase() : '';
   const fullName = typeof body?.fullName === 'string' ? body.fullName.trim() : '';
+  const password = typeof body?.password === 'string' ? body.password : '';
   const role = typeof body?.role === 'string' ? body.role : '';
   const department = typeof body?.department === 'string' ? body.department.trim() : null;
 
-  if (!/^\S+@\S+\.\S+$/.test(email) || !fullName || !allowedRoles.has(role)) {
-    return json({ error: 'Provide a valid email, full name, and staff role.' }, 400);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username) || !fullName || password.length < 12 || !allowedRoles.has(role)) {
+    return json({ error: 'Provide a username, full name, password of at least 12 characters, and staff role.' }, 400);
   }
   if (role === 'department_head' && !department) {
     return json({ error: 'Department heads require a department.' }, 400);
   }
 
   const { data: created, error: createError } = await admin.auth.admin.createUser({
-    email,
+    email: username,
+    password,
     email_confirm: true,
     user_metadata: { full_name: fullName },
   });
@@ -68,13 +71,17 @@ Deno.serve(async (request) => {
 
   const { error: profileError } = await admin.from('staff_profiles').insert({
     id: created.user.id,
-    email,
+    email: username,
+    username,
     full_name: fullName,
     role,
     department: role === 'department_head' ? department : null,
   });
   if (profileError) {
-    await admin.auth.admin.deleteUser(created.user.id);
+    const { error: rollbackError } = await admin.auth.admin.deleteUser(created.user.id);
+    if (rollbackError) {
+      return json({ error: `${profileError.message} Auth-user rollback failed: ${rollbackError.message}` }, 500);
+    }
     return json({ error: profileError.message }, 400);
   }
 

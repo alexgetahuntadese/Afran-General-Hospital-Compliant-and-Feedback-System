@@ -3,7 +3,7 @@ import { Shield, Search, FileEdit, Sun, Moon, AlertCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { StaffUser } from '../types/hospital';
-import hospitalLogo from '../assets/images/afran-general-hospital-logo.svg';
+import hospitalLogo from '../assets/images/afran-general-hospital-logo.jpg';
 
 interface HeaderProps {
   currentView: 'submit' | 'track' | 'staff';
@@ -38,7 +38,7 @@ export const Header: React.FC<HeaderProps> = ({
           <img
             src={hospitalLogo}
             alt="Afran General Hospital"
-            className="h-auto w-[8.75rem] sm:w-[11.25rem] shrink-0 transition-transform group-hover:scale-[1.02]"
+            className="h-12 w-auto max-w-[6.5rem] object-contain shrink-0 transition-transform group-hover:scale-[1.02] sm:max-w-[8rem]"
           />
         </button>
 

@@ -26,7 +26,7 @@ interface CaseRow {
 
 interface StaffProfileRow {
   id: string;
-  email: string;
+  username: string;
   full_name: string;
   role: StaffRole;
   department: string | null;
@@ -71,7 +71,7 @@ function mapCaseRow(row: CaseRow | PublicCaseRow): CaseSubmission {
 
 function mapStaffProfile(row: StaffProfileRow): StaffUser {
   return {
-    email: row.email,
+    username: row.username,
     name: row.full_name,
     role: row.role,
     department: row.department ?? undefined,
@@ -203,7 +203,7 @@ export async function getStaffProfiles(): Promise<StaffUser[]> {
   return (data as StaffProfileRow[]).map(mapStaffProfile);
 }
 
-export async function updateStaffProfile(email: string, role: StaffRole, department?: string): Promise<void> {
+export async function updateStaffProfile(username: string, role: StaffRole, department?: string): Promise<void> {
   const client = requireSupabase();
   const { data, error } = await client
     .from('staff_profiles')
@@ -211,7 +211,7 @@ export async function updateStaffProfile(email: string, role: StaffRole, departm
       role,
       department: role === 'department_head' ? department ?? null : null,
     })
-    .eq('email', email.trim().toLowerCase())
+    .eq('username', username.trim().toLowerCase())
     .select('id')
     .maybeSingle();
   if (error) throw error;
@@ -219,16 +219,18 @@ export async function updateStaffProfile(email: string, role: StaffRole, departm
 }
 
 export async function createStaffAccount(input: {
-  email: string;
+  username: string;
   fullName: string;
+  password: string;
   role: StaffRole;
   department?: string;
 }): Promise<void> {
   const client = requireSupabase();
   const { error } = await client.functions.invoke('create-staff-account', {
     body: {
-      email: input.email.trim().toLowerCase(),
+      username: input.username.trim().toLowerCase(),
       fullName: input.fullName.trim(),
+      password: input.password,
       role: input.role,
       department: input.role === 'department_head' ? input.department?.trim() : undefined,
     },

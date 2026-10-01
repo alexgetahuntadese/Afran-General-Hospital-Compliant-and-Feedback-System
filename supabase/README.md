@@ -4,8 +4,8 @@
 
 1. Copy `.env.example` to `.env`.
 2. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` from the Supabase project's API settings. The anon/publishable key is intended for browser use; never use the service-role key in this app.
-3. In Supabase Auth, enable email OTP/magic-link sign-in, turn off public sign-ups, set the local Site URL to `http://localhost:3000`, and add the deployed app URL to the allowed redirect URLs. Configure the hospital's SMTP sender for reliable delivery to assigned work emails.
-4. Run [`migrations/20261001120000_create_feedback_access.sql`](./migrations/20261001120000_create_feedback_access.sql), [`migrations/20261001155900_allow_multiple_customer_service_managers.sql`](./migrations/20261001155900_allow_multiple_customer_service_managers.sql), [`migrations/20261001194000_department_questionnaire_responses.sql`](./migrations/20261001194000_department_questionnaire_responses.sql), [`migrations/20261001202000_private_complaint_audio.sql`](./migrations/20261001202000_private_complaint_audio.sql), [`migrations/20261001210000_superadmin_staff_administration.sql`](./migrations/20261001210000_superadmin_staff_administration.sql), [`migrations/20261001213000_restrict_case_update_columns.sql`](./migrations/20261001213000_restrict_case_update_columns.sql), and [`migrations/20261001214500_enforce_case_submission_integrity.sql`](./migrations/20261001214500_enforce_case_submission_integrity.sql) in the Supabase SQL Editor. They add access policies, questionnaire/audio fields and private storage, superadmin staff-role management, restricted case update permissions, and database-side submission validation without deleting records.
+3. In Supabase Auth, keep public sign-ups disabled and enable password sign-in. Staff sign in with a username and password; the app does not send or use email OTP/magic links. Usernames look like email addresses (for example, `ezeden@afran.com`) and are stored in the `staff_profiles.username` column. The legacy `email` column mirrors that value for compatibility with older app versions, while Supabase Auth uses it internally as the password identity; it is not used for email delivery.
+4. Run [`migrations/20261001120000_create_feedback_access.sql`](./migrations/20261001120000_create_feedback_access.sql), [`migrations/20261001155900_allow_multiple_customer_service_managers.sql`](./migrations/20261001155900_allow_multiple_customer_service_managers.sql), [`migrations/20261001194000_department_questionnaire_responses.sql`](./migrations/20261001194000_department_questionnaire_responses.sql), [`migrations/20261001202000_private_complaint_audio.sql`](./migrations/20261001202000_private_complaint_audio.sql), [`migrations/20261001210000_superadmin_staff_administration.sql`](./migrations/20261001210000_superadmin_staff_administration.sql), [`migrations/20261001213000_restrict_case_update_columns.sql`](./migrations/20261001213000_restrict_case_update_columns.sql), [`migrations/20261001214500_enforce_case_submission_integrity.sql`](./migrations/20261001214500_enforce_case_submission_integrity.sql), [`migrations/20261002002400_staff_usernames.sql`](./migrations/20261002002400_staff_usernames.sql), and [`migrations/20261002003000_preserve_staff_email_column.sql`](./migrations/20261002003000_preserve_staff_email_column.sql) in the Supabase SQL Editor. They add access policies, questionnaire/audio fields and private storage, superadmin staff-role management, restricted case update permissions, database-side submission validation, and the staff username column without deleting records.
 
 ## Create staff accounts from the app
 
@@ -17,7 +17,7 @@ supabase link --project-ref $projectRef
 supabase functions deploy create-staff-account
 ```
 
-The function checks the caller's `staff_profiles` role before using the server-side service-role key to create the Auth identity and matching staff profile. Never put `SUPABASE_SERVICE_ROLE_KEY` in `.env`, browser code, or Vite variables. Once deployed, sign in with the Alex account provisioned below, open **Staff access**, and enter the new staff member's name, work email, role, and (for department heads) department. The account is created in Supabase Auth and in `staff_profiles`; the new user can then sign in with the existing email OTP flow. Public sign-ups stay disabled.
+The function checks the caller's `staff_profiles` role before using the server-side service-role key to create the password-authenticated identity and matching staff profile. Never put `SUPABASE_SERVICE_ROLE_KEY` in `.env`, browser code, or Vite variables. Once deployed, sign in with Alex's username and password, open **Staff access**, and enter the new staff member's name, username, initial password, role, and (for department heads) department. Use a password of at least 12 characters and share it securely with the staff member; the app does not email credentials. Public sign-ups stay disabled.
 
 ## Department questionnaires
 
@@ -29,15 +29,11 @@ The attached questionnaire photos were blurry, so the digital form uses adapted 
 
 ## Provision staff
 
-For the initial superadmin bootstrap, create Alex's identity in the Supabase Dashboard under **Authentication → Users → Add user** (or invite Alex), then run [`provision_requested_staff.sql`](./provision_requested_staff.sql) in the SQL Editor to attach the initial profiles and roles:
+For the initial superadmin bootstrap, create Alex's identity in the Supabase Dashboard under **Authentication → Users → Add user**, using Alex's username as the email-shaped login ID and setting a password (do not send an invite), then run [`provision_alex_admin.sql`](./provision_alex_admin.sql) in the SQL Editor to attach the superadmin profile:
 
-- `alexgetahun@afran.com` — Alex Getahun, Superadmin.
 - `alexgetahuntadese@gmail.com` — Alex Getahun Tadesse, Superadmin.
-- `getahun@afran.com` — Getahun, Customer Service Manager.
-- `tamima@afranhospital.com` — Tamima, Customer Service Manager.
-- `belay@afranhospital.com` — Ato Belay, CEO.
 
-The script is safe to rerun. It raises an error listing any requested Auth users that have not yet been created; create those initial identities in the dashboard, then run it again. Do not insert rows directly into `auth.users`. After Alex is signed in as a superadmin and the Edge Function above is deployed, create additional staff accounts from **Staff access** in the app; no dashboard or SQL steps are needed for those accounts.
+The script is safe to rerun and requires Alex's Auth identity to exist first. Set a password for Alex's existing account in the Supabase Dashboard if it does not already have one. Do not insert rows directly into `auth.users`. After Alex is signed in as a superadmin and the Edge Function above is deployed, create all additional staff accounts from **Staff access** in the app; no dashboard or SQL steps are needed for those accounts.
 
 Repeat with one of these role values:
 
@@ -50,12 +46,12 @@ Repeat with one of these role values:
 For example, a department head profile must include a department:
 
 ```sql
-insert into public.staff_profiles (id, email, full_name, role, department)
-select id, email, 'Emergency Department Head', 'department_head', 'Emergency'
+insert into public.staff_profiles (id, email, username, full_name, role, department)
+select id, email, lower(email), 'Emergency Department Head', 'department_head', 'Emergency'
 from auth.users
 where email = 'emergency.head@afranhospital.com';
 ```
 
-Only Auth users with a matching `staff_profiles` row can sign in. The app creates both records for accounts created by a superadmin; users can authenticate with the email OTP flow. Superadmins can also change role and department assignments from the Staff Access screen. The database enforces row-level security for case listing, updates, and staff-role management; public case tracking uses a database function that returns no patient contact details. Multiple customer service managers may be provisioned; the role's database policy grants them access to all cases, while CEOs can read escalated cases only.
+Only password-authenticated users with a matching `staff_profiles` row can sign in. The app creates both records for accounts created by a superadmin; usernames are used for password sign-in and no email OTP or magic link is sent. Superadmins can also change role and department assignments from the Staff Access screen. The database enforces row-level security for case listing, updates, and staff-role management; public case tracking uses a database function that returns no patient contact details. Multiple customer service managers may be provisioned; the role's database policy grants them access to all cases, while CEOs can read escalated cases only.
 
 Cases previously stored in a browser's local storage are not uploaded automatically. Export and review any records that must be retained before switching users to the Supabase-backed app.

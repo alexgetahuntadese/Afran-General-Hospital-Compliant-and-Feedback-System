@@ -10,9 +10,10 @@ begin
 end;
 $$;
 
-insert into public.staff_profiles (id, email, full_name, role, department)
+insert into public.staff_profiles (id, email, username, full_name, role, department)
 select
   auth_user.id,
+  lower(auth_user.email),
   lower(auth_user.email),
   'Alex Getahun Tadesse',
   'superadmin',
@@ -22,6 +23,7 @@ where lower(auth_user.email) = 'alexgetahuntadese@gmail.com'
 on conflict (id) do update
 set
   email = excluded.email,
+  username = excluded.username,
   full_name = excluded.full_name,
   role = excluded.role,
   department = excluded.department;
