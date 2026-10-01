@@ -18,6 +18,54 @@
     font-family: 'Noto Serif Ethiopic', 'Noto Serif', Georgia, Cambria, 'Times New Roman', Times, serif;
   }
 
+  .premium-input {
+    min-height: 3rem;
+    border-radius: 1rem;
+    border-color: #cbd5e1;
+    background-color: #f8fafc;
+    padding: 0.75rem 0.875rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .premium-input::placeholder {
+    color: #94a3b8;
+    opacity: 1;
+  }
+
+  .premium-input:hover:not(:disabled):not(:focus) {
+    border-color: #94a3b8;
+  }
+
+  .premium-input:focus-visible {
+    border-color: #0284c7;
+    background-color: #fff;
+    outline: 3px solid rgb(14 165 233 / 18%);
+    outline-offset: 1px;
+  }
+
+  .premium-input:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .dark .premium-input {
+    border-color: #475569;
+    background-color: rgb(30 41 59 / 75%);
+    color: #f8fafc;
+  }
+
+  .dark .premium-input::placeholder {
+    color: #94a3b8;
+  }
+
+  .dark .premium-input:focus-visible {
+    border-color: #38bdf8;
+    background-color: #0f172a;
+    outline-color: rgb(56 189 248 / 22%);
+  }
+
   /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 6px;

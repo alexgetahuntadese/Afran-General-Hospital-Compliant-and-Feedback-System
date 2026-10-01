@@ -207,21 +207,6 @@ export async function getStaffProfiles(): Promise<StaffUser[]> {
   return (data as StaffProfileRow[]).map(mapStaffProfile);
 }
 
-export async function updateStaffProfile(username: string, role: StaffRole, department?: string): Promise<void> {
-  const client = requireSupabase();
-  const { data, error } = await client
-    .from('staff_profiles')
-    .update({
-      role,
-      department: role === 'department_head' ? department ?? null : null,
-    })
-    .eq('username', username.trim().toLowerCase())
-    .select('id')
-    .maybeSingle();
-  if (error) throw error;
-  if (!data) throw new Error('This account is not allowed to manage staff roles.');
-}
-
 export async function createStaffAccount(input: {
   username: string;
   fullName: string;

@@ -116,8 +116,12 @@ Deno.serve(async (request) => {
   if (action === 'reset_password') {
     const password = typeof body?.password === 'string' ? body.password : '';
     if (password.length < 12) return json({ error: 'Password must be at least 12 characters.' }, 400);
-    const { error } = await admin.auth.admin.updateUserById(target.id, { password });
-    if (error) return json({ error: error.message }, 400);
+    const { error: passwordError } = await admin.auth.admin.updateUserById(target.id, { password });
+    if (passwordError) return json({ error: passwordError.message }, 400);
+    const { error: sessionError } = await admin.auth.admin.signOut(target.id, 'global');
+    if (sessionError) {
+      return json({ error: `Password updated, but existing sessions could not be revoked: ${sessionError.message}` }, 500);
+    }
     return json({ ok: true });
   }
 
@@ -137,6 +141,12 @@ Deno.serve(async (request) => {
       .update({ is_active: isActive })
       .eq('id', target.id);
     if (error) return json({ error: error.message }, 400);
+    if (!isActive) {
+      const { error: sessionError } = await admin.auth.admin.signOut(target.id, 'global');
+      if (sessionError) {
+        return json({ error: `Account deactivated, but existing sessions could not be revoked: ${sessionError.message}` }, 500);
+      }
+    }
     return json({ ok: true });
   }
 

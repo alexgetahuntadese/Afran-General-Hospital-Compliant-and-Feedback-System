@@ -594,19 +594,20 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
         </div>
 
         {/* Department & Experience Rating in a clean cohesive block */}
-        <div className={wizardStep === 1 ? 'space-y-4 pt-4' : 'hidden'}>
+        <div className={wizardStep === 1 ? 'space-y-5 pt-4' : 'hidden'}>
           <div>
-            <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-700 dark:text-slate-300">
+            <label htmlFor="feedback-department" className="mb-2 block text-xs font-bold text-slate-800 dark:text-slate-200">
               {t.chooseDept}
             </label>
             <select
+              id="feedback-department"
               value={department}
               onChange={(e) => {
                 setDepartment(e.target.value);
                 setQuestionnaireAnswers({});
                 setSubmitError('');
               }}
-              className="premium-input w-full rounded-2xl border border-slate-200 bg-slate-50/80 p-3 text-xs text-slate-900 transition-colors focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-800/60 dark:text-white dark:focus:bg-slate-900 sm:text-sm"
+              className="premium-input w-full cursor-pointer border text-slate-900 dark:text-white"
             >
               {DEPARTMENTS.map((dept) => (
                 <option key={dept} value={dept}>
@@ -694,66 +695,76 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
             </fieldset>
           )}
 
-          <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50/80 px-3 py-2.5 dark:border-slate-700 dark:bg-slate-800/60">
-            <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600 dark:text-slate-300">
+          <fieldset className="rounded-2xl border border-amber-200/80 bg-gradient-to-r from-amber-50/80 to-white p-3.5 dark:border-amber-900/60 dark:from-amber-950/30 dark:to-slate-900">
+            <legend className="px-1 text-xs font-bold text-slate-800 dark:text-slate-200">
               {t.overallExperience}
-            </span>
-            <div className="flex items-center gap-1">
+            </legend>
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                {language === 'am' ? 'ከ1 እስከ 5 ይምረጡ' : language === 'om' ? '1 hanga 5 filadhaa' : 'Tap to rate from 1 to 5'}
+              </span>
+              {rating > 0 && (
+                <span className="rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-bold text-amber-800 dark:bg-amber-950/70 dark:text-amber-200" aria-live="polite">
+                  {rating}/5
+                </span>
+              )}
+            </div>
+            <div className="mt-1 flex items-center justify-between gap-1" role="group" aria-label={t.overallExperience}>
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
                   type="button"
                   onClick={() => setRating(rating === star ? 0 : star)}
-                aria-label={`${star} ${star === 1 ? 'star' : 'stars'}`}
-                aria-pressed={rating === star}
-                  className="p-1 transition-transform hover:scale-110 focus:outline-none"
-                  title={`${star} stars`}
+                  aria-label={`${star} ${language === 'am' ? 'ኮከብ' : language === 'om' ? 'urjii' : star === 1 ? 'star' : 'stars'}`}
+                  aria-pressed={rating === star}
+                  className={`flex min-h-11 min-w-11 items-center justify-center rounded-xl transition-all focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-400/30 ${
+                    star <= rating
+                      ? 'bg-amber-100 text-amber-500 dark:bg-amber-950/50'
+                      : 'text-slate-300 hover:bg-amber-50 hover:text-amber-400 dark:text-slate-600 dark:hover:bg-amber-950/30'
+                  }`}
+                  title={`${star} ${language === 'am' ? 'ኮከብ' : language === 'om' ? 'urjii' : star === 1 ? 'star' : 'stars'}`}
                 >
-                  <Star
-                    className={`h-5 w-5 ${
-                      star <= rating
-                        ? 'fill-amber-400 text-amber-500'
-                        : 'text-slate-300 dark:text-slate-600'
-                    }`}
-                  />
+                  <Star className={`h-6 w-6 transition-transform ${star <= rating ? 'fill-current scale-110' : ''}`} />
                 </button>
               ))}
             </div>
-          </div>
+          </fieldset>
         </div>
 
         <div className={wizardStep === 2 ? 'space-y-3 pt-4' : 'hidden'}>
         {/* Complaints require a description, but not a subject. */}
         <div className="space-y-3 pt-1">
           <div>
-            <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-700 dark:text-slate-300">
+            <label htmlFor="feedback-subject" className="mb-2 block text-xs font-bold text-slate-800 dark:text-slate-200">
               {language === 'am' ? 'ርዕስ (አማራጭ)' : 'Subject (optional)'}
             </label>
             <input
+              id="feedback-subject"
               type="text"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
               placeholder={usesQuestionnaire
                 ? (language === 'am' ? 'አጭር ርዕስ' : 'Add a short summary')
                 : (language === 'am' ? 'አጭር ርዕስ' : 'Add a short subject (optional)')}
-              className="premium-input w-full rounded-2xl border border-slate-200 bg-slate-50/80 p-3 text-xs text-slate-900 transition-colors focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-800/60 dark:text-white dark:focus:bg-slate-900 sm:text-sm"
+              className="premium-input w-full border text-slate-900 dark:text-white"
             />
           </div>
 
           <div>
-            <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-700 dark:text-slate-300">
+            <label htmlFor="feedback-message" className="mb-2 block text-xs font-bold text-slate-800 dark:text-slate-200">
               {usesQuestionnaire || (kind === 'complaint' && audioBlob)
                 ? (language === 'am' ? 'ተጨማሪ አስተያየት (አማራጭ)' : 'Additional comments (optional)')
                 : t.messageLabel}
             </label>
             <textarea
+              id="feedback-message"
               rows={4}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder={usesQuestionnaire
                 ? (language === 'am' ? 'ሌላ ማካፈል የሚፈልጉት ነገር ካለ...' : 'Share any other details you would like us to know...')
                 : t.messagePlaceholder}
-              className="premium-input w-full rounded-2xl border border-slate-200 bg-slate-50/80 p-3 text-xs text-slate-900 transition-colors focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-800/60 dark:text-white dark:focus:bg-slate-900 sm:text-sm"
+              className="premium-input min-h-36 w-full resize-y border text-slate-900 dark:text-white"
             />
           </div>
         </div>
@@ -874,36 +885,45 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
           </label>
 
           {!anonymous ? (
-            <div className="grid grid-cols-1 gap-2.5 pt-1 sm:grid-cols-3">
-              <div>
+            <div className="grid grid-cols-1 gap-3 pt-1 sm:grid-cols-3">
+              <label className="space-y-1.5">
+                <span className="block text-[11px] font-semibold text-slate-600 dark:text-slate-300">{t.nameLabel}</span>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  autoComplete="name"
+                  aria-label={t.nameLabel}
                   placeholder={t.nameLabel}
-                  className="premium-input w-full rounded-2xl border border-slate-200 bg-slate-50/80 p-3 text-xs text-slate-900 transition-colors focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-800/60 dark:text-white dark:focus:bg-slate-900"
+                  className="premium-input w-full border text-slate-900 dark:text-white"
                 />
-              </div>
+              </label>
 
-              <div>
+              <label className="space-y-1.5">
+                <span className="block text-[11px] font-semibold text-slate-600 dark:text-slate-300">{t.emailLabel}</span>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
+                  aria-label={t.emailLabel}
                   placeholder={t.emailLabel}
-                  className="premium-input w-full rounded-2xl border border-slate-200 bg-slate-50/80 p-3 text-xs text-slate-900 transition-colors focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-800/60 dark:text-white dark:focus:bg-slate-900"
+                  className="premium-input w-full border text-slate-900 dark:text-white"
                 />
-              </div>
+              </label>
 
-              <div>
+              <label className="space-y-1.5">
+                <span className="block text-[11px] font-semibold text-slate-600 dark:text-slate-300">{t.phoneLabel}</span>
                 <input
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
+                  autoComplete="tel"
+                  aria-label={t.phoneLabel}
                   placeholder={t.phoneLabel}
-                  className="premium-input w-full rounded-2xl border border-slate-200 bg-slate-50/80 p-3 text-xs text-slate-900 transition-colors focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-800/60 dark:text-white dark:focus:bg-slate-900"
+                  className="premium-input w-full border text-slate-900 dark:text-white"
                 />
-              </div>
+              </label>
             </div>
           ) : (
             <p className="pl-6 text-[11px] italic text-slate-400 dark:text-slate-500">
