@@ -7,181 +7,30 @@
     --primary-hover: #0369a1;
     --accent: #06b6d4;
     --warm-accent: #e88c3a;
-    --hospital-ink: #0f172a;
-    --hospital-blue: #0f4c81;
-    --hospital-sky: #0284c7;
-    --hospital-cyan: #0ea5e9;
-    --hospital-gold: #f59e0b;
-    --hospital-rose: #ef4444;
-    --hospital-soft: #f3f8fb;
   }
 
   html {
     scroll-behavior: smooth;
-    font-family: 'Noto Sans Ethiopic', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Noto Sans Ethiopic', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 
-  body {
-    min-height: 100vh;
-    font-weight: 500;
-    background:
-      radial-gradient(circle at top, rgba(14, 165, 233, 0.08), transparent 25%),
-      linear-gradient(180deg, #f5fbfc 0%, #eef5f8 28%, #f7fafb 100%);
-    color: var(--hospital-ink);
+  h1, h2, h3, .font-serif {
+    font-family: 'Noto Serif Ethiopic', 'Noto Serif', Georgia, Cambria, 'Times New Roman', Times, serif;
   }
 
-  h1,
-  h2,
-  h3,
-  .font-serif {
-    font-family: 'Noto Serif Ethiopic', 'Noto Serif', Georgia, Cambria, 'Times New Roman', serif;
-  }
-
-  h1,
-  h2,
-  h3 {
-    font-weight: 800;
-    letter-spacing: -0.02em;
-  }
-
-  * {
-    box-sizing: border-box;
-    font-weight: 900 !important;
-  }
-
-  input,
-  textarea,
-  select,
-  button {
-    font: inherit;
-  }
-
-  .brand-badge {
-    display: flex;
-    height: 3.25rem;
-    width: 3.25rem;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    border-radius: 1rem;
-    border: 1px solid rgba(148, 163, 184, 0.5);
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.18), rgba(14, 165, 233, 0.14));
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
-    padding: 0.3rem;
-    transition: transform 180ms ease;
-  }
-
-  .brand-wordmark {
-    font-size: 0.95rem;
-    font-weight: 900;
-    letter-spacing: -0.06em;
-    color: #0f172a;
-  }
-
-  .dark .brand-wordmark {
-    color: #f8fafc;
-  }
-
-  .brand-submark {
-    margin-top: 0.08rem;
-    font-size: 0.62rem;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #1d4ed8;
-  }
-
-  .dark .brand-submark {
-    color: #7dd3fc;
-  }
-
-  .premium-hero {
-    position: relative;
-    isolation: isolate;
-    animation: fadeUp 500ms ease-out;
-  }
-
-  .hero-float {
-    animation: floatSoft 7s ease-in-out infinite;
-  }
-
-  .logo-pulse {
-    animation: pulseGlow 5s ease-in-out infinite;
-  }
-
-  .premium-form {
-    position: relative;
-    z-index: 1;
-    animation: fadeUp 650ms ease-out 70ms both;
-  }
-
-  .premium-form .premium-input {
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
-    transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
-  }
-
-  .premium-form .premium-input:focus {
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.14);
-    transform: translateY(-1px);
-  }
-
-  @keyframes fadeUp {
-    from {
-      opacity: 0;
-      transform: translateY(12px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes floatSoft {
-    0%,
-    100% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-6px);
-    }
-  }
-
-  @keyframes pulseGlow {
-    0%,
-    100% {
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
-    }
-    50% {
-      box-shadow: 0 16px 28px rgba(14, 165, 233, 0.16);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .premium-hero,
-    .premium-form,
-    .hero-float,
-    .logo-pulse,
-    .premium-form .premium-input {
-      animation: none !important;
-      transition: none !important;
-    }
-  }
-
+  /* Custom scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
-
   ::-webkit-scrollbar-track {
     background: transparent;
   }
-
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, rgba(37, 99, 235, 0.7), rgba(2, 132, 199, 0.7));
+    background: #cbd5e1;
     border-radius: 9999px;
   }
-
   ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, rgba(14, 165, 233, 0.9), rgba(37, 99, 235, 0.9));
+    background: #94a3b8;
   }
 }
