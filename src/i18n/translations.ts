@@ -151,6 +151,14 @@ export interface CloneTranslations {
 
   // Analytics summary dashboard
   summaryDashboard: string;
+  departmentAnalysis: string;
+  departmentTotalCases: string;
+  departmentComplaints: string;
+  departmentFeedback: string;
+  departmentResolutionRate: string;
+  departmentAverageRating: string;
+  noDepartmentCases: string;
+  departmentsLabel: string;
   categoriesDistribution: string;
   statusDistribution: string;
   resolutionRate: string;
@@ -312,6 +320,14 @@ export const translations: Record<Language, CloneTranslations> = {
     staffSelfAccountProtected: 'Your own superadmin account cannot be edited or removed here.',
 
     summaryDashboard: 'Analytics & Trends',
+    departmentAnalysis: 'Department performance',
+    departmentTotalCases: 'cases',
+    departmentComplaints: 'Complaints',
+    departmentFeedback: 'Feedback',
+    departmentResolutionRate: 'Resolved',
+    departmentAverageRating: 'Avg. rating',
+    noDepartmentCases: 'No department submissions yet.',
+    departmentsLabel: 'departments',
     categoriesDistribution: 'Feedback Categories Distribution',
     statusDistribution: 'Case Status Distribution',
     resolutionRate: 'Resolution Rate',
@@ -471,6 +487,14 @@ export const translations: Record<Language, CloneTranslations> = {
     staffSelfAccountProtected: 'የራስዎን የሱፐር አስተዳዳሪ መለያ እዚህ ማረም ወይም ማስወገድ አይችሉም።',
 
     summaryDashboard: 'ትንታኔ እና የሂደት መረጃ',
+    departmentAnalysis: 'የመምሪያ አፈጻጸም',
+    departmentTotalCases: 'ጉዳዮች',
+    departmentComplaints: 'ቅሬታዎች',
+    departmentFeedback: 'አስተያየቶች',
+    departmentResolutionRate: 'የተፈቱ',
+    departmentAverageRating: 'አማካይ ደረጃ',
+    noDepartmentCases: 'እስካሁን ለዚህ መምሪያ ጉዳይ አልቀረበም።',
+    departmentsLabel: 'መምሪያዎች',
     categoriesDistribution: 'የአስተያየት አይነቶች ስርጭት',
     statusDistribution: 'የጉዳዮች ሁኔታ ስርጭት',
     resolutionRate: 'የመፍትሄ ምጣኔ',
@@ -630,6 +654,14 @@ export const translations: Record<Language, CloneTranslations> = {
     staffSelfAccountProtected: 'Akkaawuntii bulchaa olaanaa keessan asitti gulaaluu ykn haquu hin dandeessan.',
 
     summaryDashboard: 'Xiinxala fi adeemsa',
+    departmentAnalysis: 'Raawwii kutaalee',
+    departmentTotalCases: 'dhimmoota',
+    departmentComplaints: 'Komiiwwan',
+    departmentFeedback: 'Yaadawwan',
+    departmentResolutionRate: 'Kan furaman',
+    departmentAverageRating: 'Sadarkaa giddugaleessaa',
+    noDepartmentCases: 'Hanga ammaatti kutaa kanaaf dhimma hin dhiyaanne.',
+    departmentsLabel: 'kutaalee',
     categoriesDistribution: 'Raabsa gosoota yaadaa',
     statusDistribution: 'Raabsa haala dhimma',
     resolutionRate: 'Qixa furmaataa',

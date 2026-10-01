@@ -21,13 +21,37 @@ import {
 } from 'lucide-react';
 import { CaseSubmission } from '../types/hospital';
 import { useLanguage } from '../context/LanguageContext';
+import { DEPARTMENTS } from '../data/seedData';
 
 interface StaffAnalyticsSummaryProps {
   cases: CaseSubmission[];
+  departmentScope?: string;
 }
 
-export const StaffAnalyticsSummary: React.FC<StaffAnalyticsSummaryProps> = ({ cases }) => {
-  const { t, language } = useLanguage();
+export const StaffAnalyticsSummary: React.FC<StaffAnalyticsSummaryProps> = ({ cases, departmentScope }) => {
+  const { t, language, getDeptName } = useLanguage();
+  const departments = departmentScope
+    ? [departmentScope]
+    : [...new Set([...DEPARTMENTS, ...cases.map((item) => item.department)])];
+  const departmentData = departments.map((department) => {
+    const departmentCases = cases.filter((item) => item.department === department);
+    const complaints = departmentCases.filter((item) => item.kind === 'complaint').length;
+    const feedback = departmentCases.filter((item) => item.kind === 'feedback' || item.kind === 'compliment').length;
+    const resolved = departmentCases.filter((item) => item.status === 'resolved').length;
+    const rated = departmentCases.filter((item) => item.rating > 0);
+    const averageRating = rated.length
+      ? rated.reduce((sum, item) => sum + item.rating, 0) / rated.length
+      : null;
+    return {
+      department,
+      total: departmentCases.length,
+      complaints,
+      feedback,
+      resolved,
+      resolutionRate: departmentCases.length ? Math.round((resolved / departmentCases.length) * 100) : 0,
+      averageRating,
+    };
+  }).sort((a, b) => b.total - a.total || departments.indexOf(a.department) - departments.indexOf(b.department));
 
   // Metrics
   const total = cases.length;
@@ -166,6 +190,78 @@ export const StaffAnalyticsSummary: React.FC<StaffAnalyticsSummaryProps> = ({ ca
           </div>
         </div>
       </div>
+
+      <section aria-labelledby="department-performance-heading" className="space-y-4 border-t border-slate-100 pt-5 dark:border-slate-800">
+        <div className="flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <h3 id="department-performance-heading" className="text-sm font-extrabold text-slate-900 dark:text-white">
+              {t.departmentAnalysis}
+            </h3>
+            {departmentScope && (
+              <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{getDeptName(departmentScope)}</p>
+            )}
+          </div>
+          <span className="text-[10px] font-medium text-slate-400">
+            {departmentData.length} {t.departmentsLabel}
+          </span>
+        </div>
+
+        {departmentData.some(({ total: count }) => count > 0) ? (
+          <div className="space-y-2.5">
+            {departmentData.map((item) => (
+              <article key={item.department} className="rounded-xl border border-slate-200/80 bg-slate-50/70 p-3 dark:border-slate-700/80 dark:bg-slate-800/40">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <h4 className="min-w-0 flex-1 text-xs font-bold text-slate-800 dark:text-slate-100">
+                    {getDeptName(item.department)}
+                  </h4>
+                  <span className="shrink-0 rounded-full bg-white px-2.5 py-1 font-mono text-[11px] font-bold text-slate-800 shadow-xs dark:bg-slate-900 dark:text-slate-100">
+                    {item.total} <span className="font-sans font-medium text-slate-500">{t.departmentTotalCases}</span>
+                  </span>
+                </div>
+
+                <div
+                  className="mt-2.5 flex h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700"
+                  role="img"
+                  aria-label={`${getDeptName(item.department)}: ${item.complaints} ${t.departmentComplaints}, ${item.feedback} ${t.departmentFeedback}`}
+                >
+                  {item.total > 0 && (
+                    <>
+                      <span className="bg-rose-500" style={{ width: `${(item.complaints / item.total) * 100}%` }} />
+                      <span className="bg-blue-600" style={{ width: `${(item.feedback / item.total) * 100}%` }} />
+                    </>
+                  )}
+                </div>
+
+                <div className="mt-2.5 grid grid-cols-2 gap-x-3 gap-y-2 text-[10px] sm:grid-cols-4">
+                  <div className="flex items-center justify-between gap-1">
+                    <span className="text-slate-500 dark:text-slate-400">{t.departmentComplaints}</span>
+                    <span className="font-mono font-bold text-rose-600 dark:text-rose-300">{item.complaints}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-1">
+                    <span className="text-slate-500 dark:text-slate-400">{t.departmentFeedback}</span>
+                    <span className="font-mono font-bold text-blue-700 dark:text-blue-300">{item.feedback}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-1">
+                    <span className="text-slate-500 dark:text-slate-400">{t.departmentResolutionRate}</span>
+                    <span className="font-mono font-bold text-emerald-700 dark:text-emerald-300">{item.resolutionRate}%</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-1">
+                    <span className="text-slate-500 dark:text-slate-400">{t.departmentAverageRating}</span>
+                    <span className="font-mono font-bold text-amber-600 dark:text-amber-300">
+                      {item.averageRating === null ? '—' : item.averageRating.toFixed(1)}
+                      {item.averageRating !== null && <span className="ml-0.5 text-amber-500">★</span>}
+                    </span>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p className="rounded-xl border border-dashed border-slate-300 px-4 py-6 text-center text-xs text-slate-500 dark:border-slate-700 dark:text-slate-400">
+            {t.noDepartmentCases}
+          </p>
+        )}
+      </section>
 
       {/* Visual Charts Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">

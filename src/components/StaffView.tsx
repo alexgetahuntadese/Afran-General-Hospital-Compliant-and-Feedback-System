@@ -505,7 +505,10 @@ export const StaffView: React.FC<StaffViewProps> = ({
 
       {/* Analytics Summary Dashboard (Recharts Visualization) */}
       {showCharts && (currentUser.role === 'superadmin' || currentUser.role === 'customer_service_manager' || currentUser.role === 'department_head') && (
-        <StaffAnalyticsSummary cases={visibleCases} />
+        <StaffAnalyticsSummary
+          cases={visibleCases}
+          departmentScope={currentUser.role === 'department_head' ? currentUser.department : undefined}
+        />
       )}
 
       {/* Filter Tabs & Search Bar */}
