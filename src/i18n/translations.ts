@@ -4,6 +4,7 @@ export interface CloneTranslations {
   emergencyBanner: string;
   hospitalName: string;
   splashLocation: string;
+  splashSubtitle: string;
   patientRelations: string;
   navSubmit: string;
   navTrack: string;
@@ -175,7 +176,8 @@ export const translations: Record<Language, CloneTranslations> = {
   en: {
     emergencyBanner: 'For medical emergencies, go to the Emergency Department immediately.',
     hospitalName: 'Afran General Hospital',
-    splashLocation: 'Addis Ababa · Ethiopia',
+    splashLocation: 'Addis Ababa, Ethiopia',
+    splashSubtitle: 'Patient Experience & Relations',
     patientRelations: 'Patient Relations',
     navSubmit: 'Submit',
     navTrack: 'Track',
@@ -344,7 +346,8 @@ export const translations: Record<Language, CloneTranslations> = {
   am: {
     emergencyBanner: 'ለአስቸኳይ የህክምና ድንገተኛ አደጋ፣ ወዲያውኑ ወደ ድንገተኛ ክፍል ይሂዱ።',
     hospitalName: 'አፍራን አጠቃላይ ሆስፒታል',
-    splashLocation: 'አዲስ አበባ · ኢትዮጵያ',
+    splashLocation: 'አዲስ አበባ፣ ኢትዮጵያ',
+    splashSubtitle: 'የታካሚዎች ተሞክሮ እና ግንኙነት',
     patientRelations: 'የታካሚዎች ተሞክሮ',
     navSubmit: 'ቅሬታ/አስተያየት',
     navTrack: 'ጉዳይ መከታተያ',
@@ -513,7 +516,8 @@ export const translations: Record<Language, CloneTranslations> = {
   om: {
     emergencyBanner: 'Yeroo yaala hatattamaa, battalumatti gara Kutaa Balaa deemaa.',
     hospitalName: 'Hospitaala Waliigalaa Afran',
-    splashLocation: 'Finfinnee · Itoophiyaa',
+    splashLocation: 'Finfinnee, Itoophiyaa',
+    splashSubtitle: 'Muuxannoo fi Hariiroo Dhukkubsattootaa',
     patientRelations: 'Hariiroo Dhukkubsattootaa',
     navSubmit: 'Yaada dhiyeessi',
     navTrack: 'Hordofi',

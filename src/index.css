@@ -132,8 +132,11 @@
 
   .hospital-splash__location {
     display: inline-flex;
+    max-width: 88vw;
     align-items: center;
+    flex-wrap: wrap;
     gap: 0.55rem;
+    justify-content: center;
     margin-bottom: 0.35rem;
     color: rgb(240 253 250 / 92%);
     font-size: 0.65rem;

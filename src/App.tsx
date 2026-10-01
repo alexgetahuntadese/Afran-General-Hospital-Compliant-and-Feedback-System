@@ -226,7 +226,7 @@ function HospitalFeedbackApp() {
             <img src={hospitalLogo} alt="" />
           </div>
           <h1 className="hospital-splash__name">{t.hospitalName}</h1>
-          <p className="hospital-splash__subtitle">{t.patientRelations}</p>
+          <p className="hospital-splash__subtitle">{t.splashSubtitle}</p>
           <svg className="hospital-splash__ecg" viewBox="0 0 160 36" fill="none" aria-hidden="true">
             <path className="hospital-splash__ecg-track" d="M2 18h42l9-9 12 20 13-28 12 22 8-5h60" />
             <path className="hospital-splash__ecg-pulse" d="M2 18h42l9-9 12 20 13-28 12 22 8-5h60" />
