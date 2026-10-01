@@ -162,7 +162,7 @@ export const TrackView: React.FC<TrackViewProps> = ({ initialRef }) => {
             {activeCase.anonymous ? (
               <span>{t.submittedAnonymously}</span>
             ) : (
-              <span>Submitted by: <strong>{activeCase.name || 'Disclosed patient'}</strong></span>
+              <span>{t.submittedBy}: <strong>{activeCase.name || t.undisclosedName}</strong></span>
             )}
           </div>
 

@@ -408,7 +408,8 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
             <button
               onClick={handleCopyRef}
               className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-              title="Copy Reference"
+              title={t.copyReference}
+              aria-label={t.copyReference}
             >
               {copied ? <Check className="w-4 h-4 text-sky-600" /> : <Copy className="w-4 h-4" />}
             </button>

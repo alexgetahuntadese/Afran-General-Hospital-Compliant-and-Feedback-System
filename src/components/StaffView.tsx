@@ -339,13 +339,13 @@ export const StaffView: React.FC<StaffViewProps> = ({
   const handleApplyTemplate = (type: 'received' | 'investigating' | 'resolved') => {
     switch (type) {
       case 'received':
-        setEditResponse('Thank you for contacting Patient Relations. Your submission has been received and routed to the department clinical supervisor for inquiry.');
+        setEditResponse(t.templateReceivedMessage);
         break;
       case 'investigating':
-        setEditResponse('Our Quality & Patient Experience Committee is currently reviewing the medical logs and staff shift roster for this visit. We will follow up shortly.');
+        setEditResponse(t.templateReviewingMessage);
         break;
       case 'resolved':
-        setEditResponse('Thank you for your patience. A comprehensive clinical review was conducted and corrective action has been implemented to resolve this concern.');
+        setEditResponse(t.templateResolvedMessage);
         break;
     }
   };
@@ -617,7 +617,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
                     <span>{t.submittedAnonymously}</span>
                   ) : (
                     <span>
-                      {c.name || 'Disclosed'} {c.email ? `(${c.email})` : ''} {c.phone ? `· ${c.phone}` : ''}
+                      {c.name || t.undisclosedName} {c.email ? `(${c.email})` : ''} {c.phone ? `· ${c.phone}` : ''}
                     </span>
                   )}
                 </div>
@@ -626,7 +626,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
                   {c.response && (
                     <span className="text-[11px] text-blue-600 dark:text-blue-400 font-semibold flex items-center gap-1">
                       <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>Responded</span>
+                      <span>{t.respondedLabel}</span>
                     </span>
                   )}
                   {currentUser.role !== 'ceo' && (
@@ -817,20 +817,20 @@ export const StaffView: React.FC<StaffViewProps> = ({
                       {t.responseVisibleNote}
                     </label>
                     <div className="flex items-center gap-1.5 text-[11px]">
-                      <span className="text-slate-400">Templates:</span>
+                      <span className="text-slate-400">{t.responseTemplates}</span>
                       <button
                         type="button"
                         onClick={() => handleApplyTemplate('received')}
                         className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 rounded text-slate-700 dark:text-slate-300"
                       >
-                        Received
+                        {t.templateReceived}
                       </button>
                       <button
                         type="button"
                         onClick={() => handleApplyTemplate('investigating')}
                         className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 rounded text-slate-700 dark:text-slate-300"
                       >
-                        Reviewing
+                        {t.templateReviewing}
                       </button>
                       <button
                         type="button"

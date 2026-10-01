@@ -107,8 +107,8 @@ export const Header: React.FC<HeaderProps> = ({
             type="button"
             onClick={toggleTheme}
             className="p-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-            title={theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            title={theme === 'dark' ? t.lightMode : t.darkMode}
+            aria-label={theme === 'dark' ? t.lightMode : t.darkMode}
           >
             {theme === 'dark' ? (
               <Sun className="w-4 h-4 text-amber-400" />

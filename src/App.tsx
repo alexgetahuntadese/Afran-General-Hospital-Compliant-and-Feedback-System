@@ -290,7 +290,7 @@ function HospitalFeedbackApp() {
           <span>{t.patientRelations}</span>
         </div>
         <p className="text-[11px] text-slate-400 dark:text-slate-500">
-          © {new Date().getFullYear()} Afran General Hospital. All patient feedback is handled with confidentiality and care.
+          © {new Date().getFullYear()} {t.hospitalName}. {t.footerNotice}
         </p>
       </footer>
     </div>

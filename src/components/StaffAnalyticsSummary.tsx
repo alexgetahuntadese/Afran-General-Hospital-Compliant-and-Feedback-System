@@ -29,7 +29,7 @@ interface StaffAnalyticsSummaryProps {
 }
 
 export const StaffAnalyticsSummary: React.FC<StaffAnalyticsSummaryProps> = ({ cases, departmentScope }) => {
-  const { t, language, getDeptName } = useLanguage();
+  const { t, getDeptName } = useLanguage();
   const departments = departmentScope
     ? [departmentScope]
     : [...new Set([...DEPARTMENTS, ...cases.map((item) => item.department)])];
@@ -139,7 +139,7 @@ export const StaffAnalyticsSummary: React.FC<StaffAnalyticsSummaryProps> = ({ ca
               {total}
             </span>
             <span className="text-[11px] text-slate-400">
-              {language === 'am' ? 'ማመልከቻዎች' : 'submissions'}
+              {t.submissionsUnit}
             </span>
           </div>
         </div>
@@ -170,7 +170,7 @@ export const StaffAnalyticsSummary: React.FC<StaffAnalyticsSummaryProps> = ({ ca
             </span>
             <Star className="w-4 h-4 fill-amber-400 text-amber-500" />
             <span className="text-[11px] text-slate-400">
-              ({ratedCases.length} reviews)
+              ({ratedCases.length} {t.reviewsUnit})
             </span>
           </div>
         </div>
@@ -185,7 +185,7 @@ export const StaffAnalyticsSummary: React.FC<StaffAnalyticsSummaryProps> = ({ ca
               {anonymousRate}%
             </span>
             <span className="text-[11px] text-slate-400">
-              ({anonymousCount} anon)
+              ({anonymousCount} {t.anonymousUnit})
             </span>
           </div>
         </div>
@@ -272,7 +272,7 @@ export const StaffAnalyticsSummary: React.FC<StaffAnalyticsSummaryProps> = ({ ca
               {t.categoriesDistribution}
             </h3>
             <span className="text-[11px] text-slate-400 font-mono">
-              {total} {language === 'am' ? 'ድምር' : 'total'}
+              {total} {t.totalUnit}
             </span>
           </div>
 
@@ -297,7 +297,7 @@ export const StaffAnalyticsSummary: React.FC<StaffAnalyticsSummaryProps> = ({ ca
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="text-xs text-slate-400 italic">No category data</div>
+              <div className="text-xs text-slate-400 italic">{t.noCategoryData}</div>
             )}
           </div>
 
@@ -330,7 +330,7 @@ export const StaffAnalyticsSummary: React.FC<StaffAnalyticsSummaryProps> = ({ ca
               {t.statusDistribution}
             </h3>
             <span className="text-[11px] text-slate-400 font-mono">
-              {resolutionRate}% {language === 'am' ? 'ተፈትቷል' : 'resolved'}
+              {resolutionRate}% {t.resolvedUnit}
             </span>
           </div>
 
@@ -362,7 +362,7 @@ export const StaffAnalyticsSummary: React.FC<StaffAnalyticsSummaryProps> = ({ ca
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="text-xs text-slate-400 italic">No status data</div>
+              <div className="text-xs text-slate-400 italic">{t.noStatusData}</div>
             )}
           </div>
 
