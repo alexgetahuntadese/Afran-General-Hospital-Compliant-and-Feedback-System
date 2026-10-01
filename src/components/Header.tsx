@@ -38,7 +38,7 @@ export const Header: React.FC<HeaderProps> = ({
           <img
             src={hospitalLogo}
             alt={t.hospitalName}
-            className="h-10 w-auto max-w-[5.75rem] shrink-0 object-contain transition-transform group-hover:scale-[1.02] sm:h-12 sm:max-w-[7.5rem]"
+            className="h-11 w-auto max-w-[6.5rem] shrink-0 object-contain transition-transform group-hover:scale-[1.02] sm:h-12 sm:max-w-[7.5rem]"
           />
           <span className="hidden min-w-0 border-l border-slate-200 pl-3 dark:border-slate-700 md:block">
             <span className="block truncate text-xs font-extrabold leading-tight text-[#03045e] dark:text-white">
@@ -50,16 +50,17 @@ export const Header: React.FC<HeaderProps> = ({
           </span>
         </button>
 
-        <nav aria-label={t.mainNavigation} className="flex min-w-0 items-center gap-0.5 sm:gap-1.5">
+        <nav aria-label={t.mainNavigation} className="flex min-w-0 items-center gap-0.5 rounded-2xl border border-slate-200/80 bg-slate-50/80 p-1 dark:border-slate-700/80 dark:bg-slate-900/80 sm:gap-1.5 sm:p-1.5">
           <button
             type="button"
             onClick={() => onNavigate('submit')}
             aria-label={t.navSubmit}
+            title={t.navSubmit}
             aria-current={currentView === 'submit' ? 'page' : undefined}
-            className={`flex min-h-10 items-center justify-center gap-1.5 rounded-xl px-2 text-[11px] font-semibold transition-all focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#90e0ef]/60 sm:px-3 sm:text-xs ${
+            className={`flex min-h-10 min-w-10 items-center justify-center gap-1.5 rounded-xl border px-2 text-[11px] font-semibold transition-all focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#90e0ef]/60 sm:px-3 sm:text-xs ${
               currentView === 'submit'
-                ? 'bg-[#caf0f8] text-[#03045e] shadow-sm dark:bg-[#023e8a]/45 dark:text-[#caf0f8]'
-                : 'text-slate-600 hover:bg-[#caf0f8]/55 hover:text-[#03045e] dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+                ? 'border-[#90e0ef] bg-white text-[#03045e] shadow-sm dark:border-[#0077b6] dark:bg-slate-800 dark:text-[#90e0ef]'
+                : 'border-transparent text-slate-600 hover:border-[#90e0ef]/50 hover:bg-white hover:text-[#03045e] dark:text-slate-300 dark:hover:border-slate-600 dark:hover:bg-slate-800 dark:hover:text-white'
             }`}
           >
             <FileEdit className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -70,11 +71,12 @@ export const Header: React.FC<HeaderProps> = ({
             type="button"
             onClick={() => onNavigate('track')}
             aria-label={t.navTrack}
+            title={t.navTrack}
             aria-current={currentView === 'track' ? 'page' : undefined}
-            className={`flex min-h-10 items-center justify-center gap-1.5 rounded-xl px-2 text-[11px] font-semibold transition-all focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#90e0ef]/60 sm:px-3 sm:text-xs ${
+            className={`flex min-h-10 min-w-10 items-center justify-center gap-1.5 rounded-xl border px-2 text-[11px] font-semibold transition-all focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#90e0ef]/60 sm:px-3 sm:text-xs ${
               currentView === 'track'
-                ? 'bg-[#caf0f8] text-[#03045e] shadow-sm dark:bg-[#023e8a]/45 dark:text-[#caf0f8]'
-                : 'text-slate-600 hover:bg-[#caf0f8]/55 hover:text-[#03045e] dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+                ? 'border-[#90e0ef] bg-white text-[#03045e] shadow-sm dark:border-[#0077b6] dark:bg-slate-800 dark:text-[#90e0ef]'
+                : 'border-transparent text-slate-600 hover:border-[#90e0ef]/50 hover:bg-white hover:text-[#03045e] dark:text-slate-300 dark:hover:border-slate-600 dark:hover:bg-slate-800 dark:hover:text-white'
             }`}
           >
             <Search className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -85,11 +87,12 @@ export const Header: React.FC<HeaderProps> = ({
             type="button"
             onClick={() => onNavigate('staff')}
             aria-label={currentUser ? t.navStaff : t.navStaffLogin}
+            title={currentUser ? t.navStaff : t.navStaffLogin}
             aria-current={currentView === 'staff' ? 'page' : undefined}
-            className={`flex min-h-10 items-center justify-center gap-1.5 rounded-xl px-2 text-[11px] font-semibold transition-all focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#90e0ef]/60 sm:px-3 sm:text-xs ${
+            className={`flex min-h-10 min-w-10 items-center justify-center gap-1.5 rounded-xl border px-2 text-[11px] font-semibold transition-all focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#90e0ef]/60 sm:px-3 sm:text-xs ${
               currentView === 'staff'
-                ? 'bg-[#caf0f8] text-[#03045e] shadow-sm dark:bg-[#023e8a]/45 dark:text-[#caf0f8]'
-                : 'text-slate-600 hover:bg-[#caf0f8]/55 hover:text-[#03045e] dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+                ? 'border-[#90e0ef] bg-white text-[#03045e] shadow-sm dark:border-[#0077b6] dark:bg-slate-800 dark:text-[#90e0ef]'
+                : 'border-transparent text-slate-600 hover:border-[#90e0ef]/50 hover:bg-white hover:text-[#03045e] dark:text-slate-300 dark:hover:border-slate-600 dark:hover:bg-slate-800 dark:hover:text-white'
             }`}
           >
             <Shield className="h-4 w-4 shrink-0" aria-hidden="true" />
