@@ -1,7 +1,7 @@
 export type SubmissionKind = 'complaint' | 'feedback' | 'compliment';
 
 export type SubmissionStatus = 'received' | 'in_review' | 'resolved';
-export type StaffRole = 'superadmin' | 'customer_service_manager' | 'staff' | 'department_head' | 'ceo';
+export type StaffRole = 'superadmin' | 'customer_service_manager' | 'staff' | 'department_head' | 'emergency_department_head' | 'ceo';
 export type QuestionnaireAnswers = Record<string, number>;
 
 export interface CaseSubmission {

@@ -4,6 +4,7 @@ import {
   Lightbulb, 
   Star, 
   CheckCircle2, 
+  Circle,
   ArrowRight, 
   RotateCcw,
   Copy,
@@ -111,13 +112,58 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
   const [audioConsent, setAudioConsent] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingError, setRecordingError] = useState('');
+  const [wizardStep, setWizardStep] = useState(0);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const recordingTimerRef = useRef<number | null>(null);
+  const wizardProgressRef = useRef<HTMLDivElement>(null);
   const discardRecordingRef = useRef(false);
   const usesQuestionnaire = kind !== 'complaint';
   const departmentQuestions = getDepartmentQuestions(department);
   const answeredQuestionCount = departmentQuestions.filter(({ id }) => questionnaireAnswers[id]).length;
+  const wizardSteps = [t.wizardStepType, t.wizardStepDetails, t.wizardStepMessage, t.wizardStepReview];
+
+  const moveToWizardStep = (nextStep: number) => {
+    setSubmitError('');
+    setWizardStep(nextStep);
+    window.requestAnimationFrame(() => {
+      if (!wizardProgressRef.current) return;
+      const top = wizardProgressRef.current.getBoundingClientRect().top + window.scrollY - 88;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  };
+
+  const validateWizardStep = () => {
+    if (wizardStep === 1 && usesQuestionnaire && answeredQuestionCount < minimumQuestionnaireAnswers) {
+      setSubmitError(language === 'am'
+        ? `ለመቀጠል ቢያንስ ${minimumQuestionnaireAnswers} የመምሪያ ጥያቄዎችን ይመልሱ።`
+        : language === 'om'
+          ? `Itti fufuuf gaaffilee kutaa yoo xiqqaate ${minimumQuestionnaireAnswers} deebisaa.`
+          : `Please answer at least ${minimumQuestionnaireAnswers} department questions to continue.`);
+      return false;
+    }
+    if (wizardStep === 2 && kind === 'complaint' && !message.trim() && !audioBlob) {
+      setSubmitError(language === 'am'
+        ? 'እባክዎ ዝርዝር ማብራሪያ ያስገቡ ወይም የድምጽ ቅጂ ያያይዙ።'
+        : language === 'om'
+          ? 'Maaloo ibsa barreessaa ykn sagalee waraabame itti dabalaa.'
+          : 'Add a description or attach a voice recording to your complaint.');
+      return false;
+    }
+    if (wizardStep === 2 && audioBlob && !audioConsent) {
+      setSubmitError(language === 'am'
+        ? 'እባክዎ የድምጽ ቅጂው እንዲያያዝ ፈቃድዎን ያረጋግጡ።'
+        : language === 'om'
+          ? 'Maaloo sagaleen waraabame akka itti dabalamu eeyyama keessan mirkaneessaa.'
+          : 'Please confirm that you consent to attaching this recording.');
+      return false;
+    }
+    return true;
+  };
+
+  const handleWizardContinue = () => {
+    if (validateWizardStep()) moveToWizardStep(wizardStep + 1);
+  };
 
   const questionDescription = kind === 'complaint'
     ? (language === 'am'
@@ -249,22 +295,32 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (wizardStep < wizardSteps.length - 1) {
+      handleWizardContinue();
+      return;
+    }
     if (usesQuestionnaire) {
       if (answeredQuestionCount < minimumQuestionnaireAnswers) {
         setSubmitError(language === 'am'
           ? `ለማስገባት ቢያንስ ${minimumQuestionnaireAnswers} የመምሪያ ጥያቄዎችን ይመልሱ።`
-          : `Please answer at least ${minimumQuestionnaireAnswers} department questions to submit.`);
+          : language === 'om'
+            ? `Dhiyeessuuf gaaffilee kutaa yoo xiqqaate ${minimumQuestionnaireAnswers} deebisaa.`
+            : `Please answer at least ${minimumQuestionnaireAnswers} department questions to submit.`);
         return;
       }
     } else if (!message.trim() && !audioBlob) {
       setSubmitError(language === 'am'
         ? 'እባክዎ ዝርዝር ማብራሪያ ያስገቡ ወይም የድምጽ ቅጂ ያያይዙ።'
-        : 'Add a description or attach a voice recording to your complaint.');
+        : language === 'om'
+          ? 'Maaloo ibsa barreessaa ykn sagalee waraabame itti dabalaa.'
+          : 'Add a description or attach a voice recording to your complaint.');
       return;
     } else if (audioBlob && !audioConsent) {
       setSubmitError(language === 'am'
         ? 'እባክዎ የድምጽ ቅጂው እንዲያያዝ ፈቃድዎን ያረጋግጡ።'
-        : 'Please confirm that you consent to attaching this recording.');
+        : language === 'om'
+          ? 'Maaloo sagaleen waraabame akka itti dabalamu eeyyama keessan mirkaneessaa.'
+          : 'Please confirm that you consent to attaching this recording.');
       return;
     }
 
@@ -372,6 +428,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
                 setSubject('');
                 setMessage('');
                 setRating(0);
+                setWizardStep(0);
               }}
               className="w-full sm:w-auto px-4 py-2 min-h-[40px] text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5"
             >
@@ -385,21 +442,21 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
   }
 
   return (
-    <div className="max-w-5xl mx-auto py-8 sm:py-12 px-4 space-y-6">
+    <div className="max-w-5xl mx-auto py-5 sm:py-12 px-4 space-y-4 sm:space-y-6">
       {/* Welcome panel */}
-      <section className="premium-hero hero-float relative overflow-hidden rounded-[32px] border border-slate-200/80 bg-gradient-to-br from-slate-950 via-blue-950 to-sky-900 px-5 py-7 text-white shadow-[0_30px_80px_rgba(15,23,42,0.18)] sm:px-8 sm:py-9">
+      <section className="premium-hero hero-float relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-gradient-to-br from-slate-950 via-blue-950 to-sky-900 px-4 py-5 text-white shadow-[0_30px_80px_rgba(15,23,42,0.18)] sm:rounded-[32px] sm:px-8 sm:py-9">
         <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-cyan-400/25 blur-3xl" aria-hidden="true" />
         <div className="absolute -bottom-20 left-1/4 h-48 w-48 rounded-full bg-blue-400/25 blur-3xl" aria-hidden="true" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.14),transparent_35%)]" aria-hidden="true" />
-        <div className="relative grid gap-7 md:grid-cols-[1fr_auto] md:items-end">
-          <div className="max-w-2xl space-y-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-cyan-100">
+        <div className="relative grid gap-4 sm:gap-7 md:grid-cols-[1fr_auto] md:items-end">
+          <div className="max-w-2xl space-y-2 sm:space-y-3">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-cyan-100 sm:text-[11px] sm:tracking-[0.24em]">
               {t.patientRelations}
             </p>
-            <h1 className="font-serif text-3xl font-black tracking-tight text-white sm:text-5xl">
+            <h1 className="font-serif text-2xl font-black tracking-tight text-white sm:text-5xl">
               {t.heroTitle}
             </h1>
-            <p className="max-w-xl text-sm leading-relaxed text-slate-200 sm:text-base">
+            <p className="max-w-xl text-xs leading-relaxed text-slate-200 sm:text-base">
               {t.heroSubtitle}
             </p>
           </div>
@@ -413,7 +470,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
             <ArrowRight className="h-3.5 w-3.5" />
           </button>
         </div>
-        <div className="relative mt-7 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/15 pt-4 text-[11px] font-medium text-cyan-100">
+        <div className="relative mt-4 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/15 pt-3 text-[10px] font-medium text-cyan-100 sm:mt-7 sm:pt-4 sm:text-[11px]">
           <span className="inline-flex items-center gap-1.5">
             <ShieldCheck className="h-3.5 w-3.5" />
             {t.confidentialityNote}
@@ -444,59 +501,100 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
             {t.patientRelations}
           </span>
         </div>
-        <div className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <div ref={wizardProgressRef} className="sticky top-[4.5rem] z-10 -mx-1 mt-4 rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-sm backdrop-blur dark:border-slate-700 dark:bg-slate-900/95 sm:static sm:mx-0 sm:mt-6 sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none sm:backdrop-blur-none">
+          <ol aria-label={`${t.wizardStepProgress} ${wizardStep + 1} / ${wizardSteps.length}: ${wizardSteps[wizardStep]}`} className="grid grid-cols-4 gap-2">
+            {wizardSteps.map((label, index) => {
+              const isComplete = index < wizardStep;
+              const isCurrent = index === wizardStep;
+              return (
+                <li key={label} aria-current={isCurrent ? 'step' : undefined} className="min-w-0">
+                  <div className={`mb-1 h-1.5 rounded-full transition-colors ${isComplete || isCurrent ? 'bg-blue-600' : 'bg-slate-200 dark:bg-slate-700'}`} />
+                  <span className={`block truncate text-center text-[10px] font-semibold ${isCurrent ? 'text-blue-700 dark:text-blue-300' : isComplete ? 'text-slate-700 dark:text-slate-300' : 'text-slate-400'}`}>
+                    {index + 1}. {label}
+                  </span>
+                </li>
+              );
+            })}
+          </ol>
+          <p className="sr-only" aria-live="polite">
+            {`${wizardSteps[wizardStep]} · ${wizardStep + 1} / ${wizardSteps.length}`}
+          </p>
+        </div>
+        <div className={wizardStep === 0 ? 'mt-5' : 'hidden'}>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <button
             type="button"
             onClick={() => selectSubmissionKind('complaint')}
             aria-pressed={kind === 'complaint'}
-            className={`kind-choice rounded-2xl border px-3 py-3 text-left transition-all duration-200 ${
+            className={`kind-choice group relative min-h-24 touch-manipulation overflow-hidden rounded-2xl border p-4 text-left transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-rose-500/20 active:translate-y-0 ${
               kind === 'complaint'
-                ? 'border-rose-300 bg-rose-50 shadow-sm ring-1 ring-rose-200 dark:border-rose-800 dark:bg-rose-950/40 dark:ring-rose-900'
-                : 'border-slate-200 bg-white hover:border-rose-200 hover:bg-rose-50/50 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-rose-900 dark:hover:bg-rose-950/20'
+                ? 'border-rose-300 bg-gradient-to-br from-rose-50 via-white to-rose-100/70 shadow-[0_10px_24px_rgba(225,29,72,0.12)] ring-2 ring-rose-200 dark:border-rose-800 dark:from-rose-950/70 dark:via-slate-900 dark:to-rose-950/40 dark:ring-rose-900'
+                : 'border-slate-200 bg-white shadow-sm hover:border-rose-200 hover:bg-rose-50/40 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:hover:border-rose-900 dark:hover:bg-rose-950/20'
             }`}
           >
-            <span className="flex items-center gap-2.5">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300">
-                <AlertCircle className="h-4 w-4" />
+            <span className={`absolute inset-y-0 left-0 w-1 transition-colors ${kind === 'complaint' ? 'bg-rose-500' : 'bg-transparent group-hover:bg-rose-200 dark:group-hover:bg-rose-900'}`} aria-hidden="true" />
+            <span className="flex items-center gap-3.5">
+              <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl transition-all duration-200 ${
+                kind === 'complaint'
+                  ? 'bg-rose-600 text-white shadow-lg shadow-rose-500/25'
+                  : 'bg-rose-50 text-rose-700 group-hover:scale-105 dark:bg-rose-950/70 dark:text-rose-300'
+              }`}>
+                <AlertCircle className="h-5 w-5" />
               </span>
-              <span className="min-w-0">
-                <span className="block text-xs font-bold text-slate-900 dark:text-white">{t.kindComplaint}</span>
-                <span className="mt-0.5 block text-[10px] leading-relaxed text-slate-500 dark:text-slate-400">
-                  {language === 'am' ? 'ችግር ወይም ስጋት ያቅርቡ' : 'Report a concern or problem'}
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-extrabold text-slate-900 dark:text-white">{t.kindComplaint}</span>
+                <span className="mt-1 block text-[11px] leading-relaxed text-slate-600 dark:text-slate-400">
+                  {t.kindComplaintDescription}
                 </span>
+              </span>
+              <span className="shrink-0" aria-hidden="true">
+                {kind === 'complaint'
+                  ? <CheckCircle2 className="h-5 w-5 text-rose-600 dark:text-rose-300" />
+                  : <Circle className="h-5 w-5 text-slate-300 transition-colors group-hover:text-rose-300 dark:text-slate-600" />}
               </span>
             </span>
           </button>
 
           <button
-          type="button"
-          onClick={() => selectSubmissionKind('feedback')}
-          aria-pressed={kind === 'feedback'}
-          className={`kind-choice rounded-2xl border px-3 py-3 text-left transition-all duration-200 ${
-            kind === 'feedback'
-              ? 'border-blue-300 bg-blue-50 shadow-sm ring-1 ring-blue-200 dark:border-blue-800 dark:bg-blue-950/40 dark:ring-blue-900'
-              : 'border-slate-200 bg-white hover:border-blue-200 hover:bg-blue-50/50 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-blue-900 dark:hover:bg-blue-950/20'
-          }`}
+            type="button"
+            onClick={() => selectSubmissionKind('feedback')}
+            aria-pressed={kind === 'feedback'}
+            className={`kind-choice group relative min-h-24 touch-manipulation overflow-hidden rounded-2xl border p-4 text-left transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/20 active:translate-y-0 ${
+              kind === 'feedback'
+                ? 'border-blue-300 bg-gradient-to-br from-blue-50 via-white to-sky-100/70 shadow-[0_10px_24px_rgba(37,99,235,0.12)] ring-2 ring-blue-200 dark:border-blue-800 dark:from-blue-950/70 dark:via-slate-900 dark:to-sky-950/40 dark:ring-blue-900'
+                : 'border-slate-200 bg-white shadow-sm hover:border-blue-200 hover:bg-blue-50/40 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:hover:border-blue-900 dark:hover:bg-blue-950/20'
+            }`}
           >
-          <span className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
-              <Lightbulb className="h-4 w-4" />
-            </span>
-            <span className="min-w-0">
-              <span className="block text-xs font-bold text-slate-900 dark:text-white">{t.kindFeedback}</span>
-              <span className="mt-0.5 block text-[10px] leading-relaxed text-slate-500 dark:text-slate-400">
-                {language === 'am' ? 'ሀሳብ ወይም ምስጋና ያጋሩ' : 'Share a suggestion or compliment'}
+            <span className={`absolute inset-y-0 left-0 w-1 transition-colors ${kind === 'feedback' ? 'bg-blue-500' : 'bg-transparent group-hover:bg-blue-200 dark:group-hover:bg-blue-900'}`} aria-hidden="true" />
+            <span className="flex items-center gap-3.5">
+              <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl transition-all duration-200 ${
+                kind === 'feedback'
+                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25'
+                  : 'bg-blue-50 text-blue-700 group-hover:scale-105 dark:bg-blue-950/70 dark:text-blue-300'
+              }`}>
+                <Lightbulb className="h-5 w-5" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-extrabold text-slate-900 dark:text-white">{t.kindFeedback}</span>
+                <span className="mt-1 block text-[11px] leading-relaxed text-slate-600 dark:text-slate-400">
+                  {t.kindFeedbackDescription}
+                </span>
+              </span>
+              <span className="shrink-0" aria-hidden="true">
+                {kind === 'feedback'
+                  ? <CheckCircle2 className="h-5 w-5 text-blue-600 dark:text-blue-300" />
+                  : <Circle className="h-5 w-5 text-slate-300 transition-colors group-hover:text-blue-300 dark:text-slate-600" />}
               </span>
             </span>
-          </span>
           </button>
         </div>
         <p className="mt-3 rounded-xl bg-slate-50 px-3.5 py-2.5 text-xs leading-relaxed text-slate-600 dark:bg-slate-800/60 dark:text-slate-300" aria-live="polite">
           {questionDescription}
         </p>
+        </div>
 
         {/* Department & Experience Rating in a clean cohesive block */}
-        <div className="space-y-4 pt-1">
+        <div className={wizardStep === 1 ? 'space-y-4 pt-4' : 'hidden'}>
           <div>
             <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-700 dark:text-slate-300">
               {t.chooseDept}
@@ -624,6 +722,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
           </div>
         </div>
 
+        <div className={wizardStep === 2 ? 'space-y-3 pt-4' : 'hidden'}>
         {/* Complaints require a description, but not a subject. */}
         <div className="space-y-3 pt-1">
           <div>
@@ -655,7 +754,6 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
                 ? (language === 'am' ? 'ሌላ ማካፈል የሚፈልጉት ነገር ካለ...' : 'Share any other details you would like us to know...')
                 : t.messagePlaceholder}
               className="premium-input w-full rounded-2xl border border-slate-200 bg-slate-50/80 p-3 text-xs text-slate-900 transition-colors focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-800/60 dark:text-white dark:focus:bg-slate-900 sm:text-sm"
-              required={!usesQuestionnaire && !audioBlob}
             />
           </div>
         </div>
@@ -742,8 +840,26 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
             )}
           </section>
         )}
+        </div>
 
         {/* Anonymous Option & Optional Contact */}
+        <div className={wizardStep === 3 ? 'space-y-3 pt-4' : 'hidden'}>
+          <section className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 dark:border-slate-700 dark:bg-slate-800/50">
+            <h3 className="text-xs font-bold text-slate-800 dark:text-slate-100">{t.wizardReviewKind}</h3>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{kind === 'complaint' ? t.kindComplaint : t.kindFeedback}</p>
+            <h3 className="mt-3 text-xs font-bold text-slate-800 dark:text-slate-100">{t.wizardReviewDepartment}</h3>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{getDeptName(department)}</p>
+            <h3 className="mt-3 text-xs font-bold text-slate-800 dark:text-slate-100">{t.wizardReviewMessage}</h3>
+            <p className="mt-1 whitespace-pre-wrap break-words text-sm text-slate-600 dark:text-slate-300">
+              {message.trim() || (audioBlob ? (language === 'am' ? 'የድምጽ ቅጂ ተያይዟል' : language === 'om' ? 'Sagaleen waraabame itti dabalameera' : 'Voice recording attached') : t.wizardNoMessage)}
+            </p>
+            <h3 className="mt-3 text-xs font-bold text-slate-800 dark:text-slate-100">{t.wizardReviewContact}</h3>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
+              {anonymous
+                ? t.wizardAnonymous
+                : [name, email, phone].filter(Boolean).join(' · ') || t.wizardNoMessage}
+            </p>
+          </section>
         <div className="space-y-3 border-t border-slate-100 pt-4 dark:border-slate-800">
           <label className="flex cursor-pointer items-center gap-2.5 select-none">
             <input
@@ -795,6 +911,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
             </p>
           )}
         </div>
+        </div>
 
         <div className="pt-2">
           {submitError && (
@@ -803,13 +920,40 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
               {submitError}
             </p>
           )}
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-sky-600 px-4 py-3.5 text-xs font-black uppercase tracking-[0.12em] text-white shadow-[0_18px_36px_rgba(37,99,235,0.35)] transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-[0_22px_40px_rgba(37,99,235,0.45)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30 disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm"
-          >
-            <span>{isSubmitting ? t.submitting : t.submitButton}</span>
-          </button>
+          <div className="flex gap-3">
+            {wizardStep > 0 && (
+              <button
+                type="button"
+                onClick={() => moveToWizardStep(wizardStep - 1)}
+                className="min-h-12 flex-1 rounded-2xl border border-slate-300 px-4 text-sm font-bold text-slate-700 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-400/20 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
+              >
+                {t.wizardBack}
+              </button>
+            )}
+            {wizardStep < wizardSteps.length - 1 ? (
+              <button
+                key="continue"
+                type="button"
+                onClick={(event) => {
+                  event.preventDefault();
+                  handleWizardContinue();
+                }}
+                className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-sky-600 px-4 text-sm font-black text-white shadow-[0_18px_36px_rgba(37,99,235,0.25)] transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30"
+              >
+                {t.wizardContinue}
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            ) : (
+              <button
+                key="submit"
+                type="submit"
+                disabled={isSubmitting}
+                className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-sky-600 px-4 text-sm font-black text-white shadow-[0_18px_36px_rgba(37,99,235,0.35)] transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-[0_22px_40px_rgba(37,99,235,0.45)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <span>{isSubmitting ? t.submitting : t.submitButton}</span>
+              </button>
+            )}
+          </div>
         </div>
       </form>
     </div>

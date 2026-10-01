@@ -67,6 +67,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
   // Modals
   const [selectedCase, setSelectedCase] = useState<CaseSubmission | null>(null);
   const [isStaffAccessOpen, setIsStaffAccessOpen] = useState(false);
+  const [staffAccessTab, setStaffAccessTab] = useState<'create' | 'directory'>('create');
   const [staffRoleDrafts, setStaffRoleDrafts] = useState<Record<string, { role: StaffRole; department: string }>>({});
   const [staffSaveUsername, setStaffSaveUsername] = useState('');
   const [staffSaveError, setStaffSaveError] = useState('');
@@ -168,7 +169,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
   const handleSaveStaffRole = async (staff: StaffUser) => {
     const draft = staffRoleDrafts[staff.username] ?? { role: staff.role, department: staff.department ?? '' };
     if (draft.role === 'department_head' && !draft.department) {
-      setStaffSaveError('Choose a department for department heads.');
+      setStaffSaveError(t.staffDepartmentRequired);
       return;
     }
     setStaffSaveUsername(staff.username);
@@ -181,7 +182,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
         return next;
       });
     } catch (error) {
-      setStaffSaveError(error instanceof Error ? error.message : 'Unable to update this staff role.');
+      setStaffSaveError(error instanceof Error ? error.message : t.staffRoleUpdateError);
     } finally {
       setStaffSaveUsername('');
     }
@@ -191,23 +192,23 @@ export const StaffView: React.FC<StaffViewProps> = ({
     event.preventDefault();
     const username = newStaffUsername.trim().toLowerCase();
     if (!username || !newStaffName.trim()) {
-      setStaffSaveError('Enter the staff member’s name and username.');
+      setStaffSaveError(t.staffEnterNameUsername);
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username)) {
-      setStaffSaveError('Enter a username in the format name@afran.com.');
+      setStaffSaveError(t.staffInvalidUsername);
       return;
     }
     if (newStaffPassword.length < 12) {
-      setStaffSaveError('Set an initial password with at least 12 characters.');
+      setStaffSaveError(t.staffPasswordTooShort);
       return;
     }
     if (newStaffPassword !== newStaffPasswordConfirmation) {
-      setStaffSaveError('The passwords do not match.');
+      setStaffSaveError(t.staffPasswordsMismatch);
       return;
     }
     if (newStaffRole === 'department_head' && !newStaffDepartment) {
-      setStaffSaveError('Choose a department for department heads.');
+      setStaffSaveError(t.staffDepartmentRequired);
       return;
     }
     setIsCreatingStaff(true);
@@ -226,10 +227,21 @@ export const StaffView: React.FC<StaffViewProps> = ({
       setNewStaffPasswordConfirmation('');
       setNewStaffRole('staff');
       setNewStaffDepartment(DEPARTMENTS[0]);
+      setStaffAccessTab('directory');
     } catch (error) {
-      setStaffSaveError(error instanceof Error ? error.message : 'Unable to create this staff account.');
+      setStaffSaveError(error instanceof Error ? error.message : t.staffCreateError);
     } finally {
       setIsCreatingStaff(false);
+    }
+  };
+
+  const getRoleLabel = (role: StaffRole) => {
+    switch (role) {
+      case 'superadmin': return t.roleSuperadmin;
+      case 'customer_service_manager': return t.roleCustomerServiceManager;
+      case 'department_head': return t.roleDepartmentHead;
+      case 'ceo': return t.roleCeo;
+      default: return t.roleStaff;
     }
   };
 
@@ -796,43 +808,80 @@ export const StaffView: React.FC<StaffViewProps> = ({
 
             <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain p-6 text-xs sm:text-sm">
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                {t.staffAccessDesc}
+                {canManageStaff ? t.staffAccessDesc : t.staffAccessManagerDesc}
               </p>
 
               {canManageStaff && (
+                <div role="tablist" aria-label={t.staffAccessTitle} className="grid grid-cols-2 rounded-xl bg-slate-100 p-1 dark:bg-slate-800">
+                  <button
+                    type="button"
+                    role="tab"
+                    id="staff-create-tab"
+                    aria-selected={staffAccessTab === 'create'}
+                    aria-controls="staff-access-panel"
+                    onClick={() => {
+                      setStaffAccessTab('create');
+                      setStaffSaveError('');
+                    }}
+                    className={`min-h-10 rounded-lg px-3 text-xs font-semibold transition-colors ${staffAccessTab === 'create' ? 'bg-white text-blue-700 shadow-sm dark:bg-slate-700 dark:text-blue-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'}`}
+                  >
+                    {t.staffAccessCreateTab}
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    id="staff-directory-tab"
+                    aria-selected={staffAccessTab === 'directory'}
+                    aria-controls="staff-access-panel"
+                    onClick={() => setStaffAccessTab('directory')}
+                    className={`min-h-10 rounded-lg px-3 text-xs font-semibold transition-colors ${staffAccessTab === 'directory' ? 'bg-white text-blue-700 shadow-sm dark:bg-slate-700 dark:text-blue-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'}`}
+                  >
+                    {t.staffAccessDirectoryTab}
+                  </button>
+                </div>
+              )}
+
+              {staffSaveError && (
+                <p role="alert" className="rounded-lg border border-rose-200 bg-rose-50 p-2 text-xs text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-300">
+                  {staffSaveError}
+                </p>
+              )}
+
+              {canManageStaff && staffAccessTab === 'create' && (
+                <div id="staff-access-panel" role="tabpanel" aria-labelledby="staff-create-tab">
                 <form onSubmit={(event) => void handleCreateStaff(event)} className="space-y-2 rounded-xl border border-blue-100 bg-blue-50/60 p-3 dark:border-blue-900/60 dark:bg-blue-950/20">
-                  <span className="text-[11px] font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider block">Create staff account</span>
+                  <span className="text-[11px] font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider block">{t.staffCreateAccount}</span>
                   <label className="block space-y-1 text-[11px] font-medium text-slate-600 dark:text-slate-300">
-                    <span>Full name</span>
+                    <span>{t.staffFullName}</span>
                     <input value={newStaffName} onChange={(event) => setNewStaffName(event.target.value)} autoComplete="name" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white" required />
                   </label>
                   <label className="block space-y-1 text-[11px] font-medium text-slate-600 dark:text-slate-300">
-                    <span>Username</span>
+                    <span>{t.staffUsername}</span>
                     <input type="text" autoCapitalize="none" autoComplete="username" spellCheck={false} value={newStaffUsername} onChange={(event) => setNewStaffUsername(event.target.value)} placeholder="username@afran.com" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white" required />
                   </label>
                   <label className="block space-y-1 text-[11px] font-medium text-slate-600 dark:text-slate-300">
-                    <span>Initial password</span>
-                    <input type="password" autoComplete="new-password" minLength={12} value={newStaffPassword} onChange={(event) => setNewStaffPassword(event.target.value)} placeholder="At least 12 characters" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white" required />
+                    <span>{t.staffInitialPassword}</span>
+                    <input type="password" autoComplete="new-password" minLength={12} value={newStaffPassword} onChange={(event) => setNewStaffPassword(event.target.value)} placeholder={t.staffPasswordMinLength} className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white" required />
                   </label>
                   <label className="block space-y-1 text-[11px] font-medium text-slate-600 dark:text-slate-300">
-                    <span>Confirm password</span>
-                    <input type="password" autoComplete="new-password" minLength={12} value={newStaffPasswordConfirmation} onChange={(event) => setNewStaffPasswordConfirmation(event.target.value)} placeholder="Re-enter initial password" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white" required />
+                    <span>{t.staffConfirmPassword}</span>
+                    <input type="password" autoComplete="new-password" minLength={12} value={newStaffPasswordConfirmation} onChange={(event) => setNewStaffPasswordConfirmation(event.target.value)} placeholder={t.staffConfirmPasswordHint} className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white" required />
                   </label>
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400">Give the username and initial password to the staff member securely. Passwords are not shown again.</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">{t.staffPasswordShareNote}</p>
                   <div className="flex gap-2">
                     <label className="min-w-0 flex-1 space-y-1 text-[11px] font-medium text-slate-600 dark:text-slate-300">
-                      <span>Role</span>
+                      <span>{t.staffRoleLabel}</span>
                       <select value={newStaffRole} onChange={(event) => setNewStaffRole(event.target.value as StaffRole)} className="w-full rounded-lg border border-slate-200 bg-white px-2 py-2.5 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white">
-                      <option value="staff">Staff</option>
-                      <option value="superadmin">Superadmin</option>
-                      <option value="department_head">Department head</option>
-                      <option value="customer_service_manager">Customer Service Manager</option>
-                      <option value="ceo">CEO</option>
+                      <option value="staff">{t.roleStaff}</option>
+                      <option value="superadmin">{t.roleSuperadmin}</option>
+                      <option value="department_head">{t.roleDepartmentHead}</option>
+                      <option value="customer_service_manager">{t.roleCustomerServiceManager}</option>
+                      <option value="ceo">{t.roleCeo}</option>
                       </select>
                     </label>
                     {newStaffRole === 'department_head' && (
                       <label className="min-w-0 flex-1 space-y-1 text-[11px] font-medium text-slate-600 dark:text-slate-300">
-                        <span>Department</span>
+                        <span>{t.staffDepartmentLabel}</span>
                         <select value={newStaffDepartment} onChange={(event) => setNewStaffDepartment(event.target.value)} className="w-full rounded-lg border border-slate-200 bg-white px-2 py-2.5 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white">
                         {DEPARTMENTS.map((department) => <option key={department} value={department}>{department}</option>)}
                         </select>
@@ -840,20 +889,17 @@ export const StaffView: React.FC<StaffViewProps> = ({
                     )}
                   </div>
                   <button type="submit" disabled={isCreatingStaff} className="min-h-10 w-full rounded-lg bg-blue-700 px-4 text-xs font-bold text-white hover:bg-blue-800 disabled:opacity-60">
-                    {isCreatingStaff ? 'Creating...' : 'Create account'}
+                    {isCreatingStaff ? t.staffCreatingAccount : t.staffCreateAccountButton}
                   </button>
                 </form>
+                </div>
               )}
 
-              <div className="space-y-2 pt-2">
+              {(!canManageStaff || staffAccessTab === 'directory') && (
+              <div id="staff-access-panel" role={canManageStaff ? 'tabpanel' : undefined} aria-labelledby={canManageStaff ? 'staff-directory-tab' : undefined} className="space-y-2 pt-2">
                 <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
-                  Active Staff Directory
+                  {t.staffDirectoryTitle}
                 </span>
-                {staffSaveError && (
-                  <p role="alert" className="rounded-lg border border-rose-200 bg-rose-50 p-2 text-xs text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-300">
-                    {staffSaveError}
-                  </p>
-                )}
                 <div className="divide-y divide-slate-100 dark:divide-slate-800">
                   {staffList.map((st) => (
                     <div key={st.username} className="py-3 space-y-2 text-xs">
@@ -864,7 +910,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
                         </div>
                         {!canManageStaff && (
                           <span className="shrink-0 text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 uppercase font-semibold">
-                            {st.role.replaceAll('_', ' ')}
+                            {getRoleLabel(st.role)}
                           </span>
                         )}
                       </div>
@@ -892,11 +938,11 @@ export const StaffView: React.FC<StaffViewProps> = ({
                                   }}
                                   className="min-h-9 flex-1 rounded-lg border border-slate-200 bg-white px-2 text-[11px] text-slate-700 disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
                                 >
-                                  <option value="superadmin">Superadmin</option>
-                                  <option value="customer_service_manager">Customer Service Manager</option>
-                                  <option value="department_head">Department Head</option>
-                                  <option value="ceo">CEO</option>
-                                  <option value="staff">Staff</option>
+                                  <option value="superadmin">{t.roleSuperadmin}</option>
+                                  <option value="customer_service_manager">{t.roleCustomerServiceManager}</option>
+                                  <option value="department_head">{t.roleDepartmentHead}</option>
+                                  <option value="ceo">{t.roleCeo}</option>
+                                  <option value="staff">{t.roleStaff}</option>
                                 </select>
                                 {draft.role === 'department_head' && (
                                   <select
@@ -936,6 +982,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
                   ))}
                 </div>
               </div>
+              )}
             </div>
           </div>
         </div>

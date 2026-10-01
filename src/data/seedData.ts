@@ -31,3 +31,20 @@ export const DEPARTMENTS_AM: Record<string, string> = {
   'Reception & Security': 'መስተንግዶና ጥበቃ (Reception & Security)',
   'Cleanliness & Facilities': 'ፅዳትና መስተንግዶ (Cleanliness & Facilities)'
 };
+
+export const DEPARTMENTS_OM: Record<string, string> = {
+  'Emergency': 'Kutaa Balaa (Emergency)',
+  'Outpatient (OPD)': 'Kiliinika Dhukkubsattoota Alaa (OPD)',
+  'Adult ICU (AICU)': 'Kutaa Kunuunsa Cimaa Ga’eessotaa (AICU)',
+  'Intensive Care Unit (ICU)': 'Kutaa Kunuunsa Cimaa (ICU)',
+  'Neonatal ICU (NICU)': 'Kutaa Kunuunsa Cimaa Daa’imman Haaraa Dhalatanii (NICU)',
+  'Maternity': 'Kutaa Haadholii fi Da’umsaa (Maternity)',
+  'Pediatrics': 'Kutaa Yaala Daa’immanii (Pediatrics)',
+  'Surgery': 'Kutaa Baqaqsanii Yaalu (Surgery)',
+  'Laboratory': 'Laaboraatoorii (Laboratory)',
+  'Pharmacy': 'Mana Qorichaa (Pharmacy)',
+  'Radiology': 'Kutaa Raadiyooloojii (Radiology)',
+  'Billing & Records': 'Kutaa Kaffaltii fi Galmeewwanii (Billing & Records)',
+  'Reception & Security': 'Simannaa fi Nageenyaa (Reception & Security)',
+  'Cleanliness & Facilities': 'Qulqullinaa fi Tajaajila Manaa (Cleanliness & Facilities)'
+};

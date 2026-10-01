@@ -47,6 +47,8 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Submit */}
           <button
             onClick={() => onNavigate('submit')}
+            aria-label={t.navSubmit}
+            aria-current={currentView === 'submit' ? 'page' : undefined}
             className={`px-2.5 py-1.5 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 ${
               currentView === 'submit'
                 ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold'
@@ -60,6 +62,8 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Track */}
           <button
             onClick={() => onNavigate('track')}
+            aria-label={t.navTrack}
+            aria-current={currentView === 'track' ? 'page' : undefined}
             className={`px-2.5 py-1.5 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 ${
               currentView === 'track'
                 ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold'
@@ -73,6 +77,8 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Staff */}
           <button
             onClick={() => onNavigate('staff')}
+            aria-label={currentUser ? t.navStaff : t.navStaffLogin}
+            aria-current={currentView === 'staff' ? 'page' : undefined}
             className={`px-2.5 py-1.5 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 ${
               currentView === 'staff'
                 ? 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-semibold'
@@ -90,9 +96,10 @@ export const Header: React.FC<HeaderProps> = ({
             type="button"
             onClick={toggleLanguage}
             className="px-2 py-1 rounded-md text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-            title={language === 'am' ? 'Switch to English' : 'ወደ አማርኛ ቀይር'}
+            title={language === 'en' ? t.switchToAmharic : language === 'am' ? t.switchToOromo : t.switchToEnglish}
+            aria-label={language === 'en' ? t.switchToAmharic : language === 'am' ? t.switchToOromo : t.switchToEnglish}
           >
-            {language === 'am' ? 'EN' : 'አማርኛ'}
+            {language === 'en' ? 'AM' : language === 'am' ? 'OM' : 'EN'}
           </button>
 
           {/* Theme Toggle */}
@@ -101,6 +108,7 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={toggleTheme}
             className="p-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             title={theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           >
             {theme === 'dark' ? (
               <Sun className="w-4 h-4 text-amber-400" />

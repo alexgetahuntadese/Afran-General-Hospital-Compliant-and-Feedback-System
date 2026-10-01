@@ -209,7 +209,9 @@ export async function updateStaffProfile(username: string, role: StaffRole, depa
     .from('staff_profiles')
     .update({
       role,
-      department: role === 'department_head' ? department ?? null : null,
+      department: role === 'emergency_department_head'
+        ? 'Emergency'
+        : role === 'department_head' ? department ?? null : null,
     })
     .eq('username', username.trim().toLowerCase())
     .select('id')
@@ -232,7 +234,9 @@ export async function createStaffAccount(input: {
       fullName: input.fullName.trim(),
       password: input.password,
       role: input.role,
-      department: input.role === 'department_head' ? input.department?.trim() : undefined,
+      department: input.role === 'emergency_department_head'
+        ? 'Emergency'
+        : input.role === 'department_head' ? input.department?.trim() : undefined,
     },
   });
   if (error) {

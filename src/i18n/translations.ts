@@ -1,4 +1,4 @@
-export type Language = 'en' | 'am';
+export type Language = 'en' | 'am' | 'om';
 
 export interface CloneTranslations {
   emergencyBanner: string;
@@ -9,14 +9,32 @@ export interface CloneTranslations {
   navStaffLogin: string;
   navStaff: string;
   navSignOut: string;
+  switchToEnglish: string;
+  switchToAmharic: string;
+  switchToOromo: string;
+  wizardStepType: string;
+  wizardStepDetails: string;
+  wizardStepMessage: string;
+  wizardStepReview: string;
+  wizardStepProgress: string;
+  wizardContinue: string;
+  wizardBack: string;
+  wizardReviewKind: string;
+  wizardReviewDepartment: string;
+  wizardReviewMessage: string;
+  wizardReviewContact: string;
+  wizardAnonymous: string;
+  wizardNoMessage: string;
   
   heroTitle: string;
   heroSubtitle: string;
   
   kindComplaint: string;
+  kindComplaintDescription: string;
   kindSuggestion: string;
   kindCompliment: string;
   kindFeedback: string;
+  kindFeedbackDescription: string;
   
   chooseDept: string;
   overallExperience: string;
@@ -61,6 +79,8 @@ export interface CloneTranslations {
   saving: string;
   searching: string;
   roleStaff: string;
+  roleSuperadmin: string;
+  roleCustomerServiceManager: string;
   roleDepartmentHead: string;
   roleCeo: string;
   managerScope: string;
@@ -82,6 +102,29 @@ export interface CloneTranslations {
   statusLabel: string;
   staffAccessTitle: string;
   staffAccessDesc: string;
+  staffAccessCreateTab: string;
+  staffAccessDirectoryTab: string;
+  staffAccessManagerDesc: string;
+  staffCreateAccount: string;
+  staffFullName: string;
+  staffUsername: string;
+  staffInitialPassword: string;
+  staffPasswordMinLength: string;
+  staffConfirmPassword: string;
+  staffConfirmPasswordHint: string;
+  staffPasswordShareNote: string;
+  staffRoleLabel: string;
+  staffDepartmentLabel: string;
+  staffCreatingAccount: string;
+  staffCreateAccountButton: string;
+  staffDirectoryTitle: string;
+  staffEnterNameUsername: string;
+  staffInvalidUsername: string;
+  staffPasswordTooShort: string;
+  staffPasswordsMismatch: string;
+  staffDepartmentRequired: string;
+  staffCreateError: string;
+  staffRoleUpdateError: string;
 
   // Analytics summary dashboard
   summaryDashboard: string;
@@ -105,14 +148,32 @@ export const translations: Record<Language, CloneTranslations> = {
     navStaffLogin: 'Staff login',
     navStaff: 'Staff',
     navSignOut: 'Sign out',
+    switchToEnglish: 'Switch to English',
+    switchToAmharic: 'Switch to Amharic',
+    switchToOromo: 'Switch to Afaan Oromo',
+    wizardStepType: 'Type',
+    wizardStepDetails: 'Details',
+    wizardStepMessage: 'Message',
+    wizardStepReview: 'Review',
+    wizardStepProgress: 'Step',
+    wizardContinue: 'Continue',
+    wizardBack: 'Back',
+    wizardReviewKind: 'Feedback type',
+    wizardReviewDepartment: 'Department',
+    wizardReviewMessage: 'Your message',
+    wizardReviewContact: 'Contact details',
+    wizardAnonymous: 'Submitting anonymously',
+    wizardNoMessage: 'No written message',
     
     heroTitle: 'Your voice helps us care better.',
     heroSubtitle: 'Share a complaint, suggestion or compliment about your visit to Afran General Hospital. Every submission is read by our Patient Relations team.',
     
     kindComplaint: 'Complaint',
+    kindComplaintDescription: 'Tell us about a problem or concern',
     kindSuggestion: 'Suggestion',
     kindCompliment: 'Compliment',
     kindFeedback: 'Feedback',
+    kindFeedbackDescription: 'Share an idea or tell us what went well',
     
     chooseDept: 'Choose a department',
     overallExperience: 'Overall experience (optional)',
@@ -157,6 +218,8 @@ export const translations: Record<Language, CloneTranslations> = {
     saving: 'Saving...',
     searching: 'Searching...',
     roleStaff: 'Patient Relations staff',
+    roleSuperadmin: 'Superadmin',
+    roleCustomerServiceManager: 'Customer Service Manager',
     roleDepartmentHead: 'Department head',
     roleCeo: 'CEO',
     managerScope: 'Customer Service Manager · full access to all cases',
@@ -178,6 +241,29 @@ export const translations: Record<Language, CloneTranslations> = {
     statusLabel: 'Status',
     staffAccessTitle: 'Staff access',
     staffAccessDesc: 'Superadmins can create staff accounts and assign each person a role and (for department heads) department.',
+    staffAccessCreateTab: 'Create account',
+    staffAccessDirectoryTab: 'Staff directory',
+    staffAccessManagerDesc: 'View active staff accounts and their assigned roles.',
+    staffCreateAccount: 'Create staff account',
+    staffFullName: 'Full name',
+    staffUsername: 'Username',
+    staffInitialPassword: 'Initial password',
+    staffPasswordMinLength: 'At least 12 characters',
+    staffConfirmPassword: 'Confirm password',
+    staffConfirmPasswordHint: 'Re-enter the initial password',
+    staffPasswordShareNote: 'Share the username and initial password with the staff member securely. The password will not be shown again.',
+    staffRoleLabel: 'Role',
+    staffDepartmentLabel: 'Department',
+    staffCreatingAccount: 'Creating account...',
+    staffCreateAccountButton: 'Create account',
+    staffDirectoryTitle: 'Active staff directory',
+    staffEnterNameUsername: 'Enter the staff member’s name and username.',
+    staffInvalidUsername: 'Enter a username in the format name@afran.com.',
+    staffPasswordTooShort: 'Set an initial password with at least 12 characters.',
+    staffPasswordsMismatch: 'The passwords do not match.',
+    staffDepartmentRequired: 'Choose a department for department heads.',
+    staffCreateError: 'Unable to create this staff account.',
+    staffRoleUpdateError: 'Unable to update this staff role.',
 
     summaryDashboard: 'Analytics & Trends',
     categoriesDistribution: 'Feedback Categories Distribution',
@@ -198,14 +284,32 @@ export const translations: Record<Language, CloneTranslations> = {
     navStaffLogin: 'የሰራተኞች መግቢያ',
     navStaff: 'የስራ አመራር',
     navSignOut: 'ውጣ',
+    switchToEnglish: 'ወደ እንግሊዝኛ ቀይር',
+    switchToAmharic: 'ወደ አማርኛ ቀይር',
+    switchToOromo: 'ወደ ኦሮምኛ ቀይር',
+    wizardStepType: 'አይነት',
+    wizardStepDetails: 'ዝርዝር',
+    wizardStepMessage: 'መልዕክት',
+    wizardStepReview: 'ግምገማ',
+    wizardStepProgress: 'ደረጃ',
+    wizardContinue: 'ቀጥል',
+    wizardBack: 'ተመለስ',
+    wizardReviewKind: 'የአስተያየት አይነት',
+    wizardReviewDepartment: 'መምሪያ',
+    wizardReviewMessage: 'መልዕክትዎ',
+    wizardReviewContact: 'የእውቂያ መረጃ',
+    wizardAnonymous: 'ማንነት ሳይገለጽ ይቀርባል',
+    wizardNoMessage: 'የጽሑፍ መልዕክት የለም',
     
     heroTitle: 'የእርስዎ ድምፅ የተሻለ ህክምና እንድንሰጥ ይረዳናል።',
     heroSubtitle: 'ስለ አፍራን አጠቃላይ ሆስፒታል ቆይታዎ ቅሬታ፣ የማሻሻያ ሀሳብ ወይም ምስጋና ያጋሩን። እያንዳንዱ ማመልከቻ በታካሚዎች ተሞክሮ ቡድናችን በጥንቃቄ ይነበባል።',
     
     kindComplaint: 'ቅሬታ',
+    kindComplaintDescription: 'ችግር ወይም ስጋት ያጋሩን',
     kindSuggestion: 'የማሻሻያ ሀሳብ',
     kindCompliment: 'ምስጋና',
     kindFeedback: 'አስተያየት',
+    kindFeedbackDescription: 'ሀሳብ ወይም የተደሰቱበትን ነገር ያጋሩን',
     
     chooseDept: 'የሆስፒታሉን ክፍል ይምረጡ',
     overallExperience: 'አጠቃላይ ተሞክሮ (አማራጭ)',
@@ -250,6 +354,8 @@ export const translations: Record<Language, CloneTranslations> = {
     saving: 'በማስቀመጥ ላይ...',
     searching: 'በመፈለግ ላይ...',
     roleStaff: 'የታካሚ ግንኙነት ሰራተኛ',
+    roleSuperadmin: 'ሱፐር አስተዳዳሪ',
+    roleCustomerServiceManager: 'የደንበኛ አገልግሎት አስተዳዳሪ',
     roleDepartmentHead: 'የክፍል ኃላፊ',
     roleCeo: 'ዋና ሥራ አስፈጻሚ',
     managerScope: 'የደንበኛ አገልግሎት አስተዳዳሪ · ሁሉንም ጉዳዮች የማየት ፈቃድ',
@@ -270,7 +376,30 @@ export const translations: Record<Language, CloneTranslations> = {
     responseVisibleNote: 'ምላሽ (በመከታተያ ገጹ ላይ ለተገልጋዩ የሚታይ)',
     statusLabel: 'ሁኔታ',
     staffAccessTitle: 'የሰራተኞች ፈቃድ',
-    staffAccessDesc: 'በSupabase Auth የሰራተኛ መለያ ይፍጠሩ፤ ከዚያም በstaff_profiles ሰንጠረዥ ውስጥ ሚናና የክፍል ኃላፊ ክፍል ይመድቡ።',
+    staffAccessDesc: 'ሱፐር አስተዳዳሪዎች የሰራተኛ መለያ መፍጠርና ሚና እና ክፍል መመደብ ይችላሉ።',
+    staffAccessCreateTab: 'መለያ ፍጠር',
+    staffAccessDirectoryTab: 'የሰራተኞች ዝርዝር',
+    staffAccessManagerDesc: 'ንቁ የሰራተኛ መለያዎችንና የተመደቡ ሚናዎችን ይመልከቱ።',
+    staffCreateAccount: 'የሰራተኛ መለያ ፍጠር',
+    staffFullName: 'ሙሉ ስም',
+    staffUsername: 'የተጠቃሚ ስም',
+    staffInitialPassword: 'የመጀመሪያ የይለፍ ቃል',
+    staffPasswordMinLength: 'ቢያንስ 12 ቁምፊዎች',
+    staffConfirmPassword: 'የይለፍ ቃሉን ያረጋግጡ',
+    staffConfirmPasswordHint: 'የመጀመሪያውን የይለፍ ቃል እንደገና ያስገቡ',
+    staffPasswordShareNote: 'የተጠቃሚ ስሙንና የመጀመሪያውን የይለፍ ቃል ለሰራተኛው በደህንነት ያጋሩ። የይለፍ ቃሉ እንደገና አይታይም።',
+    staffRoleLabel: 'ሚና',
+    staffDepartmentLabel: 'ክፍል',
+    staffCreatingAccount: 'መለያ በመፍጠር ላይ...',
+    staffCreateAccountButton: 'መለያ ፍጠር',
+    staffDirectoryTitle: 'ንቁ የሰራተኞች ዝርዝር',
+    staffEnterNameUsername: 'የሰራተኛውን ሙሉ ስምና የተጠቃሚ ስም ያስገቡ።',
+    staffInvalidUsername: 'በname@afran.com ቅርጸት የተጠቃሚ ስም ያስገቡ።',
+    staffPasswordTooShort: 'ቢያንስ 12 ቁምፊ ያለው የመጀመሪያ የይለፍ ቃል ያዘጋጁ።',
+    staffPasswordsMismatch: 'የይለፍ ቃሎቹ አይዛመዱም።',
+    staffDepartmentRequired: 'ለክፍል ኃላፊዎች ክፍል ይምረጡ።',
+    staffCreateError: 'ይህን የሰራተኛ መለያ መፍጠር አልተቻለም።',
+    staffRoleUpdateError: 'የዚህን ሰራተኛ ሚና ማዘመን አልተቻለም።',
 
     summaryDashboard: 'ትንታኔ እና የሂደት መረጃ',
     categoriesDistribution: 'የአስተያየት አይነቶች ስርጭት',
@@ -281,5 +410,141 @@ export const translations: Record<Language, CloneTranslations> = {
     totalCases: 'አጠቃላይ ጉዳዮች',
     showCharts: 'ትንታኔ አሳይ',
     hideCharts: 'ትንታኔ ደብቅ',
+  },
+  om: {
+    emergencyBanner: 'Yeroo yaala hatattamaa, battalumatti gara Kutaa Balaa deemaa.',
+    hospitalName: 'Hospitaala Waliigalaa Afran',
+    patientRelations: 'Hariiroo Dhukkubsattootaa',
+    navSubmit: 'Yaada dhiyeessi',
+    navTrack: 'Hordofi',
+    navStaffLogin: 'Seensa hojjettootaa',
+    navStaff: 'Hojjettoota',
+    navSignOut: 'Ba\'i',
+    switchToEnglish: 'Gara Afaan Ingiliffaatti jijjiiri',
+    switchToAmharic: 'Gara Afaan Amaaraatti jijjiiri',
+    switchToOromo: 'Gara Afaan Oromootti jijjiiri',
+    wizardStepType: 'Gosa',
+    wizardStepDetails: 'Ibsa',
+    wizardStepMessage: 'Ergaa',
+    wizardStepReview: 'Mirkaneessi',
+    wizardStepProgress: 'Sadarkaa',
+    wizardContinue: 'Itti fufi',
+    wizardBack: 'Duubatti deebi’i',
+    wizardReviewKind: 'Gosa yaadaa',
+    wizardReviewDepartment: 'Kutaa',
+    wizardReviewMessage: 'Ergaa keessan',
+    wizardReviewContact: 'Odeeffannoo quunnamtii',
+    wizardAnonymous: 'Maqaa malee dhiyaata',
+    wizardNoMessage: 'Ergaan barreeffamaa hin jiru',
+
+    heroTitle: 'Sagaleen keessan kunuunsa fooyya’aa akka kenninu nu gargaara.',
+    heroSubtitle: 'Daawwannaa Hospitaala Waliigalaa Afran irratti komii, yaada fooyya’iinsaa ykn galata nuuf qoodaa. Ergaan hundi garee Hariiroo Dhukkubsattootaatiin ni ilaalama.',
+
+    kindComplaint: 'Komii',
+    kindComplaintDescription: 'Waa’ee rakkoo ykn yaaddoo isin mudate nutti himaa',
+    kindSuggestion: 'Yaada fooyya’iinsaa',
+    kindCompliment: 'Galata',
+    kindFeedback: 'Yaada',
+    kindFeedbackDescription: 'Yaada fooyya’iinsaa ykn waan gaarii isin mudate nuuf qoodaa',
+
+    chooseDept: 'Kutaa hospitaalaa filadhaa',
+    overallExperience: 'Muuxannoo waliigalaa (filannoo)',
+    subjectLabel: 'Mata-duree',
+    subjectPlaceholder: 'Mata-duree gabaabaa barreessaa',
+    messageLabel: 'Waan isin mudate nutti himaa',
+    messagePlaceholder: 'Maaloo ibsa dabalataa barreessaa...',
+    submitAnonymously: 'Maqaa malee dhiyeessi',
+    anonymousNote: 'Odeeffannoo quunnamtii keessanii hin kuusnu.',
+    confidentialityNote: 'Iccitiidhaan fi of eeggannoodhaan ni ilaalama.',
+    nameLabel: 'Maqaa',
+    emailLabel: 'Imeelii',
+    phoneLabel: 'Lakkoofsa bilbilaa',
+    submitButton: 'Dhiyeessi',
+    submitting: 'Ergaa jira...',
+
+    thankYouTitle: 'Galatoomaa. Ergaan keessan nu gaheera.',
+    keepRefNotice: 'Haala dhimma keessanii hordofuuf lakkoofsa wabii kana qabadhaa:',
+    trackThisCase: 'Dhimmicha hordofi',
+    submitAnother: 'Yaada biraa dhiyeessi',
+
+    trackHeading: 'Dhimmicha hordofaa',
+    trackPlaceholder: 'AGH-7K2P9Q',
+    trackButton: 'Hordofi',
+    noCaseFound: 'Dhimmi hin argamne',
+    checkRefAgain: 'Lakkoofsa wabii mirkaneessaa, irra deebi’aatii yaalaa.',
+    responseFromPR: 'Deebii garee Hariiroo Dhukkubsattootaa',
+    awaitingResponse: 'Gareen Hariiroo Dhukkubsattootaa ergaa keessan ilaalaa jira. Haaromsi asitti ni mul’ata.',
+    submittedAnonymously: 'Maqaa malee dhiyaate',
+    statusReceived: 'Fudhatame',
+    statusInReview: 'Ilaalamaa jira',
+    statusResolved: 'Furameera',
+
+    caseDashboard: 'Daashboordii dhimma',
+    staffSignIn: 'Seensa hojjettootaa',
+    staffSignInDesc: 'Dhimmoota ilaaluuf akkaawuntii hojjettootaa keessaniin seenaa.',
+    staffUsernamePlaceholder: 'username@afran.com',
+    signInBtn: 'Seeni',
+    signingIn: 'Seenaa jira...',
+    passwordSignIn: 'Maqaa fayyadamaa fi jecha icciitii isinif kennameen seenaa.',
+    managerProvisionNote: 'Akkaawuntiiwwan bulchaa olaanaadhaan uumaman qofatu dhimmoota hojjettootaa arguu danda’a.',
+    saving: 'Olkaa’aa jira...',
+    searching: 'Barbaadaa jira...',
+    roleStaff: 'Hojjetaa Hariiroo Dhukkubsattootaa',
+    roleSuperadmin: 'Bulchaa olaanaa',
+    roleCustomerServiceManager: 'Bulchaa Tajaajila Maamilaa',
+    roleDepartmentHead: 'Itti gaafatamaa kutaa',
+    roleCeo: 'Hoogganaa Olaanaa',
+    managerScope: 'Bulchaa Tajaajila Maamilaa · dhimmoota hunda arguu danda’a',
+    ceoScope: 'Dhimmoota olitti dabarfaman qofa agarsiisaa jira',
+    staffScope: 'Dhimmoonni akka argaman hin ramadamne',
+    escalated: 'Olitti dabarfame',
+    markEscalated: 'Dhimmicha gamaaggama Hoogganaa Olaanaaf dabarsi',
+    filterAll: 'Hunda',
+    filterReceived: 'Fudhataman',
+    filterInReview: 'Ilaalamaa jiran',
+    filterResolved: 'Furaman',
+    searchCasesPlaceholder: 'Dhimmoota barbaadi...',
+    noCasesHere: 'Asitti dhimma hin jiru',
+    newSubmissionsAuto: 'Ergaawwan haaraan ofumaan asitti ni mul’atu.',
+    reviewCase: 'Dhimmicha gamaaggami',
+    close: 'Cufi',
+    saveChanges: 'Jijjiirama olkaa’i',
+    responseVisibleNote: 'Deebii (fuula hordoffii irratti dhiyeessaaf ni mul’ata)',
+    statusLabel: 'Haala',
+    staffAccessTitle: 'Hayyama hojjettootaa',
+    staffAccessDesc: 'Bulchitoonni olaanoon akkaawuntii hojjettootaa uumuu fi nama hundaaf gahee fi (itti gaafatamtoota kutaatiif) kutaa ramaduu danda’u.',
+    staffAccessCreateTab: 'Akkaawuntii uumi',
+    staffAccessDirectoryTab: 'Tarree hojjettootaa',
+    staffAccessManagerDesc: 'Akkaawuntii hojjettootaa hojii irra jiran fi gahee isaanii ilaalaa.',
+    staffCreateAccount: 'Akkaawuntii hojjetaa uumi',
+    staffFullName: 'Maqaa guutuu',
+    staffUsername: 'Maqaa fayyadamaa',
+    staffInitialPassword: 'Jecha icciitii jalqabaa',
+    staffPasswordMinLength: 'Qubee ykn mallattoo yoo xiqqaate 12',
+    staffConfirmPassword: 'Jecha icciitii mirkaneessi',
+    staffConfirmPasswordHint: 'Jecha icciitii jalqabaa irra deebi’ii galchi',
+    staffPasswordShareNote: 'Maqaa fayyadamaa fi jecha icciitii jalqabaa hojjetaa sana waliin karaa nageenya qabuun qoodi. Jechi icciitii kun lammaffaa hin agarsiifamu.',
+    staffRoleLabel: 'Gahee',
+    staffDepartmentLabel: 'Kutaa',
+    staffCreatingAccount: 'Akkaawuntii uumaa jira...',
+    staffCreateAccountButton: 'Akkaawuntii uumi',
+    staffDirectoryTitle: 'Tarree hojjettootaa hojii irra jiran',
+    staffEnterNameUsername: 'Maqaa guutuu fi maqaa fayyadamaa hojjetaa galchi.',
+    staffInvalidUsername: 'Maqaa fayyadamaa bifa name@afran.com qabu galchi.',
+    staffPasswordTooShort: 'Jecha icciitii jalqabaa qubee ykn mallattoo yoo xiqqaate 12 qabu qopheessi.',
+    staffPasswordsMismatch: 'Jecha icciitiiwwan wal hin fakkaatan.',
+    staffDepartmentRequired: 'Itti gaafatamtoota kutaatiif kutaa filadhaa.',
+    staffCreateError: 'Akkaawuntii hojjetaa kana uumuu hin dandeenye.',
+    staffRoleUpdateError: 'Gahee hojjetaa kana haaromsuu hin dandeenye.',
+
+    summaryDashboard: 'Xiinxala fi adeemsa',
+    categoriesDistribution: 'Raabsa gosoota yaadaa',
+    statusDistribution: 'Raabsa haala dhimma',
+    resolutionRate: 'Qixa furmaataa',
+    avgRating: 'Sadarkaa giddugaleessaa',
+    anonymousRate: 'Maqaa malee',
+    totalCases: 'Baay’ina dhimma waliigalaa',
+    showCharts: 'Xiinxala agarsiisi',
+    hideCharts: 'Xiinxala dhoksi',
   }
 };

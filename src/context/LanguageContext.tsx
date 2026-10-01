@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import { Language, translations, CloneTranslations } from '../i18n/translations';
-import { DEPARTMENTS_AM } from '../data/seedData';
+import { DEPARTMENTS_AM, DEPARTMENTS_OM } from '../data/seedData';
 
 interface LanguageContextType {
   language: Language;
@@ -18,8 +18,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [language, setLanguageState] = useState<Language>(() => {
     try {
       const saved = localStorage.getItem(LANG_STORAGE_KEY);
-      // Default to Amharic ('am') to fulfill user request directly, while saving user's manual preference
-      return (saved === 'am' || saved === 'en') ? saved : 'am';
+      // Default to Amharic while keeping any saved language preference.
+      return (saved === 'am' || saved === 'om' || saved === 'en') ? saved : 'am';
     } catch {
       return 'am';
     }
@@ -35,7 +35,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const toggleLanguage = () => {
-    const next = language === 'en' ? 'am' : 'en';
+    const next = language === 'en' ? 'am' : language === 'am' ? 'om' : 'en';
     setLanguage(next);
   };
 
@@ -44,6 +44,9 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const getDeptName = (dept: string) => {
     if (language === 'am') {
       return DEPARTMENTS_AM[dept] || dept;
+    }
+    if (language === 'om') {
+      return DEPARTMENTS_OM[dept] || dept;
     }
     return dept;
   };
