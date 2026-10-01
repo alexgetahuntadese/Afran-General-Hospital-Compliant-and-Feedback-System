@@ -20,6 +20,7 @@ The attached questionnaire photos were blurry, so the digital form uses adapted 
 Create each staff identity in the Supabase Dashboard under **Authentication → Users → Add user** (or invite the person) using their assigned work email. Keep public sign-ups disabled; the app intentionally uses OTP only for pre-created accounts. Then run [`provision_requested_staff.sql`](./provision_requested_staff.sql) in the SQL Editor to attach profiles and roles:
 
 - `alexgetahun@afran.com` — Alex Getahun, Superadmin.
+- `getahun@afran.com` — Getahun, Customer Service Manager.
 - `tamima@afranhospital.com` — Tamima, Customer Service Manager.
 - `belay@afranhospital.com` — Ato Belay, CEO.
 

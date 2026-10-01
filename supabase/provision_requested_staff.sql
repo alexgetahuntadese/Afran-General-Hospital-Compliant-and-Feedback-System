@@ -6,6 +6,7 @@ begin
   into missing_emails
   from (values
     ('alexgetahun@afran.com'),
+    ('getahun@afran.com'),
     ('tamima@afranhospital.com'),
     ('belay@afranhospital.com')
   ) as requested(email)
@@ -31,6 +32,7 @@ select
   null
 from (values
   ('alexgetahun@afran.com', 'Alex Getahun', 'superadmin'),
+  ('getahun@afran.com', 'Getahun', 'customer_service_manager'),
   ('tamima@afranhospital.com', 'Tamima', 'customer_service_manager'),
   ('belay@afranhospital.com', 'Ato Belay', 'ceo')
 ) as requested(email, full_name, role)
