@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 104" role="img" aria-labelledby="title">
+  <title id="title">Afran General Hospital</title>
+  <path d="M4 51h53l8-8 7 26 12-59 12 70 11-43 8 14h25" fill="none" stroke="#10276d" stroke-linecap="square" stroke-linejoin="round" stroke-width="7"/>
+  <text x="140" y="61" fill="#10276d" font-family="Arial, sans-serif" font-size="47" font-weight="800" letter-spacing="-2">AFRAN</text>
+  <text x="143" y="84" fill="#10276d" font-family="Arial, sans-serif" font-size="14" font-weight="700" letter-spacing=".35">AFRAN GENERAL HOSPITAL</text>
+  <circle cx="470" cy="24" r="13" fill="none" stroke="#10276d" stroke-width="7"/>
+  <path d="M451 92c2-28 7-45 19-51 10-5 20 2 24 14 5 14 7 27 9 38" fill="none" stroke="#10276d" stroke-linecap="round" stroke-width="8"/>
+  <path d="M431 64c10-24 30-34 51-31 17 2 27 14 31 30M437 83c8 14 23 21 41 19" fill="none" stroke="#08a7d3" stroke-linecap="round" stroke-width="5"/>
+</svg>

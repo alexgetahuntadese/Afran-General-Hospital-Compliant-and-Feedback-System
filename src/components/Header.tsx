@@ -3,6 +3,7 @@ import { Shield, Search, FileEdit, Sun, Moon, AlertCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { StaffUser } from '../types/hospital';
+import hospitalLogo from '../assets/images/afran-general-hospital-logo.svg';
 
 interface HeaderProps {
   currentView: 'submit' | 'track' | 'staff';
@@ -31,21 +32,14 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Brand & Wordmark */}
         <button
           onClick={() => onNavigate('submit')}
-          className="text-left flex items-center gap-2 group focus:outline-none"
+          className="text-left flex items-center group focus:outline-none"
+          aria-label={t.hospitalName}
         >
-          <div className="w-7 h-7 rounded-lg bg-indigo-600 dark:bg-indigo-500 text-white flex items-center justify-center font-bold text-xs shadow-xs shrink-0 group-hover:scale-105 transition-transform">
-            <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current" aria-hidden="true">
-              <path d="M19 10.5h-5.5V5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v5.5H5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5h5.5V19c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-5.5H19c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5z" />
-            </svg>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-xs sm:text-sm font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
-              {t.hospitalName}
-            </span>
-            <span className="text-[10px] text-slate-400 dark:text-slate-500">
-              {t.patientRelations}
-            </span>
-          </div>
+          <img
+            src={hospitalLogo}
+            alt="Afran General Hospital"
+            className="h-auto w-[8.75rem] sm:w-[11.25rem] shrink-0 transition-transform group-hover:scale-[1.02]"
+          />
         </button>
 
         {/* Navigation & Clean Controls */}
