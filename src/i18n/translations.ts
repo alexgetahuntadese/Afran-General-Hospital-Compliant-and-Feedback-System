@@ -147,6 +147,7 @@ export interface CloneTranslations {
   staffAccountDeleteError: string;
   staffAccountUpdateError: string;
   staffConfirmAction: string;
+  staffSelfAccountProtected: string;
 
   // Analytics summary dashboard
   summaryDashboard: string;
@@ -308,6 +309,7 @@ export const translations: Record<Language, CloneTranslations> = {
     staffAccountDeleteError: 'Unable to delete this account.',
     staffAccountUpdateError: 'Unable to update this account.',
     staffConfirmAction: 'Confirm',
+    staffSelfAccountProtected: 'Your own superadmin account cannot be edited or removed here.',
 
     summaryDashboard: 'Analytics & Trends',
     categoriesDistribution: 'Feedback Categories Distribution',
@@ -466,6 +468,7 @@ export const translations: Record<Language, CloneTranslations> = {
     staffAccountDeleteError: 'ይህን መለያ መሰረዝ አልተቻለም።',
     staffAccountUpdateError: 'ይህን መለያ ማዘመን አልተቻለም።',
     staffConfirmAction: 'እርግጠኛ ነዎት?',
+    staffSelfAccountProtected: 'የራስዎን የሱፐር አስተዳዳሪ መለያ እዚህ ማረም ወይም ማስወገድ አይችሉም።',
 
     summaryDashboard: 'ትንታኔ እና የሂደት መረጃ',
     categoriesDistribution: 'የአስተያየት አይነቶች ስርጭት',
@@ -624,6 +627,7 @@ export const translations: Record<Language, CloneTranslations> = {
     staffAccountDeleteError: 'Akkaawuntii kana haquu hin dandeenye.',
     staffAccountUpdateError: 'Akkaawuntii kana haaromsuu hin dandeenye.',
     staffConfirmAction: 'Mirkaneessaa',
+    staffSelfAccountProtected: 'Akkaawuntii bulchaa olaanaa keessan asitti gulaaluu ykn haquu hin dandeessan.',
 
     summaryDashboard: 'Xiinxala fi adeemsa',
     categoriesDistribution: 'Raabsa gosoota yaadaa',

@@ -261,17 +261,22 @@ export async function manageStaffAccount(input: StaffAccountAction): Promise<voi
   if (error) throw await getFunctionError(error);
 }
 
-async function getFunctionError(error: Error): Promise<Error> {
-  if (error.name === 'FunctionsHttpError' && error.context instanceof Response) {
-    const responseBody: unknown = await error.context.clone().json().catch(() => null);
-    if (
-      typeof responseBody === 'object'
-      && responseBody !== null
-      && 'error' in responseBody
-      && typeof responseBody.error === 'string'
-    ) {
-      return new Error(responseBody.error);
+async function getFunctionError(error: unknown): Promise<Error> {
+  if (typeof error === 'object' && error !== null && 'name' in error && 'context' in error) {
+    const name = error.name;
+    const context = error.context;
+    if (name === 'FunctionsHttpError' && context instanceof Response) {
+      const responseBody: unknown = await context.clone().json().catch(() => null);
+      if (
+        typeof responseBody === 'object'
+        && responseBody !== null
+        && 'error' in responseBody
+        && typeof responseBody.error === 'string'
+      ) {
+        return new Error(responseBody.error);
+      }
     }
   }
-  return error;
+  if (error instanceof Error) return error;
+  return new Error('The staff account request failed.');
 }

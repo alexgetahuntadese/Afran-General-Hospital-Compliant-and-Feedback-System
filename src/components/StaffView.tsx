@@ -931,6 +931,11 @@ export const StaffView: React.FC<StaffViewProps> = ({
                   {staffSaveError}
                 </p>
               )}
+              {staffSaveSuccess && (
+                <p role="status" className="rounded-lg border border-emerald-200 bg-emerald-50 p-2 text-xs text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-300">
+                  {staffSaveSuccess}
+                </p>
+              )}
 
               {canManageStaff && staffAccessTab === 'create' && (
                 <div id="staff-access-panel" role="tabpanel" aria-labelledby="staff-create-tab">
@@ -992,80 +997,183 @@ export const StaffView: React.FC<StaffViewProps> = ({
                 </span>
                 <div className="divide-y divide-slate-100 dark:divide-slate-800">
                   {staffList.map((st) => (
-                    <div key={st.username} className="py-3 space-y-2 text-xs">
+                    <div key={st.username} className={`space-y-3 py-3 text-xs ${!st.isActive ? 'opacity-70' : ''}`}>
                       <div className="flex items-center justify-between gap-2">
                         <div className="min-w-0">
                           <span className="font-semibold text-slate-900 dark:text-white block">{st.name}</span>
                           <span className="text-[11px] text-slate-400">{st.username}</span>
                         </div>
-                        {!canManageStaff && (
-                          <span className="shrink-0 text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 uppercase font-semibold">
-                            {getRoleLabel(st.role)}
+                        <div className="flex shrink-0 flex-col items-end gap-1">
+                          <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase ${st.isActive ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'}`}>
+                            {st.isActive ? t.staffAccountActive : t.staffAccountInactive}
                           </span>
-                        )}
+                          {!canManageStaff && (
+                            <span className="rounded bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+                              {getRoleLabel(st.role)}
+                            </span>
+                          )}
+                        </div>
                       </div>
                       {canManageStaff && (
-                        <div className="flex flex-wrap items-center gap-2">
-                          {(() => {
-                            const draft = staffRoleDrafts[st.username] ?? { role: st.role, department: st.department ?? '' };
-                            const isSelf = st.username === currentUser?.username;
-                            return (
-                              <>
-                                <select
-                                  aria-label={`Role for ${st.username}`}
-                                  value={draft.role}
-                                  disabled={isSelf || staffSaveUsername === st.username}
+                        <div className="space-y-3">
+                          {st.username === currentUser?.username ? (
+                            <p className="text-[10px] text-slate-500 dark:text-slate-400">{t.staffSelfAccountProtected}</p>
+                          ) : (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setEditingStaffUsername(editingStaffUsername === st.username ? '' : st.username);
+                                  setStaffSaveError('');
+                                  setStaffSaveSuccess('');
+                                  setStaffAccountDrafts((drafts) => ({
+                                    ...drafts,
+                                    [st.username]: drafts[st.username] ?? {
+                                      username: st.username,
+                                      fullName: st.name,
+                                      role: st.role,
+                                      department: st.department ?? '',
+                                    },
+                                  }));
+                                }}
+                                className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-slate-200 px-3 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+                              >
+                                <Pencil className="h-3.5 w-3.5" />
+                                {editingStaffUsername === st.username ? t.staffCancelEdit : t.staffEditAccount}
+                              </button>
+
+                              {editingStaffUsername === st.username && (() => {
+                                const draft = getStaffDraft(st);
+                                const isBusy = staffSaveUsername === st.username;
+                                const hasChanges = draft.username.trim().toLowerCase() !== st.username
+                                  || draft.fullName.trim() !== st.name
+                                  || draft.role !== st.role
+                                  || draft.department !== (st.department ?? '');
+                                const updateDraft = (changes: Partial<typeof draft>) => {
+                                  setStaffAccountDrafts((drafts) => ({
+                                    ...drafts,
+                                    [st.username]: { ...draft, ...changes },
+                                  }));
+                                  setStaffSaveError('');
+                                  setStaffSaveSuccess('');
+                                };
+                                return (
+                                  <div className="space-y-3 rounded-xl border border-slate-200 bg-slate-50/80 p-3 dark:border-slate-700 dark:bg-slate-800/40">
+                                    <label className="block space-y-1 font-medium text-slate-600 dark:text-slate-300">
+                                      <span>{t.staffFullName}</span>
+                                      <input
+                                        value={draft.fullName}
+                                        onChange={(event) => updateDraft({ fullName: event.target.value })}
+                                        autoComplete="name"
+                                        className="min-h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                                      />
+                                    </label>
+                                    <label className="block space-y-1 font-medium text-slate-600 dark:text-slate-300">
+                                      <span>{t.staffNewUsername}</span>
+                                      <input
+                                        value={draft.username}
+                                        onChange={(event) => updateDraft({ username: event.target.value })}
+                                        autoCapitalize="none"
+                                        autoComplete="username"
+                                        spellCheck={false}
+                                        className="min-h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                                      />
+                                    </label>
+                                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                      <label className="block space-y-1 font-medium text-slate-600 dark:text-slate-300">
+                                        <span>{t.staffRoleLabel}</span>
+                                        <select
+                                          value={draft.role}
+                                          onChange={(event) => updateDraft({
+                                            role: event.target.value as StaffRole,
+                                            department: event.target.value === 'department_head' ? draft.department || DEPARTMENTS[0] : '',
+                                          })}
+                                          className="min-h-10 w-full rounded-lg border border-slate-200 bg-white px-2 text-xs text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+                                        >
+                                          <option value="superadmin">{t.roleSuperadmin}</option>
+                                          <option value="customer_service_manager">{t.roleCustomerServiceManager}</option>
+                                          <option value="department_head">{t.roleDepartmentHead}</option>
+                                          <option value="ceo">{t.roleCeo}</option>
+                                          <option value="staff">{t.roleStaff}</option>
+                                        </select>
+                                      </label>
+                                      {draft.role === 'department_head' && (
+                                        <label className="block space-y-1 font-medium text-slate-600 dark:text-slate-300">
+                                          <span>{t.staffDepartmentLabel}</span>
+                                          <select
+                                            value={draft.department}
+                                            onChange={(event) => updateDraft({ department: event.target.value })}
+                                            className="min-h-10 w-full rounded-lg border border-slate-200 bg-white px-2 text-xs text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+                                          >
+                                            {DEPARTMENTS.map((department) => (
+                                              <option key={department} value={department}>{getDeptName(department)}</option>
+                                            ))}
+                                          </select>
+                                        </label>
+                                      )}
+                                    </div>
+                                    {draft.role === 'department_head' && (
+                                      <p className="text-[10px] leading-relaxed text-slate-500 dark:text-slate-400">{t.staffDepartmentAccessNote}</p>
+                                    )}
+                                    <button
+                                      type="button"
+                                      disabled={isBusy || !hasChanges}
+                                      onClick={() => void handleSaveStaffAccount(st)}
+                                      className="min-h-10 w-full rounded-lg bg-blue-700 px-3 text-xs font-bold text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
+                                    >
+                                      {isBusy ? t.staffUpdatingAccount : t.staffUpdateAccount}
+                                    </button>
+                                  </div>
+                                );
+                              })()}
+
+                              <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto]">
+                                <input
+                                  type="password"
+                                  minLength={12}
+                                  autoComplete="new-password"
+                                  aria-label={`${t.staffPasswordReset}: ${st.username}`}
+                                  placeholder={t.staffPasswordReset}
+                                  value={staffPasswordDrafts[st.username] ?? ''}
                                   onChange={(event) => {
-                                    const role = event.target.value as StaffRole;
-                                    setStaffRoleDrafts((drafts) => ({
-                                      ...drafts,
-                                      [st.username]: {
-                                        role,
-                                        department: role === 'department_head' ? draft.department || DEPARTMENTS[0] : '',
-                                      },
-                                    }));
+                                    setStaffPasswordDrafts((drafts) => ({ ...drafts, [st.username]: event.target.value }));
                                     setStaffSaveError('');
+                                    setStaffSaveSuccess('');
                                   }}
-                                  className="min-h-9 flex-1 rounded-lg border border-slate-200 bg-white px-2 text-[11px] text-slate-700 disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                                  className="min-h-10 min-w-0 rounded-lg border border-slate-200 bg-white px-3 text-[11px] text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                                />
+                                <button
+                                  type="button"
+                                  disabled={staffSaveUsername === st.username || (staffPasswordDrafts[st.username] ?? '').length < 12}
+                                  onClick={() => void handleResetStaffPassword(st)}
+                                  className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-lg border border-blue-200 px-3 text-[11px] font-semibold text-blue-700 hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-blue-900 dark:text-blue-300 dark:hover:bg-blue-950/40"
                                 >
-                                  <option value="superadmin">{t.roleSuperadmin}</option>
-                                  <option value="customer_service_manager">{t.roleCustomerServiceManager}</option>
-                                  <option value="department_head">{t.roleDepartmentHead}</option>
-                                  <option value="ceo">{t.roleCeo}</option>
-                                  <option value="staff">{t.roleStaff}</option>
-                                </select>
-                                {draft.role === 'department_head' && (
-                                  <select
-                                    aria-label={`Department for ${st.username}`}
-                                    value={draft.department}
-                                    disabled={isSelf || staffSaveUsername === st.username}
-                                    onChange={(event) => {
-                                      setStaffRoleDrafts((drafts) => ({
-                                        ...drafts,
-                                        [st.username]: { ...draft, department: event.target.value },
-                                      }));
-                                      setStaffSaveError('');
-                                    }}
-                                    className="min-h-9 flex-1 rounded-lg border border-slate-200 bg-white px-2 text-[11px] text-slate-700 disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
-                                  >
-                                    {DEPARTMENTS.map((department) => (
-                                      <option key={department} value={department}>{getDeptName(department)}</option>
-                                    ))}
-                                  </select>
-                                )}
-                                {!isSelf && (
-                                  <button
-                                    type="button"
-                                    disabled={staffSaveUsername === st.username || (draft.role === st.role && draft.department === (st.department ?? ''))}
-                                    onClick={() => void handleSaveStaffRole(st)}
-                                    className="min-h-9 rounded-lg bg-blue-700 px-3 text-[11px] font-bold text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
-                                  >
-                                    {staffSaveUsername === st.username ? t.saving : t.saveChanges}
-                                  </button>
-                                )}
-                              </>
-                            );
-                          })()}
+                                  <KeyRound className="h-3.5 w-3.5" />
+                                  {t.staffResetPassword}
+                                </button>
+                              </div>
+                              <div className="flex flex-wrap gap-2">
+                                <button
+                                  type="button"
+                                  disabled={staffSaveUsername === st.username}
+                                  onClick={() => void handleSetStaffActive(st)}
+                                  className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-amber-200 px-3 text-[11px] font-semibold text-amber-800 hover:bg-amber-50 disabled:opacity-50 dark:border-amber-900 dark:text-amber-300 dark:hover:bg-amber-950/40"
+                                >
+                                  {st.isActive ? <UserX className="h-3.5 w-3.5" /> : <UserCheck className="h-3.5 w-3.5" />}
+                                  {st.isActive ? t.staffDeactivate : t.staffActivate}
+                                </button>
+                                <button
+                                  type="button"
+                                  disabled={staffSaveUsername === st.username}
+                                  onClick={() => void handleDeleteStaffAccount(st)}
+                                  className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-rose-200 px-3 text-[11px] font-semibold text-rose-700 hover:bg-rose-50 disabled:opacity-50 dark:border-rose-900 dark:text-rose-300 dark:hover:bg-rose-950/40"
+                                >
+                                  <Trash2 className="h-3.5 w-3.5" />
+                                  {t.staffDeleteAccount}
+                                </button>
+                              </div>
+                            </>
+                          )}
                         </div>
                       )}
                     </div>
