@@ -84,7 +84,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
   const [newStaffPassword, setNewStaffPassword] = useState('');
   const [newStaffPasswordConfirmation, setNewStaffPasswordConfirmation] = useState('');
   const [newStaffRole, setNewStaffRole] = useState<StaffRole>('staff');
-  const [newStaffDepartment, setNewStaffDepartment] = useState(DEPARTMENTS[0]);
+  const [newStaffDepartment, setNewStaffDepartment] = useState('');
   const [isCreatingStaff, setIsCreatingStaff] = useState(false);
 
   // Editing case in modal
@@ -311,7 +311,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
       setNewStaffPassword('');
       setNewStaffPasswordConfirmation('');
       setNewStaffRole('staff');
-      setNewStaffDepartment(DEPARTMENTS[0]);
+      setNewStaffDepartment('');
       setStaffAccessTab('directory');
     } catch (error) {
       setStaffSaveError(error instanceof Error ? error.message : t.staffCreateError);
@@ -970,6 +970,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
                       <label className="min-w-0 flex-1 space-y-1 text-[11px] font-medium text-slate-600 dark:text-slate-300">
                         <span>{t.staffDepartmentLabel}</span>
                         <select value={newStaffDepartment} onChange={(event) => setNewStaffDepartment(event.target.value)} className="w-full rounded-lg border border-slate-200 bg-white px-2 py-2.5 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white">
+                        <option value="">{t.staffDepartmentLabel}</option>
                         {DEPARTMENTS.map((department) => <option key={department} value={department}>{department}</option>)}
                         </select>
                       </label>
@@ -1083,7 +1084,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
                                           value={draft.role}
                                           onChange={(event) => updateDraft({
                                             role: event.target.value as StaffRole,
-                                            department: event.target.value === 'department_head' ? draft.department || DEPARTMENTS[0] : '',
+                                            department: event.target.value === 'department_head' ? draft.department || '' : '',
                                           })}
                                           className="min-h-10 w-full rounded-lg border border-slate-200 bg-white px-2 text-xs text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
                                         >
@@ -1102,6 +1103,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
                                             onChange={(event) => updateDraft({ department: event.target.value })}
                                             className="min-h-10 w-full rounded-lg border border-slate-200 bg-white px-2 text-xs text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
                                           >
+                                            <option value="">{t.staffDepartmentLabel}</option>
                                             {DEPARTMENTS.map((department) => (
                                               <option key={department} value={department}>{getDeptName(department)}</option>
                                             ))}

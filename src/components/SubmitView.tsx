@@ -93,7 +93,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
   const maxRecordingBytes = 10 * 1024 * 1024;
 
   const [kind, setKind] = useState<SubmissionKind>('complaint');
-  const [department, setDepartment] = useState(DEPARTMENTS[0]);
+  const [department, setDepartment] = useState('');
   const [questionnaireAnswers, setQuestionnaireAnswers] = useState<Record<string, number>>({});
   const [rating, setRating] = useState<number>(0);
   const [subject, setSubject] = useState('');
@@ -134,9 +134,17 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
   };
 
   const validateWizardStep = () => {
+    if (wizardStep === 1 && !department) {
+      setSubmitError(language === 'am'
+        ? 'እባክዎ መምሪያ ይምረጡ።'
+        : language === 'om'
+          ? 'Maaloo kutaa filadhu.'
+          : 'Please select a department.');
+      return false;
+    }
     if (wizardStep === 1 && usesQuestionnaire && answeredQuestionCount < minimumQuestionnaireAnswers) {
       setSubmitError(language === 'am'
-        ? `ለመቀጠል ቢያንስ ${minimumQuestionnaireAnswers} የመምሪያ ጥያቄዎችን ይመልሱ።`
+        ? `ለመቀጠል ቢያንስ ${minimumQuestionnaireAnswers} የመምሪያ ጥያቄዎችን ይመልሉ።`
         : language === 'om'
           ? `Itti fufuuf gaaffilee kutaa yoo xiqqaate ${minimumQuestionnaireAnswers} deebisaa.`
           : `Please answer at least ${minimumQuestionnaireAnswers} department questions to continue.`);
@@ -277,6 +285,9 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
     setKind(nextKind);
     setQuestionnaireAnswers({});
     setSubmitError('');
+    // For complaint, go to step 1 (department selection only)
+    // For feedback, go to step 1 (department + questionnaire)
+    setWizardStep(1);
   };
 
   // Generate random 6-character reference code matching target format AGH-XXXXXX
@@ -293,6 +304,14 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
     e.preventDefault();
     if (wizardStep < wizardSteps.length - 1) {
       handleWizardContinue();
+      return;
+    }
+    if (!department) {
+      setSubmitError(language === 'am'
+        ? 'እባክዎ መምሪያ ይምረጡ።'
+        : language === 'om'
+          ? 'Maaloo kutaa filadhu.'
+          : 'Please select a department.');
       return;
     }
     if (usesQuestionnaire) {
@@ -603,6 +622,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
               }}
               className="premium-input w-full cursor-pointer border text-slate-900 dark:text-white"
             >
+              <option value="">{t.chooseDept}</option>
               {DEPARTMENTS.map((dept) => (
                 <option key={dept} value={dept}>
                   {getDeptName(dept)}
