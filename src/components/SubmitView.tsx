@@ -398,41 +398,41 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
   if (submittedCase) {
     return (
       <div className="max-w-md mx-auto py-12 px-4">
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-xs p-6 sm:p-8 text-center space-y-5">
-          <div className="w-12 h-12 bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mx-auto">
-            <CheckCircle2 className="w-6 h-6" />
+        <div className="bg-gradient-to-br from-white via-white to-slate-50/50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950/50 rounded-3xl border-2 border-slate-200/60 dark:border-slate-800/60 shadow-2xl p-8 sm:p-10 text-center space-y-6">
+          <div className="w-16 h-16 bg-gradient-to-br from-[#0077b6] to-[#00b4d8] text-white rounded-2xl flex items-center justify-center mx-auto shadow-xl shadow-[#0077b6]/30">
+            <CheckCircle2 className="w-8 h-8" />
         </div>
 
-          <div className="space-y-1">
-            <h2 className="font-serif text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
+          <div className="space-y-2">
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
               {t.thankYouTitle}
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
               {t.keepRefNotice}
             </p>
           </div>
 
-          <div className="py-3 px-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/80 dark:border-slate-700/60 flex items-center justify-center gap-3">
-            <span className="font-mono text-xl font-bold tracking-wider text-blue-700 dark:text-blue-300">
+          <div className="py-4 px-5 bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800/60 dark:to-slate-900/60 rounded-2xl border-2 border-slate-200/60 dark:border-slate-700/60 flex items-center justify-center gap-4 shadow-md">
+            <span className="font-mono text-2xl font-bold tracking-wider text-[#0077b6] dark:text-[#90e0ef]">
               {submittedCase.reference}
             </span>
             <button
               onClick={handleCopyRef}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+              className="p-2 rounded-xl text-slate-400 hover:text-[#0077b6] dark:hover:text-[#90e0ef] hover:bg-white dark:hover:bg-slate-800 transition-all shadow-sm hover:shadow-md"
               title={t.copyReference}
               aria-label={t.copyReference}
             >
-              {copied ? <Check className="w-4 h-4 text-sky-600" /> : <Copy className="w-4 h-4" />}
+              {copied ? <Check className="w-5 h-5 text-[#00b4d8]" /> : <Copy className="w-5 h-5" />}
             </button>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 pt-2">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
             <button
               onClick={() => onNavigateTrack(submittedCase.reference)}
-              className="w-full sm:w-auto px-4 py-2 min-h-[44px] bg-blue-600 hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/20 text-white font-semibold text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-2xs"
+              className="w-full sm:w-auto px-5 py-3 min-h-[48px] bg-gradient-to-r from-[#0077b6] via-[#00b4d8] to-[#90e0ef] hover:from-[#006094] hover:via-[#0096a8] hover:to-[#70c5dd] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#90e0ef]/40 text-white font-semibold text-sm rounded-2xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl flex items-center justify-center gap-2 shadow-lg shadow-[#0077b6]/25"
             >
               <span>{t.trackThisCase}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-4 h-4" />
             </button>
             <button
               onClick={() => {
@@ -442,9 +442,9 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
                 setRating(0);
                 setWizardStep(0);
               }}
-              className="w-full sm:w-auto px-4 py-2 min-h-[40px] text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5"
+              className="w-full sm:w-auto px-5 py-3 min-h-[44px] text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-sm rounded-2xl transition-all duration-300 hover:shadow-md flex items-center justify-center gap-2 border-2 border-slate-200/60 dark:border-slate-700/60"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
+              <RotateCcw className="w-4 h-4" />
               <span>{t.submitAnother}</span>
             </button>
           </div>
@@ -497,32 +497,32 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
 
       <form
         onSubmit={handleSubmit}
-        className="premium-form mx-auto max-w-3xl rounded-[28px] border border-slate-200/80 bg-white/95 p-5 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/95 sm:p-8"
+        className="premium-form mx-auto max-w-3xl rounded-[32px] border border-slate-200/80 bg-gradient-to-br from-white via-white to-slate-50/50 p-6 shadow-[0_32px_80px_rgba(3,4,94,0.12)] backdrop-blur-sm dark:border-slate-800 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950/50 sm:p-10"
       >
-        <div className="flex items-center justify-between gap-3 border-b border-slate-200 pb-5 dark:border-slate-800">
+        <div className="flex items-center justify-between gap-4 border-b border-slate-200/60 pb-6 dark:border-slate-800/60">
           <div>
-            <div className="mb-1.5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#0077b6] dark:text-[#90e0ef]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#90e0ef] ring-2 ring-[#90e0ef]/25" />
+            <div className="mb-2 flex items-center gap-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[#0077b6] dark:text-[#90e0ef]">
+              <span className="h-2 w-2 rounded-full bg-[#90e0ef] ring-2 ring-[#90e0ef]/30 animate-pulse" />
               {t.patientRelations}
             </div>
-            <h2 className="text-xl font-black text-slate-900 dark:text-white">{t.submitButton}</h2>
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+            <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">{t.submitButton}</h2>
+            <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
               {t.feedbackTypePrompt}
             </p>
           </div>
-          <span className="hidden rounded-full bg-[#caf0f8] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#03045e] dark:bg-[#023e8a]/50 dark:text-[#caf0f8] sm:inline-flex">
+          <span className="hidden rounded-full bg-gradient-to-r from-[#caf0f8] to-[#90e0ef] px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#03045e] dark:from-[#023e8a] dark:to-[#0077b6] dark:text-[#caf0f8] sm:inline-flex shadow-lg shadow-[#90e0ef]/20">
             {t.patientRelations}
           </span>
         </div>
-        <div ref={wizardProgressRef} className="sticky top-[4.5rem] z-10 -mx-1 mt-4 rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-sm backdrop-blur dark:border-slate-700 dark:bg-slate-900/95 sm:static sm:mx-0 sm:mt-6 sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none sm:backdrop-blur-none">
-          <ol aria-label={`${t.wizardStepProgress} ${wizardStep + 1} / ${wizardSteps.length}: ${wizardSteps[wizardStep]}`} className="grid grid-cols-4 gap-2">
+        <div ref={wizardProgressRef} className="sticky top-[4.5rem] z-10 -mx-1 mt-6 rounded-2xl border border-slate-200/60 bg-gradient-to-r from-white to-slate-50/50 p-4 shadow-lg backdrop-blur-sm dark:border-slate-700/60 dark:from-slate-900 dark:to-slate-950/50 sm:static sm:mx-0 sm:mt-8 sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none sm:backdrop-blur-none">
+          <ol aria-label={`${t.wizardStepProgress} ${wizardStep + 1} / ${wizardSteps.length}: ${wizardSteps[wizardStep]}`} className="grid grid-cols-4 gap-3">
             {wizardSteps.map((label, index) => {
               const isComplete = index < wizardStep;
               const isCurrent = index === wizardStep;
               return (
                 <li key={label} aria-current={isCurrent ? 'step' : undefined} className="min-w-0">
-                  <div className={`mb-1 h-1.5 rounded-full transition-colors ${isComplete || isCurrent ? 'bg-[#0077b6]' : 'bg-slate-200 dark:bg-slate-700'}`} />
-                  <span className={`block truncate text-center text-[10px] font-semibold ${isCurrent ? 'text-[#03045e] dark:text-[#90e0ef]' : isComplete ? 'text-slate-700 dark:text-slate-300' : 'text-slate-400'}`}>
+                  <div className={`mb-2 h-2 rounded-full transition-all duration-300 ${isComplete || isCurrent ? 'bg-gradient-to-r from-[#0077b6] to-[#00b4d8] shadow-lg shadow-[#0077b6]/20' : 'bg-slate-200 dark:bg-slate-700'}`} />
+                  <span className={`block truncate text-center text-[10px] font-semibold transition-colors ${isCurrent ? 'text-[#03045e] dark:text-[#90e0ef] scale-105' : isComplete ? 'text-slate-700 dark:text-slate-300' : 'text-slate-400'}`}>
                     {index + 1}. {label}
                   </span>
                 </li>
@@ -533,37 +533,37 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
             {`${wizardSteps[wizardStep]} · ${wizardStep + 1} / ${wizardSteps.length}`}
           </p>
         </div>
-        <div className={wizardStep === 0 ? 'mt-5' : 'hidden'}>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className={wizardStep === 0 ? 'mt-6' : 'hidden'}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <button
             type="button"
             onClick={() => selectSubmissionKind('complaint')}
             aria-pressed={kind === 'complaint'}
-            className={`kind-choice group relative min-h-24 touch-manipulation overflow-hidden rounded-2xl border p-4 text-left transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-rose-500/20 active:translate-y-0 ${
+            className={`kind-choice group relative min-h-28 touch-manipulation overflow-hidden rounded-3xl border-2 p-5 text-left transition-all duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-rose-500/30 active:translate-y-0 ${
               kind === 'complaint'
-                ? 'border-rose-300 bg-gradient-to-br from-rose-50 via-white to-rose-100/70 shadow-[0_10px_24px_rgba(225,29,72,0.12)] ring-2 ring-rose-200 dark:border-rose-800 dark:from-rose-950/70 dark:via-slate-900 dark:to-rose-950/40 dark:ring-rose-900'
-                : 'border-slate-200 bg-white shadow-sm hover:border-rose-200 hover:bg-rose-50/40 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:hover:border-rose-900 dark:hover:bg-rose-950/20'
+                ? 'border-rose-400 bg-gradient-to-br from-rose-50 via-white to-rose-100/80 shadow-[0_20px_40px_rgba(225,29,72,0.15)] ring-4 ring-rose-200 dark:border-rose-500 dark:from-rose-950/80 dark:via-slate-900 dark:to-rose-950/50 dark:ring-rose-900/50'
+                : 'border-slate-200 bg-white shadow-md hover:border-rose-300 hover:bg-gradient-to-br hover:from-rose-50 hover:to-white hover:shadow-xl dark:border-slate-700 dark:bg-slate-900 dark:hover:border-rose-700 dark:hover:from-rose-950/30 dark:hover:to-slate-900'
             }`}
           >
-            <span className={`absolute inset-y-0 left-0 w-1 transition-colors ${kind === 'complaint' ? 'bg-rose-500' : 'bg-transparent group-hover:bg-rose-200 dark:group-hover:bg-rose-900'}`} aria-hidden="true" />
-            <span className="flex items-center gap-3.5">
-              <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl transition-all duration-200 ${
+            <span className={`absolute inset-y-0 left-0 w-1.5 transition-all duration-300 ${kind === 'complaint' ? 'bg-gradient-to-b from-rose-500 to-rose-600' : 'bg-transparent group-hover:bg-gradient-to-b group-hover:from-rose-300 group-hover:to-rose-400 dark:group-hover:from-rose-700 dark:group-hover:to-rose-800'}`} aria-hidden="true" />
+            <span className="flex items-center gap-4">
+              <span className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl transition-all duration-300 ${
                 kind === 'complaint'
-                  ? 'bg-rose-600 text-white shadow-lg shadow-rose-500/25'
-                  : 'bg-rose-50 text-rose-700 group-hover:scale-105 dark:bg-rose-950/70 dark:text-rose-300'
+                  ? 'bg-gradient-to-br from-rose-500 to-rose-600 text-white shadow-xl shadow-rose-500/30 scale-110'
+                  : 'bg-gradient-to-br from-rose-100 to-rose-200 text-rose-700 group-hover:scale-110 dark:from-rose-950/60 dark:to-rose-900/60 dark:text-rose-300'
               }`}>
-                <AlertCircle className="h-5 w-5" />
+                <AlertCircle className="h-6 w-6" />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-sm font-extrabold text-slate-900 dark:text-white">{t.kindComplaint}</span>
-                <span className="mt-1 block text-[11px] leading-relaxed text-slate-600 dark:text-slate-400">
+                <span className="block text-base font-extrabold text-slate-900 dark:text-white">{t.kindComplaint}</span>
+                <span className="mt-1.5 block text-xs leading-relaxed text-slate-600 dark:text-slate-400">
                   {t.kindComplaintDescription}
                 </span>
               </span>
               <span className="shrink-0" aria-hidden="true">
                 {kind === 'complaint'
-                  ? <CheckCircle2 className="h-5 w-5 text-rose-600 dark:text-rose-300" />
-                  : <Circle className="h-5 w-5 text-slate-300 transition-colors group-hover:text-rose-300 dark:text-slate-600" />}
+                  ? <CheckCircle2 className="h-6 w-6 text-rose-600 dark:text-rose-300 scale-110" />
+                  : <Circle className="h-6 w-6 text-slate-300 transition-colors group-hover:text-rose-400 dark:text-slate-600" />}
               </span>
             </span>
           </button>
@@ -572,44 +572,44 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
             type="button"
             onClick={() => selectSubmissionKind('feedback')}
             aria-pressed={kind === 'feedback'}
-            className={`kind-choice group relative min-h-24 touch-manipulation overflow-hidden rounded-2xl border p-4 text-left transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/20 active:translate-y-0 ${
+            className={`kind-choice group relative min-h-28 touch-manipulation overflow-hidden rounded-3xl border-2 p-5 text-left transition-all duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30 active:translate-y-0 ${
               kind === 'feedback'
-                ? 'border-blue-300 bg-gradient-to-br from-blue-50 via-white to-sky-100/70 shadow-[0_10px_24px_rgba(37,99,235,0.12)] ring-2 ring-blue-200 dark:border-blue-800 dark:from-blue-950/70 dark:via-slate-900 dark:to-sky-950/40 dark:ring-blue-900'
-                : 'border-slate-200 bg-white shadow-sm hover:border-blue-200 hover:bg-blue-50/40 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:hover:border-blue-900 dark:hover:bg-blue-950/20'
+                ? 'border-blue-400 bg-gradient-to-br from-blue-50 via-white to-sky-100/80 shadow-[0_20px_40px_rgba(37,99,235,0.15)] ring-4 ring-blue-200 dark:border-blue-500 dark:from-blue-950/80 dark:via-slate-900 dark:to-sky-950/50 dark:ring-blue-900/50'
+                : 'border-slate-200 bg-white shadow-md hover:border-blue-300 hover:bg-gradient-to-br hover:from-blue-50 hover:to-white hover:shadow-xl dark:border-slate-700 dark:bg-slate-900 dark:hover:border-blue-700 dark:hover:from-blue-950/30 dark:hover:to-slate-900'
             }`}
           >
-            <span className={`absolute inset-y-0 left-0 w-1 transition-colors ${kind === 'feedback' ? 'bg-blue-500' : 'bg-transparent group-hover:bg-blue-200 dark:group-hover:bg-blue-900'}`} aria-hidden="true" />
-            <span className="flex items-center gap-3.5">
-              <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl transition-all duration-200 ${
+            <span className={`absolute inset-y-0 left-0 w-1.5 transition-all duration-300 ${kind === 'feedback' ? 'bg-gradient-to-b from-blue-500 to-blue-600' : 'bg-transparent group-hover:bg-gradient-to-b group-hover:from-blue-300 group-hover:to-blue-400 dark:group-hover:from-blue-700 dark:group-hover:to-blue-800'}`} aria-hidden="true" />
+            <span className="flex items-center gap-4">
+              <span className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl transition-all duration-300 ${
                 kind === 'feedback'
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25'
-                  : 'bg-blue-50 text-blue-700 group-hover:scale-105 dark:bg-blue-950/70 dark:text-blue-300'
+                  ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-xl shadow-blue-500/30 scale-110'
+                  : 'bg-gradient-to-br from-blue-100 to-blue-200 text-blue-700 group-hover:scale-110 dark:from-blue-950/60 dark:to-blue-900/60 dark:text-blue-300'
               }`}>
-                <Lightbulb className="h-5 w-5" />
+                <Lightbulb className="h-6 w-6" />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-sm font-extrabold text-slate-900 dark:text-white">{t.kindFeedback}</span>
-                <span className="mt-1 block text-[11px] leading-relaxed text-slate-600 dark:text-slate-400">
+                <span className="block text-base font-extrabold text-slate-900 dark:text-white">{t.kindFeedback}</span>
+                <span className="mt-1.5 block text-xs leading-relaxed text-slate-600 dark:text-slate-400">
                   {t.kindFeedbackDescription}
                 </span>
               </span>
               <span className="shrink-0" aria-hidden="true">
                 {kind === 'feedback'
-                  ? <CheckCircle2 className="h-5 w-5 text-blue-600 dark:text-blue-300" />
-                  : <Circle className="h-5 w-5 text-slate-300 transition-colors group-hover:text-blue-300 dark:text-slate-600" />}
+                  ? <CheckCircle2 className="h-6 w-6 text-blue-600 dark:text-blue-300 scale-110" />
+                  : <Circle className="h-6 w-6 text-slate-300 transition-colors group-hover:text-blue-400 dark:text-slate-600" />}
               </span>
             </span>
           </button>
         </div>
-        <p className="mt-3 rounded-xl bg-slate-50 px-3.5 py-2.5 text-xs leading-relaxed text-slate-600 dark:bg-slate-800/60 dark:text-slate-300" aria-live="polite">
+        <p className="mt-4 rounded-2xl bg-gradient-to-r from-slate-50 to-slate-100 px-4 py-3 text-sm leading-relaxed text-slate-700 dark:from-slate-800/60 dark:to-slate-900/60 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60 shadow-sm" aria-live="polite">
           {questionDescription}
         </p>
         </div>
 
         {/* Department & Experience Rating in a clean cohesive block */}
-        <div className={wizardStep === 1 ? 'space-y-5 pt-4' : 'hidden'}>
+        <div className={wizardStep === 1 ? 'space-y-6 pt-6' : 'hidden'}>
           <div>
-            <label htmlFor="feedback-department" className="mb-2 block text-xs font-bold text-slate-800 dark:text-slate-200">
+            <label htmlFor="feedback-department" className="mb-3 block text-sm font-bold text-slate-800 dark:text-slate-200">
               {t.chooseDept}
             </label>
             <select
@@ -620,7 +620,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
                 setQuestionnaireAnswers({});
                 setSubmitError('');
               }}
-              className="premium-input w-full cursor-pointer border text-slate-900 dark:text-white"
+              className="premium-input w-full cursor-pointer border-2 text-slate-900 dark:text-white text-base py-3 px-4 rounded-xl transition-all hover:border-[#0077b6] focus:border-[#0077b6] focus:ring-4 focus:ring-[#0077b6]/20"
             >
               <option value="">{t.chooseDept}</option>
               {DEPARTMENTS.map((dept) => (
@@ -632,45 +632,45 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
           </div>
 
           {usesQuestionnaire && (
-            <fieldset className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50/70 p-4 dark:border-slate-700 dark:bg-slate-800/40 sm:p-5">
+            <fieldset className="space-y-5 rounded-3xl border-2 border-slate-200/60 bg-gradient-to-br from-slate-50 to-white p-5 shadow-lg dark:border-slate-700/60 dark:from-slate-800/60 dark:to-slate-900 sm:p-6">
               <legend className="sr-only">
                 {t.questionnaireTitle}
               </legend>
-              <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <h3 className="text-sm font-black text-slate-900 dark:text-white">
+                  <h3 className="text-base font-black text-slate-900 dark:text-white">
                     {t.questionnaireTitle}
                   </h3>
-                  <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+                  <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                     {t.questionnaireInstructions.replace('{minimum}', String(minimumQuestionnaireAnswers))}
                   </p>
                 </div>
-                <span className="rounded-full border border-blue-200 bg-white px-3 py-1 text-[10px] font-bold text-blue-800 dark:border-blue-900 dark:bg-slate-900 dark:text-blue-200">
+                <span className="rounded-full border-2 border-blue-300 bg-gradient-to-r from-blue-50 to-white px-4 py-1.5 text-xs font-bold text-blue-800 shadow-md dark:border-blue-700 dark:from-blue-950/60 dark:to-slate-900 dark:text-blue-200">
                   {answeredQuestionCount}/{departmentQuestions.length} {t.questionnaireAnswered}
                 </span>
               </div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+              <div className="h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700 shadow-inner">
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-blue-600 to-sky-500 transition-[width] duration-300"
+                  className="h-full rounded-full bg-gradient-to-r from-[#0077b6] via-[#00b4d8] to-[#90e0ef] transition-[width] duration-500 shadow-lg"
                   style={{ width: `${(answeredQuestionCount / departmentQuestions.length) * 100}%` }}
                 />
               </div>
-              <div className="space-y-2.5">
+              <div className="space-y-4">
                 {departmentQuestions.map((question, index) => {
                   const options = question.scale === 'likelihood' ? LIKELIHOOD_OPTIONS : SATISFACTION_OPTIONS;
                   const selectedValue = questionnaireAnswers[question.id];
 
                   return (
-                    <div key={question.id} className="rounded-2xl border border-slate-200 bg-white p-3.5 shadow-sm transition-colors hover:border-blue-200 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-blue-900 sm:p-4">
-                      <div className="mb-3 flex items-start gap-2.5">
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-[10px] font-black text-blue-800 dark:bg-blue-950/70 dark:text-blue-200">
+                    <div key={question.id} className="rounded-2xl border-2 border-slate-200/60 bg-white p-4 shadow-md transition-all duration-300 hover:border-blue-300 hover:shadow-lg dark:border-slate-700/60 dark:bg-slate-900 dark:hover:border-blue-700 sm:p-5">
+                      <div className="mb-4 flex items-start gap-3">
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-100 to-blue-200 text-xs font-black text-blue-800 shadow-md dark:from-blue-950/70 dark:to-blue-900/70 dark:text-blue-200">
                           {index + 1}
                         </span>
-                        <span className="pt-0.5 text-xs font-semibold leading-relaxed text-slate-800 dark:text-slate-100">
+                        <span className="pt-1 text-sm font-semibold leading-relaxed text-slate-800 dark:text-slate-100">
                           {question[language]}
                         </span>
                       </div>
-                      <div className="grid grid-cols-5 gap-1.5" role="group" aria-label={question[language]}>
+                      <div className="grid grid-cols-5 gap-2" role="group" aria-label={question[language]}>
                         {options.map((option) => {
                           const isSelected = selectedValue === option.value;
                           return (
@@ -686,14 +686,14 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
                                 }));
                                 setSubmitError('');
                               }}
-                              className={`flex min-h-16 flex-col items-center justify-center gap-1.5 rounded-xl border px-1 py-2 text-center transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 ${
+                              className={`flex min-h-20 flex-col items-center justify-center gap-2 rounded-xl border-2 px-1 py-2.5 text-center transition-all duration-300 hover:-translate-y-1 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 ${
                                 isSelected ? ratingOptionStyles[option.value].selected : ratingOptionStyles[option.value].idle
                               }`}
                             >
-                              <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-black ${
-                                isSelected ? 'bg-white/20 ring-1 ring-white/30' : 'bg-white/80 shadow-sm dark:bg-slate-950/50'
+                              <span className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-black transition-all ${
+                                isSelected ? 'bg-white/30 ring-2 ring-white/40 scale-110' : 'bg-white/90 shadow-md dark:bg-slate-950/50'
                               }`}>{option.value}</span>
-                              <span className="text-[9px] font-bold leading-tight break-words">
+                              <span className="text-[10px] font-bold leading-tight break-words">
                                 {option[language]}
                               </span>
                             </button>
@@ -707,21 +707,21 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
             </fieldset>
           )}
 
-          <fieldset className="rounded-2xl border border-amber-200/80 bg-gradient-to-r from-amber-50/80 to-white p-3.5 dark:border-amber-900/60 dark:from-amber-950/30 dark:to-slate-900">
-            <legend className="px-1 text-xs font-bold text-slate-800 dark:text-slate-200">
+          <fieldset className="rounded-3xl border-2 border-amber-300/60 bg-gradient-to-br from-amber-50 via-white to-amber-100/50 p-5 shadow-lg dark:border-amber-700/60 dark:from-amber-950/40 dark:via-slate-900 dark:to-amber-950/20">
+            <legend className="px-2 text-sm font-bold text-slate-800 dark:text-slate-200">
               {t.overallExperience}
             </legend>
-            <div className="flex items-center justify-between gap-2">
-              <span className="text-[11px] text-slate-500 dark:text-slate-400">
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">
                 {t.ratingPrompt}
               </span>
               {rating > 0 && (
-                <span className="rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-bold text-amber-800 dark:bg-amber-950/70 dark:text-amber-200" aria-live="polite">
+                <span className="rounded-full bg-gradient-to-r from-amber-200 to-amber-300 px-3 py-1.5 text-xs font-bold text-amber-900 shadow-md dark:from-amber-800 dark:to-amber-700 dark:text-amber-100" aria-live="polite">
                   {rating}/5
                 </span>
               )}
             </div>
-            <div className="mt-1 flex items-center justify-between gap-1" role="group" aria-label={t.overallExperience}>
+            <div className="mt-2 flex items-center justify-between gap-2" role="group" aria-label={t.overallExperience}>
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
@@ -729,25 +729,25 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
                   onClick={() => setRating(rating === star ? 0 : star)}
                   aria-label={`${star} ${star === 1 ? t.starUnit : t.starsUnit}`}
                   aria-pressed={rating === star}
-                  className={`flex min-h-11 min-w-11 items-center justify-center rounded-xl transition-all focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-400/30 ${
+                  className={`flex min-h-14 min-w-14 items-center justify-center rounded-2xl transition-all duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-400/40 hover:scale-110 ${
                     star <= rating
-                      ? 'bg-amber-100 text-amber-500 dark:bg-amber-950/50'
-                      : 'text-slate-300 hover:bg-amber-50 hover:text-amber-400 dark:text-slate-600 dark:hover:bg-amber-950/30'
+                      ? 'bg-gradient-to-br from-amber-400 to-amber-500 text-white shadow-xl shadow-amber-500/30'
+                      : 'text-slate-300 hover:bg-gradient-to-br hover:from-amber-100 hover:to-amber-200 hover:text-amber-600 dark:text-slate-600 dark:hover:from-amber-900/50 dark:hover:to-amber-800/50 dark:hover:text-amber-300'
                   }`}
                   title={`${star} ${star === 1 ? t.starUnit : t.starsUnit}`}
                 >
-                  <Star className={`h-6 w-6 transition-transform ${star <= rating ? 'fill-current scale-110' : ''}`} />
+                  <Star className={`h-7 w-7 transition-transform ${star <= rating ? 'fill-current scale-110' : ''}`} />
                 </button>
               ))}
             </div>
           </fieldset>
         </div>
 
-        <div className={wizardStep === 2 ? 'space-y-3 pt-4' : 'hidden'}>
+        <div className={wizardStep === 2 ? 'space-y-5 pt-6' : 'hidden'}>
         {/* Complaints require a description, but not a subject. */}
-        <div className="space-y-3 pt-1">
+        <div className="space-y-5 pt-2">
           <div>
-            <label htmlFor="feedback-subject" className="mb-2 block text-xs font-bold text-slate-800 dark:text-slate-200">
+            <label htmlFor="feedback-subject" className="mb-3 block text-sm font-bold text-slate-800 dark:text-slate-200">
               {t.subjectLabel} ({t.optionalLabel})
             </label>
             <input
@@ -758,25 +758,25 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
               placeholder={usesQuestionnaire
                 ? t.subjectPlaceholder
                 : t.subjectPlaceholder}
-              className="premium-input w-full border text-slate-900 dark:text-white"
+              className="premium-input w-full border-2 text-slate-900 dark:text-white text-base py-3 px-4 rounded-xl transition-all hover:border-[#0077b6] focus:border-[#0077b6] focus:ring-4 focus:ring-[#0077b6]/20"
             />
           </div>
 
           <div>
-            <label htmlFor="feedback-message" className="mb-2 block text-xs font-bold text-slate-800 dark:text-slate-200">
+            <label htmlFor="feedback-message" className="mb-3 block text-sm font-bold text-slate-800 dark:text-slate-200">
               {usesQuestionnaire || (kind === 'complaint' && audioBlob)
                 ? t.additionalCommentsLabel
                 : t.messageLabel}
             </label>
             <textarea
               id="feedback-message"
-              rows={4}
+              rows={5}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder={usesQuestionnaire
                 ? t.additionalCommentsPlaceholder
                 : t.messagePlaceholder}
-              className="premium-input min-h-36 w-full resize-y border text-slate-900 dark:text-white"
+              className="premium-input min-h-40 w-full resize-y border-2 text-slate-900 dark:text-white text-base py-3 px-4 rounded-xl transition-all hover:border-[#0077b6] focus:border-[#0077b6] focus:ring-4 focus:ring-[#0077b6]/20"
             />
           </div>
         </div>
@@ -939,19 +939,19 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
         </div>
         </div>
 
-        <div className="pt-2">
+        <div className="pt-4">
           {submitError && (
-            <p role="alert" className="mb-3 flex items-start gap-2 rounded-2xl border border-rose-200 bg-rose-50 p-3.5 text-xs font-semibold text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-300">
-              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+            <p role="alert" className="mb-4 flex items-start gap-3 rounded-2xl border-2 border-rose-300 bg-gradient-to-r from-rose-50 to-rose-100/50 p-4 text-sm font-semibold text-rose-800 dark:border-rose-700 dark:from-rose-950/60 dark:to-rose-900/30 dark:text-rose-300 shadow-lg shadow-rose-500/10">
+              <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
               {submitError}
             </p>
           )}
-          <div className="flex gap-3">
+          <div className="flex gap-4">
             {wizardStep > 0 && (
               <button
                 type="button"
                 onClick={() => moveToWizardStep(wizardStep - 1)}
-                className="min-h-12 flex-1 rounded-2xl border border-slate-300 px-4 text-sm font-bold text-slate-700 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-400/20 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
+                className="min-h-14 flex-1 rounded-2xl border-2 border-slate-300 px-5 text-sm font-bold text-slate-700 transition-all duration-300 hover:bg-slate-100 hover:border-slate-400 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-400/30 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:border-slate-500"
               >
                 {t.wizardBack}
               </button>
@@ -964,17 +964,17 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
                   event.preventDefault();
                   handleWizardContinue();
                 }}
-                className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#03045e] via-[#0077b6] to-[#023e8a] px-4 text-sm font-black text-white shadow-[0_18px_36px_rgba(0,119,182,0.28)] transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#90e0ef]/60"
+                className="flex min-h-14 flex-1 items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-[#0077b6] via-[#00b4d8] to-[#90e0ef] px-5 text-sm font-black text-white shadow-xl shadow-[#0077b6]/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#0077b6]/40 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#90e0ef]/60"
               >
                 {t.wizardContinue}
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-5 w-5" />
               </button>
             ) : (
               <button
                 key="submit"
                 type="submit"
                 disabled={isSubmitting}
-                className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#03045e] via-[#0077b6] to-[#023e8a] px-4 text-sm font-black text-white shadow-[0_18px_36px_rgba(0,119,182,0.3)] transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-[0_22px_40px_rgba(0,119,182,0.4)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#90e0ef]/60 disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex min-h-14 flex-1 items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-[#0077b6] via-[#00b4d8] to-[#90e0ef] px-5 text-sm font-black text-white shadow-xl shadow-[#0077b6]/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#0077b6]/40 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#90e0ef]/60 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:shadow-lg"
               >
                 <span>{isSubmitting ? t.submitting : t.submitButton}</span>
               </button>
