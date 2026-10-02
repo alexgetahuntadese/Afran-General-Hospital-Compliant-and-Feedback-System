@@ -1,13 +1,13 @@
 import React from 'react';
-import { Shield, Search, FileEdit, Sun, Moon, AlertCircle } from 'lucide-react';
+import { Shield, Search, FileEdit, Sun, Moon, AlertCircle, QrCode } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { StaffUser } from '../types/hospital';
 import hospitalLogo from '../assets/images/afran-general-hospital-logo.jpg';
 
 interface HeaderProps {
-  currentView: 'submit' | 'track' | 'staff';
-  onNavigate: (view: 'submit' | 'track' | 'staff') => void;
+  currentView: 'submit' | 'track' | 'staff' | 'qrcode';
+  onNavigate: (view: 'submit' | 'track' | 'staff' | 'qrcode') => void;
   currentUser: StaffUser | null;
   onSignOut: () => void;
 }
@@ -97,6 +97,22 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <Shield className="h-4 w-4 shrink-0" aria-hidden="true" />
             <span className="hidden sm:inline">{currentUser ? t.navStaff : t.navStaffLogin}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onNavigate('qrcode')}
+            aria-label="QR Code Posters"
+            title="QR Code Posters"
+            aria-current={currentView === 'qrcode' ? 'page' : undefined}
+            className={`flex min-h-10 min-w-10 items-center justify-center gap-1.5 rounded-xl border px-2 text-[11px] font-semibold transition-all focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#90e0ef]/60 sm:px-3 sm:text-xs ${
+              currentView === 'qrcode'
+                ? 'border-[#90e0ef] bg-white text-[#03045e] shadow-sm dark:border-[#0077b6] dark:bg-slate-800 dark:text-[#90e0ef]'
+                : 'border-transparent text-slate-600 hover:border-[#90e0ef]/50 hover:bg-white hover:text-[#03045e] dark:text-slate-300 dark:hover:border-slate-600 dark:hover:bg-slate-800 dark:hover:text-white'
+            }`}
+          >
+            <QrCode className="h-4 w-4 shrink-0" aria-hidden="true" />
+            <span className="hidden sm:inline">QR Posters</span>
           </button>
 
           <span className="mx-1 h-6 w-px shrink-0 bg-slate-200 dark:bg-slate-700 sm:mx-2" aria-hidden="true" />

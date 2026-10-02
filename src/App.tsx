@@ -11,6 +11,7 @@ import { Header } from './components/Header';
 import { SubmitView } from './components/SubmitView';
 import { TrackView } from './components/TrackView';
 import { StaffView } from './components/StaffView';
+import { QRCodePoster } from './components/QRCodePoster';
 import { CaseSubmission, StaffAccountAction, StaffRole, StaffUser } from './types/hospital';
 import type { Session } from '@supabase/supabase-js';
 import { createCase, createStaffAccount, getCases, getCurrentUserProfile, getStaffProfiles, manageStaffAccount, updateCase } from './lib/data';
@@ -21,7 +22,7 @@ function HospitalFeedbackApp() {
 
   const [showSplash, setShowSplash] = useState(true);
   const [isSplashExiting, setIsSplashExiting] = useState(false);
-  const [currentView, setCurrentView] = useState<'submit' | 'track' | 'staff'>('submit');
+  const [currentView, setCurrentView] = useState<'submit' | 'track' | 'staff' | 'qrcode'>('submit');
   const [cases, setCases] = useState<CaseSubmission[]>([]);
   const [staffList, setStaffList] = useState<StaffUser[]>([]);
   const [currentUser, setCurrentUserState] = useState<StaffUser | null>(null);
@@ -277,6 +278,10 @@ function HospitalFeedbackApp() {
             authError={authError}
             dataError={dataError}
           />
+        )}
+
+        {currentView === 'qrcode' && (
+          <QRCodePoster />
         )}
       </main>
 
