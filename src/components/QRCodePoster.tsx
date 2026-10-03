@@ -55,12 +55,6 @@ export const QRCodePoster: React.FC = () => {
                 <p className="text-xl font-semibold text-slate-900">
                   Scan to share complaint • suggestion • compliment feedback
                 </p>
-                <p className="text-xl font-semibold text-slate-900">
-                  ስካን በማድረግ ቅሬታ • ሀሳብ • ምስጋና • አስተያየትዎን ያካፍሉ
-                </p>
-                <p className="text-xl font-semibold text-slate-900">
-                  Qabxii fayyadamiin komii • yaada • galmeessaa yaada kenni
-                </p>
               </div>
 
               <div className="my-8">
@@ -95,13 +89,7 @@ export const QRCodePoster: React.FC = () => {
               
               <div className="space-y-2">
                 <p className="text-xl font-semibold text-slate-900">
-                  Scan to share complaint • suggestion • compliment feedback
-                </p>
-                <p className="text-xl font-semibold text-slate-900">
                   ስካን በማድረግ ቅሬታ • ሀሳብ • ምስጋና • አስተያየትዎን ያካፍሉ
-                </p>
-                <p className="text-xl font-semibold text-slate-900">
-                  Qabxii fayyadamiin komii • yaada • galmeessaa yaada kenni
                 </p>
               </div>
 
@@ -137,13 +125,7 @@ export const QRCodePoster: React.FC = () => {
               
               <div className="space-y-2">
                 <p className="text-xl font-semibold text-slate-900">
-                  Scan to share complaint • suggestion • compliment feedback
-                </p>
-                <p className="text-xl font-semibold text-slate-900">
-                  ስካን በማድረግ ቅሬታ • ሀሳብ • ምስጋና • አስተያየትዎን ያካፍሉ
-                </p>
-                <p className="text-xl font-semibold text-slate-900">
-                  Qabxii fayyadamiin komii • yaada • galmeessaa yaada kenni
+                  Qabxii fayyadamiin komii • yaada • galmeessaa kenni
                 </p>
               </div>
 
@@ -179,12 +161,6 @@ export const QRCodePoster: React.FC = () => {
               <div className="space-y-2">
                 <p className="text-xl font-semibold text-slate-900">
                   Scan to share complaint • suggestion • compliment feedback
-                </p>
-                <p className="text-xl font-semibold text-slate-900">
-                  ስካን በማድረግ ቅሬታ • ሀሳብ • ምስጋና • አስተያየትዎን ያካፍሉ
-                </p>
-                <p className="text-xl font-semibold text-slate-900">
-                  Qabxii fayyadamiin komii • yaada • galmeessaa yaada kenni
                 </p>
               </div>
 
