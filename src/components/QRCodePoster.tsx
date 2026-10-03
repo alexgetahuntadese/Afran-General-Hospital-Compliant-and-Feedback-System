@@ -11,12 +11,13 @@ export const QRCodePoster: React.FC = () => {
   useEffect(() => {
     const url = 'https://afranfeedback.vercel.app';
     QRCode.toDataURL(url, {
-      width: 400,
-      margin: 2,
+      width: 600,
+      margin: 4,
       color: {
-        dark: '#03045e',
+        dark: '#000000',
         light: '#ffffff',
       },
+      errorCorrectionLevel: 'H',
     }).then(setQrCodeUrl);
   }, []);
 
@@ -26,179 +27,69 @@ export const QRCodePoster: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-3xl mx-auto no-print">
         <div className="mb-8 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-slate-900">QR Code Posters for Hospital Walls</h1>
+          <h1 className="text-2xl font-bold text-slate-900">QR Code Poster for Hospital Walls</h1>
           <button
             onClick={handlePrint}
             className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
           >
-            Print Posters
+            Print Poster
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Poster 1 - English */}
-          <div
-            ref={posterRef}
-            className="bg-white rounded-2xl shadow-lg p-8 print:shadow-none print:border-2 print:border-black"
-          >
-            <div className="text-center space-y-6">
-              <img
-                src={hospitalLogo}
-                alt="Afran General Hospital Logo"
-                className="w-32 h-32 mx-auto object-contain"
-              />
-              <h2 className="text-3xl font-bold text-slate-900">{t.hospitalName}</h2>
-              
-              <div className="space-y-2">
-                <p className="text-xl font-semibold text-slate-900">
-                  Scan to share complaint • suggestion • compliment feedback
-                </p>
-              </div>
+        {/* Single Portrait Poster with All Languages */}
+        <div
+          ref={posterRef}
+          className="bg-white rounded-2xl shadow-lg p-8 print:shadow-none print:border-2 print:border-black"
+        >
+          <div className="text-center space-y-8 max-w-lg mx-auto">
+            <img
+              src={hospitalLogo}
+              alt="Afran General Hospital Logo"
+              className="w-48 h-48 mx-auto object-contain"
+            />
+            <h2 className="text-4xl font-black text-slate-900">{t.hospitalName}</h2>
+            
+            <div className="space-y-4">
+              <p className="text-2xl font-bold text-slate-900">
+                Scan to share complaint • suggestion • compliment feedback
+              </p>
+              <p className="text-2xl font-bold text-slate-900">
+                ስካን በማድረግ ቅሬታ • ሀሳብ • ምስጋና • አስተያየትዎን ያካፍሉ
+              </p>
+              <p className="text-2xl font-bold text-slate-900">
+                Qabxii fayyadamiin komii • yaada • galmeessaa kenni
+              </p>
+            </div>
 
-              <div className="my-8">
-                <div className="bg-white p-4 rounded-xl border-2 border-slate-200 inline-block">
-                  {qrCodeUrl && (
-                    <img
-                      src={qrCodeUrl}
-                      alt="QR Code"
-                      className="w-64 h-64 mx-auto"
-                    />
-                  )}
-                </div>
-              </div>
-
-              <div className="pt-8 border-t border-slate-200">
-                <p className="text-sm text-slate-500">
-                  https://afranfeedback.vercel.app
-                </p>
+            <div className="my-12">
+              <div className="bg-white p-6 rounded-2xl border-4 border-slate-300 inline-block">
+                {qrCodeUrl && (
+                  <img
+                    src={qrCodeUrl}
+                    alt="QR Code"
+                    className="w-96 h-96 mx-auto"
+                  />
+                )}
               </div>
             </div>
-          </div>
 
-          {/* Poster 2 - Amharic */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 print:shadow-none print:border-2 print:border-black">
-            <div className="text-center space-y-6">
-              <img
-                src={hospitalLogo}
-                alt="Afran General Hospital Logo"
-                className="w-32 h-32 mx-auto object-contain"
-              />
-              <h2 className="text-3xl font-bold text-slate-900">አፍራን ጠቅላይ ሆስፒታል</h2>
-              
-              <div className="space-y-2">
-                <p className="text-xl font-semibold text-slate-900">
-                  ስካን በማድረግ ቅሬታ • ሀሳብ • ምስጋና • አስተያየትዎን ያካፍሉ
-                </p>
-              </div>
-
-              <div className="my-8">
-                <div className="bg-white p-4 rounded-xl border-2 border-slate-200 inline-block">
-                  {qrCodeUrl && (
-                    <img
-                      src={qrCodeUrl}
-                      alt="QR Code"
-                      className="w-64 h-64 mx-auto"
-                    />
-                  )}
-                </div>
-              </div>
-
-              <div className="pt-8 border-t border-slate-200">
-                <p className="text-sm text-slate-500">
-                  https://afranfeedback.vercel.app
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Poster 3 - Afaan Oromoo */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 print:shadow-none print:border-2 print:border-black">
-            <div className="text-center space-y-6">
-              <img
-                src={hospitalLogo}
-                alt="Afran General Hospital Logo"
-                className="w-32 h-32 mx-auto object-contain"
-              />
-              <h2 className="text-3xl font-bold text-slate-900">Hospitaalii Afran Guddittii</h2>
-              
-              <div className="space-y-2">
-                <p className="text-xl font-semibold text-slate-900">
-                  Qabxii fayyadamiin komii • yaada • galmeessaa kenni
-                </p>
-              </div>
-
-              <div className="my-8">
-                <div className="bg-white p-4 rounded-xl border-2 border-slate-200 inline-block">
-                  {qrCodeUrl && (
-                    <img
-                      src={qrCodeUrl}
-                      alt="QR Code"
-                      className="w-64 h-64 mx-auto"
-                    />
-                  )}
-                </div>
-              </div>
-
-              <div className="pt-8 border-t border-slate-200">
-                <p className="text-sm text-slate-500">
-                  https://afranfeedback.vercel.app
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Poster 4 - Simple/Minimal */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 print:shadow-none print:border-2 print:border-black">
-            <div className="text-center space-y-6">
-              <img
-                src={hospitalLogo}
-                alt="Afran General Hospital Logo"
-                className="w-24 h-24 mx-auto object-contain"
-              />
-              
-              <div className="space-y-2">
-                <p className="text-xl font-semibold text-slate-900">
-                  Scan to share complaint • suggestion • compliment feedback
-                </p>
-              </div>
-
-              <div className="my-6">
-                <div className="bg-white p-4 rounded-xl border-2 border-slate-200 inline-block">
-                  {qrCodeUrl && (
-                    <img
-                      src={qrCodeUrl}
-                      alt="QR Code"
-                      className="w-72 h-72 mx-auto"
-                    />
-                  )}
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <h2 className="text-2xl font-bold text-slate-900">
-                  {t.hospitalName}
-                </h2>
-              </div>
-
-              <div className="pt-8 border-t border-slate-200">
-                <p className="text-xs text-slate-400">
-                  https://afranfeedback.vercel.app
-                </p>
-              </div>
+            <div className="pt-8 border-t-4 border-slate-300">
+              <p className="text-lg font-bold text-slate-700">
+                https://afranfeedback.vercel.app
+              </p>
             </div>
           </div>
         </div>
 
-        <div className="mt-8 p-4 bg-blue-50 rounded-lg">
+        <div className="mt-8 p-4 bg-blue-50 rounded-lg no-print">
           <h3 className="font-semibold text-slate-900 mb-2">Printing Instructions:</h3>
           <ul className="text-sm text-slate-600 space-y-1 list-disc list-inside">
-            <li>Click "Print Posters" button above</li>
+            <li>Click "Print Poster" button above</li>
             <li>Select A4 or Letter paper size</li>
-            <li>Choose "Landscape" orientation for better fit</li>
+            <li>Choose "Portrait" orientation</li>
             <li>Set margins to "Minimum" or "None"</li>
-            <li>Print 2 copies (2 posters per page)</li>
             <li>Laminate for durability in hospital areas</li>
           </ul>
         </div>
