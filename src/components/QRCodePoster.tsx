@@ -50,8 +50,19 @@ export const QRCodePoster: React.FC = () => {
                 className="w-32 h-32 mx-auto object-contain"
               />
               <h2 className="text-3xl font-bold text-slate-900">{t.hospitalName}</h2>
-              <p className="text-lg text-slate-600">{t.patientRelations}</p>
               
+              <div className="space-y-2">
+                <p className="text-xl font-semibold text-slate-900">
+                  Scan to share complaint • suggestion • compliment feedback
+                </p>
+                <p className="text-xl font-semibold text-slate-900">
+                  ስካን በማድረግ ቅሬታ • ሀሳብ • ምስጋና • አስተያየትዎን ያካፍሉ
+                </p>
+                <p className="text-xl font-semibold text-slate-900">
+                  Qabxii fayyadamiin komii • yaada • galmeessaa yaada kenni
+                </p>
+              </div>
+
               <div className="my-8">
                 <div className="bg-white p-4 rounded-xl border-2 border-slate-200 inline-block">
                   {qrCodeUrl && (
@@ -64,19 +75,7 @@ export const QRCodePoster: React.FC = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <p className="text-xl font-semibold text-slate-900">
-                  Scan to Share Your Feedback
-                </p>
-                <p className="text-base text-slate-600">
-                  Complaint • Suggestion • Compliment
-                </p>
-                <p className="text-sm text-slate-500 mt-4">
-                  Your voice matters. Help us improve your experience.
-                </p>
-              </div>
-
-              <div className="pt-6 border-t border-slate-200">
+              <div className="pt-8 border-t border-slate-200">
                 <p className="text-sm text-slate-500">
                   https://afranfeedback.vercel.app
                 </p>
@@ -93,8 +92,19 @@ export const QRCodePoster: React.FC = () => {
                 className="w-32 h-32 mx-auto object-contain"
               />
               <h2 className="text-3xl font-bold text-slate-900">አፍራን ጠቅላይ ሆስፒታል</h2>
-              <p className="text-lg text-slate-600">የተቀባይነት ግንኙነት</p>
               
+              <div className="space-y-2">
+                <p className="text-xl font-semibold text-slate-900">
+                  Scan to share complaint • suggestion • compliment feedback
+                </p>
+                <p className="text-xl font-semibold text-slate-900">
+                  ስካን በማድረግ ቅሬታ • ሀሳብ • ምስጋና • አስተያየትዎን ያካፍሉ
+                </p>
+                <p className="text-xl font-semibold text-slate-900">
+                  Qabxii fayyadamiin komii • yaada • galmeessaa yaada kenni
+                </p>
+              </div>
+
               <div className="my-8">
                 <div className="bg-white p-4 rounded-xl border-2 border-slate-200 inline-block">
                   {qrCodeUrl && (
@@ -107,19 +117,7 @@ export const QRCodePoster: React.FC = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <p className="text-xl font-semibold text-slate-900">
-                  ለመቀረፍ ይቃኙ
-                </p>
-                <p className="text-base text-slate-600">
-                  ቅሬታ • ሀሳብ • ምስጋና
-                </p>
-                <p className="text-sm text-slate-500 mt-4">
-                  ድምፅዎ አስፈላጊ ነው። እንዲሻሻልን ይርዳን።
-                </p>
-              </div>
-
-              <div className="pt-6 border-t border-slate-200">
+              <div className="pt-8 border-t border-slate-200">
                 <p className="text-sm text-slate-500">
                   https://afranfeedback.vercel.app
                 </p>
@@ -136,8 +134,19 @@ export const QRCodePoster: React.FC = () => {
                 className="w-32 h-32 mx-auto object-contain"
               />
               <h2 className="text-3xl font-bold text-slate-900">Hospitaalii Afran Guddittii</h2>
-              <p className="text-lg text-slate-600">Waldhoreessii Faa'ii</p>
               
+              <div className="space-y-2">
+                <p className="text-xl font-semibold text-slate-900">
+                  Scan to share complaint • suggestion • compliment feedback
+                </p>
+                <p className="text-xl font-semibold text-slate-900">
+                  ስካን በማድረግ ቅሬታ • ሀሳብ • ምስጋና • አስተያየትዎን ያካፍሉ
+                </p>
+                <p className="text-xl font-semibold text-slate-900">
+                  Qabxii fayyadamiin komii • yaada • galmeessaa yaada kenni
+                </p>
+              </div>
+
               <div className="my-8">
                 <div className="bg-white p-4 rounded-xl border-2 border-slate-200 inline-block">
                   {qrCodeUrl && (
@@ -150,19 +159,7 @@ export const QRCodePoster: React.FC = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <p className="text-xl font-semibold text-slate-900">
-                  Qabxii fayyadamiin qabxi
-                </p>
-                <p className="text-base text-slate-600">
-                  Komii • Yaada • Galmeessaa
-                </p>
-                <p className="text-sm text-slate-500 mt-4">
-                    Sagaleen keessan gaarii. Jaalalli keenya cabsi.
-                </p>
-              </div>
-
-              <div className="pt-6 border-t border-slate-200">
+              <div className="pt-8 border-t border-slate-200">
                 <p className="text-sm text-slate-500">
                   https://afranfeedback.vercel.app
                 </p>
@@ -179,6 +176,18 @@ export const QRCodePoster: React.FC = () => {
                 className="w-24 h-24 mx-auto object-contain"
               />
               
+              <div className="space-y-2">
+                <p className="text-xl font-semibold text-slate-900">
+                  Scan to share complaint • suggestion • compliment feedback
+                </p>
+                <p className="text-xl font-semibold text-slate-900">
+                  ስካን በማድረግ ቅሬታ • ሀሳብ • ምስጋና • አስተያየትዎን ያካፍሉ
+                </p>
+                <p className="text-xl font-semibold text-slate-900">
+                  Qabxii fayyadamiin komii • yaada • galmeessaa yaada kenni
+                </p>
+              </div>
+
               <div className="my-6">
                 <div className="bg-white p-4 rounded-xl border-2 border-slate-200 inline-block">
                   {qrCodeUrl && (
@@ -195,18 +204,9 @@ export const QRCodePoster: React.FC = () => {
                 <h2 className="text-2xl font-bold text-slate-900">
                   {t.hospitalName}
                 </h2>
-                <p className="text-lg font-semibold text-blue-700">
-                  Scan to Share Feedback
-                </p>
-                <p className="text-sm text-slate-500">
-                  ስካን በማድረግ አስተያየትዎን ያካፍሉ
-                </p>
-                <p className="text-sm text-slate-500">
-                  Qabxii fayyadamiin yaada kenni
-                </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-200">
+              <div className="pt-8 border-t border-slate-200">
                 <p className="text-xs text-slate-400">
                   https://afranfeedback.vercel.app
                 </p>

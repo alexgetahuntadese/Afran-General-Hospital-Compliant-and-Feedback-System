@@ -454,42 +454,42 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
   }
 
   return (
-    <div className="max-w-5xl mx-auto py-5 sm:py-12 px-4 space-y-4 sm:space-y-6">
+    <div className="max-w-6xl mx-auto py-8 sm:py-16 px-4 space-y-8 sm:space-y-12">
       {/* Welcome panel */}
-      <section className="premium-hero hero-float relative overflow-hidden rounded-[28px] border border-[#90e0ef]/30 px-4 py-5 text-white shadow-[0_30px_80px_rgba(3,4,94,0.2)] sm:rounded-[32px] sm:px-8 sm:py-9">
-        <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-[#90e0ef]/35 blur-3xl" aria-hidden="true" />
-        <div className="absolute -bottom-20 left-1/4 h-48 w-48 rounded-full bg-teal-400/25 blur-3xl" aria-hidden="true" />
-        <div className="absolute -right-8 bottom-2 h-24 w-24 rounded-full bg-amber-400/10 blur-2xl" aria-hidden="true" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.14),transparent_35%)]" aria-hidden="true" />
-        <div className="relative grid gap-4 sm:gap-7 md:grid-cols-[1fr_auto] md:items-end">
-          <div className="max-w-2xl space-y-2 sm:space-y-3">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#caf0f8] sm:text-[11px] sm:tracking-[0.24em]">
+      <section className="premium-hero hero-float relative overflow-hidden rounded-[32px] border border-white/20 bg-gradient-to-br from-[#0077b6] via-[#00b4d8] to-[#90e0ef] px-6 py-8 text-white shadow-2xl sm:rounded-[40px] sm:px-12 sm:py-12">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4xIi8+PC9zdmc+')] opacity-30" aria-hidden="true" />
+        <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-white/20 blur-3xl" aria-hidden="true" />
+        <div className="absolute -bottom-20 left-1/4 h-64 w-64 rounded-full bg-white/15 blur-3xl" aria-hidden="true" />
+        <div className="absolute top-1/2 right-1/4 h-32 w-32 rounded-full bg-[#caf0f8]/30 blur-2xl" aria-hidden="true" />
+        <div className="relative grid gap-6 sm:gap-8 md:grid-cols-[1fr_auto] md:items-center">
+          <div className="max-w-2xl space-y-4">
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-white/90 sm:text-sm">
               {t.patientRelations}
             </p>
-            <h1 className="font-serif text-2xl font-black tracking-tight text-white sm:text-5xl">
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white leading-tight">
               {t.heroTitle}
             </h1>
-            <p className="max-w-xl text-xs leading-relaxed text-slate-200 sm:text-base">
+            <p className="max-w-xl text-sm sm:text-base leading-relaxed text-white/90">
               {t.heroSubtitle}
             </p>
           </div>
           <button
             type="button"
             onClick={() => onNavigateTrack('')}
-            className="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-5 py-3 text-xs font-semibold tracking-[0.08em] text-white transition-all duration-200 hover:bg-white/18 focus:outline-none focus:ring-2 focus:ring-cyan-200"
+            className="inline-flex min-h-[52px] items-center justify-center gap-3 rounded-2xl border-2 border-white/30 bg-white/10 backdrop-blur-sm px-6 py-4 text-sm font-bold tracking-wide text-white transition-all duration-300 hover:bg-white/20 hover:scale-105 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-white/40"
           >
-            <Search className="h-4 w-4" />
+            <Search className="h-5 w-5" />
             <span>{t.trackHeading}</span>
-            <ArrowRight className="h-3.5 w-3.5" />
+            <ArrowRight className="h-4 w-4" />
           </button>
         </div>
-        <div className="relative mt-4 flex flex-wrap gap-x-5 gap-y-2 border-t border-[#90e0ef]/30 pt-3 text-[10px] font-medium text-[#caf0f8] sm:mt-7 sm:pt-4 sm:text-[11px]">
-          <span className="inline-flex items-center gap-1.5">
-            <ShieldCheck className="h-3.5 w-3.5" />
+        <div className="relative mt-6 flex flex-wrap gap-x-6 gap-y-3 border-t border-white/20 pt-4 text-xs font-medium text-white/90 sm:mt-8 sm:pt-6 sm:text-sm">
+          <span className="inline-flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full backdrop-blur-sm">
+            <ShieldCheck className="h-4 w-4" />
             {t.confidentialityNote}
           </span>
-          <span className="inline-flex items-center gap-1.5">
-            <CheckCircle2 className="h-3.5 w-3.5" />
+          <span className="inline-flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full backdrop-blur-sm">
+            <CheckCircle2 className="h-4 w-4" />
             {t.patientRelations}
           </span>
         </div>
@@ -497,32 +497,32 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
 
       <form
         onSubmit={handleSubmit}
-        className="premium-form mx-auto max-w-3xl rounded-[32px] border border-slate-200/80 bg-gradient-to-br from-white via-white to-slate-50/50 p-6 shadow-[0_32px_80px_rgba(3,4,94,0.12)] backdrop-blur-sm dark:border-slate-800 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950/50 sm:p-10"
+        className="premium-form mx-auto max-w-4xl rounded-[40px] border border-white/40 bg-white/70 backdrop-blur-xl p-8 shadow-2xl dark:border-slate-700/50 dark:bg-slate-900/70 sm:p-12"
       >
-        <div className="flex items-center justify-between gap-4 border-b border-slate-200/60 pb-6 dark:border-slate-800/60">
+        <div className="flex items-center justify-between gap-6 border-b border-slate-200/50 pb-8 dark:border-slate-700/50">
           <div>
-            <div className="mb-2 flex items-center gap-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[#0077b6] dark:text-[#90e0ef]">
-              <span className="h-2 w-2 rounded-full bg-[#90e0ef] ring-2 ring-[#90e0ef]/30 animate-pulse" />
+            <div className="mb-3 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#0077b6] dark:text-[#90e0ef]">
+              <span className="h-2.5 w-2.5 rounded-full bg-gradient-to-r from-[#0077b6] to-[#00b4d8] ring-2 ring-[#90e0ef]/40 animate-pulse" />
               {t.patientRelations}
             </div>
-            <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">{t.submitButton}</h2>
-            <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+            <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{t.submitButton}</h2>
+            <p className="mt-2 text-base text-slate-500 dark:text-slate-400 leading-relaxed">
               {t.feedbackTypePrompt}
             </p>
           </div>
-          <span className="hidden rounded-full bg-gradient-to-r from-[#caf0f8] to-[#90e0ef] px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#03045e] dark:from-[#023e8a] dark:to-[#0077b6] dark:text-[#caf0f8] sm:inline-flex shadow-lg shadow-[#90e0ef]/20">
+          <span className="hidden rounded-full bg-gradient-to-r from-[#0077b6] to-[#00b4d8] px-5 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-xl shadow-[#0077b6]/30 sm:inline-flex">
             {t.patientRelations}
           </span>
         </div>
-        <div ref={wizardProgressRef} className="sticky top-[4.5rem] z-10 -mx-1 mt-6 rounded-2xl border border-slate-200/60 bg-gradient-to-r from-white to-slate-50/50 p-4 shadow-lg backdrop-blur-sm dark:border-slate-700/60 dark:from-slate-900 dark:to-slate-950/50 sm:static sm:mx-0 sm:mt-8 sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none sm:backdrop-blur-none">
-          <ol aria-label={`${t.wizardStepProgress} ${wizardStep + 1} / ${wizardSteps.length}: ${wizardSteps[wizardStep]}`} className="grid grid-cols-4 gap-3">
+        <div ref={wizardProgressRef} className="sticky top-[4.5rem] z-10 -mx-1 mt-8 rounded-3xl border border-slate-200/50 bg-white/80 backdrop-blur-xl p-6 shadow-xl dark:border-slate-700/50 dark:bg-slate-900/80 sm:static sm:mx-0 sm:mt-10 sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none sm:backdrop-blur-none">
+          <ol aria-label={`${t.wizardStepProgress} ${wizardStep + 1} / ${wizardSteps.length}: ${wizardSteps[wizardStep]}`} className="grid grid-cols-4 gap-4">
             {wizardSteps.map((label, index) => {
               const isComplete = index < wizardStep;
               const isCurrent = index === wizardStep;
               return (
                 <li key={label} aria-current={isCurrent ? 'step' : undefined} className="min-w-0">
-                  <div className={`mb-2 h-2 rounded-full transition-all duration-300 ${isComplete || isCurrent ? 'bg-gradient-to-r from-[#0077b6] to-[#00b4d8] shadow-lg shadow-[#0077b6]/20' : 'bg-slate-200 dark:bg-slate-700'}`} />
-                  <span className={`block truncate text-center text-[10px] font-semibold transition-colors ${isCurrent ? 'text-[#03045e] dark:text-[#90e0ef] scale-105' : isComplete ? 'text-slate-700 dark:text-slate-300' : 'text-slate-400'}`}>
+                  <div className={`mb-3 h-2.5 rounded-full transition-all duration-500 ${isComplete || isCurrent ? 'bg-gradient-to-r from-[#0077b6] via-[#00b4d8] to-[#90e0ef] shadow-xl shadow-[#0077b6]/30' : 'bg-slate-200 dark:bg-slate-700'}`} />
+                  <span className={`block truncate text-center text-xs font-bold transition-all duration-300 ${isCurrent ? 'text-[#0077b6] dark:text-[#90e0ef] scale-110' : isComplete ? 'text-slate-700 dark:text-slate-300' : 'text-slate-400'}`}>
                     {index + 1}. {label}
                   </span>
                 </li>
@@ -533,37 +533,37 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
             {`${wizardSteps[wizardStep]} · ${wizardStep + 1} / ${wizardSteps.length}`}
           </p>
         </div>
-        <div className={wizardStep === 0 ? 'mt-6' : 'hidden'}>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className={wizardStep === 0 ? 'mt-8' : 'hidden'}>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           <button
             type="button"
             onClick={() => selectSubmissionKind('complaint')}
             aria-pressed={kind === 'complaint'}
-            className={`kind-choice group relative min-h-28 touch-manipulation overflow-hidden rounded-3xl border-2 p-5 text-left transition-all duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-rose-500/30 active:translate-y-0 ${
+            className={`kind-choice group relative min-h-36 touch-manipulation overflow-hidden rounded-3xl border-2 p-6 text-left transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-rose-500/40 active:translate-y-0 ${
               kind === 'complaint'
-                ? 'border-rose-400 bg-gradient-to-br from-rose-50 via-white to-rose-100/80 shadow-[0_20px_40px_rgba(225,29,72,0.15)] ring-4 ring-rose-200 dark:border-rose-500 dark:from-rose-950/80 dark:via-slate-900 dark:to-rose-950/50 dark:ring-rose-900/50'
-                : 'border-slate-200 bg-white shadow-md hover:border-rose-300 hover:bg-gradient-to-br hover:from-rose-50 hover:to-white hover:shadow-xl dark:border-slate-700 dark:bg-slate-900 dark:hover:border-rose-700 dark:hover:from-rose-950/30 dark:hover:to-slate-900'
+                ? 'border-rose-500 bg-gradient-to-br from-rose-100 via-white to-rose-50 shadow-2xl shadow-rose-500/25 ring-4 ring-rose-300 dark:border-rose-600 dark:from-rose-950/90 dark:via-slate-900 dark:to-rose-950/60 dark:ring-rose-700'
+                : 'border-slate-200 bg-white shadow-lg hover:border-rose-400 hover:bg-gradient-to-br hover:from-rose-50 hover:to-white hover:shadow-2xl dark:border-slate-700 dark:bg-slate-900 dark:hover:border-rose-600 dark:hover:from-rose-950/40 dark:hover:to-slate-900'
             }`}
           >
-            <span className={`absolute inset-y-0 left-0 w-1.5 transition-all duration-300 ${kind === 'complaint' ? 'bg-gradient-to-b from-rose-500 to-rose-600' : 'bg-transparent group-hover:bg-gradient-to-b group-hover:from-rose-300 group-hover:to-rose-400 dark:group-hover:from-rose-700 dark:group-hover:to-rose-800'}`} aria-hidden="true" />
-            <span className="flex items-center gap-4">
-              <span className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl transition-all duration-300 ${
+            <span className={`absolute inset-y-0 left-0 w-2 transition-all duration-500 ${kind === 'complaint' ? 'bg-gradient-to-b from-rose-500 to-rose-600' : 'bg-transparent group-hover:bg-gradient-to-b group-hover:from-rose-400 group-hover:to-rose-500 dark:group-hover:from-rose-700 dark:group-hover:to-rose-800'}`} aria-hidden="true" />
+            <span className="flex items-center gap-5">
+              <span className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl transition-all duration-500 ${
                 kind === 'complaint'
-                  ? 'bg-gradient-to-br from-rose-500 to-rose-600 text-white shadow-xl shadow-rose-500/30 scale-110'
-                  : 'bg-gradient-to-br from-rose-100 to-rose-200 text-rose-700 group-hover:scale-110 dark:from-rose-950/60 dark:to-rose-900/60 dark:text-rose-300'
+                  ? 'bg-gradient-to-br from-rose-500 to-rose-600 text-white shadow-2xl shadow-rose-500/40 scale-110'
+                  : 'bg-gradient-to-br from-rose-100 to-rose-200 text-rose-700 group-hover:scale-110 dark:from-rose-950/70 dark:to-rose-900/70 dark:text-rose-300'
               }`}>
-                <AlertCircle className="h-6 w-6" />
+                <AlertCircle className="h-7 w-7" />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-base font-extrabold text-slate-900 dark:text-white">{t.kindComplaint}</span>
-                <span className="mt-1.5 block text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+                <span className="block text-lg font-extrabold text-slate-900 dark:text-white">{t.kindComplaint}</span>
+                <span className="mt-2 block text-sm leading-relaxed text-slate-600 dark:text-slate-400">
                   {t.kindComplaintDescription}
                 </span>
               </span>
               <span className="shrink-0" aria-hidden="true">
                 {kind === 'complaint'
-                  ? <CheckCircle2 className="h-6 w-6 text-rose-600 dark:text-rose-300 scale-110" />
-                  : <Circle className="h-6 w-6 text-slate-300 transition-colors group-hover:text-rose-400 dark:text-slate-600" />}
+                  ? <CheckCircle2 className="h-7 w-7 text-rose-600 dark:text-rose-300 scale-110" />
+                  : <Circle className="h-7 w-7 text-slate-300 transition-colors group-hover:text-rose-400 dark:text-slate-600" />}
               </span>
             </span>
           </button>
@@ -572,36 +572,36 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
             type="button"
             onClick={() => selectSubmissionKind('feedback')}
             aria-pressed={kind === 'feedback'}
-            className={`kind-choice group relative min-h-28 touch-manipulation overflow-hidden rounded-3xl border-2 p-5 text-left transition-all duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30 active:translate-y-0 ${
+            className={`kind-choice group relative min-h-36 touch-manipulation overflow-hidden rounded-3xl border-2 p-6 text-left transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/40 active:translate-y-0 ${
               kind === 'feedback'
-                ? 'border-blue-400 bg-gradient-to-br from-blue-50 via-white to-sky-100/80 shadow-[0_20px_40px_rgba(37,99,235,0.15)] ring-4 ring-blue-200 dark:border-blue-500 dark:from-blue-950/80 dark:via-slate-900 dark:to-sky-950/50 dark:ring-blue-900/50'
-                : 'border-slate-200 bg-white shadow-md hover:border-blue-300 hover:bg-gradient-to-br hover:from-blue-50 hover:to-white hover:shadow-xl dark:border-slate-700 dark:bg-slate-900 dark:hover:border-blue-700 dark:hover:from-blue-950/30 dark:hover:to-slate-900'
+                ? 'border-blue-500 bg-gradient-to-br from-blue-100 via-white to-sky-50 shadow-2xl shadow-blue-500/25 ring-4 ring-blue-300 dark:border-blue-600 dark:from-blue-950/90 dark:via-slate-900 dark:to-sky-950/60 dark:ring-blue-700'
+                : 'border-slate-200 bg-white shadow-lg hover:border-blue-400 hover:bg-gradient-to-br hover:from-blue-50 hover:to-white hover:shadow-2xl dark:border-slate-700 dark:bg-slate-900 dark:hover:border-blue-600 dark:hover:from-blue-950/40 dark:hover:to-slate-900'
             }`}
           >
-            <span className={`absolute inset-y-0 left-0 w-1.5 transition-all duration-300 ${kind === 'feedback' ? 'bg-gradient-to-b from-blue-500 to-blue-600' : 'bg-transparent group-hover:bg-gradient-to-b group-hover:from-blue-300 group-hover:to-blue-400 dark:group-hover:from-blue-700 dark:group-hover:to-blue-800'}`} aria-hidden="true" />
-            <span className="flex items-center gap-4">
-              <span className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl transition-all duration-300 ${
+            <span className={`absolute inset-y-0 left-0 w-2 transition-all duration-500 ${kind === 'feedback' ? 'bg-gradient-to-b from-blue-500 to-blue-600' : 'bg-transparent group-hover:bg-gradient-to-b group-hover:from-blue-400 group-hover:to-blue-500 dark:group-hover:from-blue-700 dark:group-hover:to-blue-800'}`} aria-hidden="true" />
+            <span className="flex items-center gap-5">
+              <span className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl transition-all duration-500 ${
                 kind === 'feedback'
-                  ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-xl shadow-blue-500/30 scale-110'
-                  : 'bg-gradient-to-br from-blue-100 to-blue-200 text-blue-700 group-hover:scale-110 dark:from-blue-950/60 dark:to-blue-900/60 dark:text-blue-300'
+                  ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-2xl shadow-blue-500/40 scale-110'
+                  : 'bg-gradient-to-br from-blue-100 to-blue-200 text-blue-700 group-hover:scale-110 dark:from-blue-950/70 dark:to-blue-900/70 dark:text-blue-300'
               }`}>
-                <Lightbulb className="h-6 w-6" />
+                <Lightbulb className="h-7 w-7" />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-base font-extrabold text-slate-900 dark:text-white">{t.kindFeedback}</span>
-                <span className="mt-1.5 block text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+                <span className="block text-lg font-extrabold text-slate-900 dark:text-white">{t.kindFeedback}</span>
+                <span className="mt-2 block text-sm leading-relaxed text-slate-600 dark:text-slate-400">
                   {t.kindFeedbackDescription}
                 </span>
               </span>
               <span className="shrink-0" aria-hidden="true">
                 {kind === 'feedback'
-                  ? <CheckCircle2 className="h-6 w-6 text-blue-600 dark:text-blue-300 scale-110" />
-                  : <Circle className="h-6 w-6 text-slate-300 transition-colors group-hover:text-blue-400 dark:text-slate-600" />}
+                  ? <CheckCircle2 className="h-7 w-7 text-blue-600 dark:text-blue-300 scale-110" />
+                  : <Circle className="h-7 w-7 text-slate-300 transition-colors group-hover:text-blue-400 dark:text-slate-600" />}
               </span>
             </span>
           </button>
         </div>
-        <p className="mt-4 rounded-2xl bg-gradient-to-r from-slate-50 to-slate-100 px-4 py-3 text-sm leading-relaxed text-slate-700 dark:from-slate-800/60 dark:to-slate-900/60 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60 shadow-sm" aria-live="polite">
+        <p className="mt-6 rounded-2xl bg-gradient-to-r from-slate-50 to-slate-100 px-5 py-4 text-base leading-relaxed text-slate-700 dark:from-slate-800/60 dark:to-slate-900/60 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60 shadow-md" aria-live="polite">
           {questionDescription}
         </p>
         </div>
