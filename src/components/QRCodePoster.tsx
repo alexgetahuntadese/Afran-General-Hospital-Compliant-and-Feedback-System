@@ -41,7 +41,7 @@ export const QRCodePoster: React.FC = () => {
         {/* Single Portrait Poster with All Languages */}
         <div
           ref={posterRef}
-          className="bg-white rounded-2xl shadow-lg p-8 print:shadow-none print:border-2 print:border-black"
+          className="bg-white rounded-2xl shadow-lg p-8 print:shadow-none print:border-0 print:p-12"
         >
           <div className="text-center space-y-8 max-w-lg mx-auto">
             <img
@@ -64,12 +64,12 @@ export const QRCodePoster: React.FC = () => {
             </div>
 
             <div className="my-12">
-              <div className="bg-white p-6 rounded-2xl border-4 border-slate-300 inline-block">
+              <div className="bg-white p-8 rounded-2xl border-4 border-slate-300 inline-block print:border-0 print:p-0">
                 {qrCodeUrl && (
                   <img
                     src={qrCodeUrl}
                     alt="QR Code"
-                    className="w-96 h-96 mx-auto"
+                    className="w-96 h-96 mx-auto print:w-[400px] print:h-[400px]"
                   />
                 )}
               </div>
@@ -104,7 +104,7 @@ export const QRCodePoster: React.FC = () => {
             display: none !important;
           }
           @page {
-            size: A4 landscape;
+            size: A4 portrait;
             margin: 0.5cm;
           }
         }
