@@ -189,6 +189,24 @@ export const TrackView: React.FC<TrackViewProps> = ({ initialRef }) => {
               </div>
             )}
           </div>
+
+          {/* Department Head Verification */}
+          {activeCase.departmentHeadChecked && (
+            <div className="p-4 sm:p-5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/60 space-y-2">
+              <div className="flex items-center gap-2 text-xs font-bold text-emerald-900 dark:text-emerald-300">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <span>Seen / Checked by Department Head</span>
+              </div>
+              <div className="text-xs text-emerald-700 dark:text-emerald-400 leading-relaxed">
+                This complaint has been reviewed and verified by the department head.
+              </div>
+              {activeCase.departmentHeadCheckedAt && (
+                <div className="text-[10px] text-emerald-600 dark:text-emerald-500 font-mono text-right">
+                  Verified: {new Date(activeCase.departmentHeadCheckedAt).toLocaleDateString()}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       ) : hasSearched ? (
         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-8 text-center space-y-2">

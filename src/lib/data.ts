@@ -22,6 +22,8 @@ interface CaseRow {
   questionnaire_version: string | null;
   questionnaire_answers: Record<string, number> | null;
   audio_path: string | null;
+  department_head_checked: boolean;
+  department_head_checked_at: string | null;
 }
 
 interface StaffProfileRow {
@@ -34,7 +36,10 @@ interface StaffProfileRow {
   created_at: string;
 }
 
-type PublicCaseRow = Omit<CaseRow, 'name' | 'email' | 'phone' | 'escalated' | 'questionnaire_version' | 'questionnaire_answers' | 'audio_path'>;
+type PublicCaseRow = Omit<CaseRow, 'name' | 'email' | 'phone' | 'escalated' | 'questionnaire_version' | 'questionnaire_answers' | 'audio_path'> & {
+  department_head_checked: boolean;
+  department_head_checked_at: string | null;
+};
 
 function requireSupabase() {
   if (!supabase) {
@@ -67,6 +72,8 @@ function mapCaseRow(row: CaseRow | PublicCaseRow): CaseSubmission {
       ? row.questionnaire_answers
       : undefined,
     audioPath: 'audio_path' in row ? row.audio_path ?? undefined : undefined,
+    departmentHeadChecked: 'department_head_checked' in row ? row.department_head_checked : undefined,
+    departmentHeadCheckedAt: 'department_head_checked_at' in row ? row.department_head_checked_at ?? undefined : undefined,
   };
 }
 
@@ -165,6 +172,8 @@ export async function updateCase(updatedCase: CaseSubmission): Promise<void> {
       escalated: Boolean(updatedCase.escalated),
       response: updatedCase.response ?? null,
       responded_at: updatedCase.respondedAt ?? null,
+      department_head_checked: updatedCase.departmentHeadChecked ?? false,
+      department_head_checked_at: updatedCase.departmentHeadCheckedAt ?? null,
       updated_at: new Date().toISOString(),
     })
     .eq('id', updatedCase.id)

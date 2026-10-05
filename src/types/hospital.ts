@@ -25,6 +25,8 @@ export interface CaseSubmission {
   questionnaireVersion?: string;
   questionnaireAnswers?: QuestionnaireAnswers;
   audioPath?: string;
+  departmentHeadChecked?: boolean;
+  departmentHeadCheckedAt?: string;
 }
 
 export interface StaffUser {

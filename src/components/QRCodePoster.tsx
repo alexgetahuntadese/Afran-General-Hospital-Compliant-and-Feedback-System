@@ -6,6 +6,7 @@ import { useLanguage } from '../context/LanguageContext';
 export const QRCodePoster: React.FC = () => {
   const { t, language } = useLanguage();
   const [qrCodeUrl, setQrCodeUrl] = useState('');
+  const [isPrinting, setIsPrinting] = useState(false);
   const posterRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -22,7 +23,10 @@ export const QRCodePoster: React.FC = () => {
   }, []);
 
   const handlePrint = () => {
+    if (isPrinting) return;
+    setIsPrinting(true);
     window.print();
+    setTimeout(() => setIsPrinting(false), 1000);
   };
 
   return (
@@ -32,9 +36,14 @@ export const QRCodePoster: React.FC = () => {
           <h1 className="text-2xl font-bold text-slate-900">QR Code Poster for Hospital Walls</h1>
           <button
             onClick={handlePrint}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+            disabled={isPrinting}
+            className={`px-6 py-3 rounded-lg font-semibold transition-colors ${
+              isPrinting
+                ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                : 'bg-blue-600 text-white hover:bg-blue-700'
+            }`}
           >
-            Print Poster
+            {isPrinting ? 'Printing...' : 'Print Poster'}
           </button>
         </div>
 
@@ -50,7 +59,7 @@ export const QRCodePoster: React.FC = () => {
               className="w-48 h-48 mx-auto object-contain"
             />
             <h2 className="text-4xl font-black text-slate-900">{t.hospitalName}</h2>
-            
+
             <div className="space-y-4">
               <p className="text-2xl font-bold text-slate-900">
                 Scan to share complaint • suggestion • compliment feedback
@@ -106,6 +115,9 @@ export const QRCodePoster: React.FC = () => {
           @page {
             size: A4 portrait;
             margin: 0.5cm;
+          }
+          .print-page-break {
+            page-break-after: always;
           }
         }
       `}</style>

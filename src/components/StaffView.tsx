@@ -167,11 +167,25 @@ export const StaffView: React.FC<StaffViewProps> = ({
     });
   }, [visibleCases, statusFilter, searchQuery, currentUser?.role]);
 
-  const handleOpenReview = (c: CaseSubmission) => {
+  const handleOpenReview = async (c: CaseSubmission) => {
     setSelectedCase(c);
     setEditStatus(c.status);
     setEditResponse(c.response || '');
     setEditEscalated(Boolean(c.escalated));
+
+    // Auto-mark as checked by department head when they open the case
+    if (currentUser?.role === 'department_head' && !c.departmentHeadChecked) {
+      try {
+        await onUpdateCase({
+          ...c,
+          departmentHeadChecked: true,
+          departmentHeadCheckedAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        });
+      } catch (error) {
+        console.error('Failed to mark as checked by department head:', error);
+      }
+    }
   };
 
   const getStaffDraft = (staff: StaffUser) => staffAccountDrafts[staff.username] ?? {
@@ -583,6 +597,12 @@ export const StaffView: React.FC<StaffViewProps> = ({
                       {t.escalated}
                     </span>
                   )}
+                  {c.departmentHeadChecked && (
+                    <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" />
+                      <span>Dept. Head</span>
+                    </span>
+                  )}
                   <span className="text-[11px] font-semibold capitalize px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
                     {c.kind === 'complaint' ? t.kindComplaint : t.kindFeedback}
                   </span>
@@ -752,6 +772,24 @@ export const StaffView: React.FC<StaffViewProps> = ({
                       ))}
                   </div>
                 </section>
+              )}
+
+              {/* Department Head Verification Status */}
+              {selectedCase.departmentHeadChecked && (
+                <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/60 space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-bold text-emerald-900 dark:text-emerald-300">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    <span>Seen / Checked by Department Head</span>
+                  </div>
+                  <div className="text-xs text-emerald-700 dark:text-emerald-400 leading-relaxed">
+                    This complaint has been reviewed and verified by the department head.
+                  </div>
+                  {selectedCase.departmentHeadCheckedAt && (
+                    <div className="text-[10px] text-emerald-600 dark:text-emerald-500 font-mono text-right">
+                      Verified: {new Date(selectedCase.departmentHeadCheckedAt).toLocaleString()}
+                    </div>
+                  )}
+                </div>
               )}
 
               {/* Status Update */}
