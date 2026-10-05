@@ -21,6 +21,6 @@ alter table public.feedback_cases
         kind in ('feedback', 'compliment')
         and questionnaire_version is not null
         and jsonb_typeof(questionnaire_answers) = 'object'
-        and jsonb_object_length(questionnaire_answers) >= 4
+        and (questionnaire_answers ?| array['q1', 'q2', 'q3', 'q4'])
       )
     ) not valid;

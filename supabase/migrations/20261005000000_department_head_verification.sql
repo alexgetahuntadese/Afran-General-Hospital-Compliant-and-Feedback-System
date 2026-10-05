@@ -3,8 +3,10 @@ alter table public.feedback_cases
   add column if not exists department_head_checked boolean not null default false,
   add column if not exists department_head_checked_at timestamptz;
 
--- Update the track_case_by_reference function to include new columns
-create or replace function public.track_case_by_reference(lookup_reference text)
+-- Drop and recreate the track_case_by_reference function to include new columns
+drop function if exists public.track_case_by_reference(text);
+
+create function public.track_case_by_reference(lookup_reference text)
 returns table (
   id text,
   reference text,
@@ -47,3 +49,7 @@ as $$
   where cases.reference = upper(trim(lookup_reference))
   limit 1
 $$;
+
+-- Re-grant permissions
+revoke all on function public.track_case_by_reference(text) from public;
+grant execute on function public.track_case_by_reference(text) to anon, authenticated;
