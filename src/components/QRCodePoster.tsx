@@ -7,6 +7,7 @@ export const QRCodePoster: React.FC = () => {
   const { t, language } = useLanguage();
   const [qrCodeUrl, setQrCodeUrl] = useState('');
   const [isPrinting, setIsPrinting] = useState(false);
+  const [qrError, setQrError] = useState(false);
   const posterRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -19,7 +20,9 @@ export const QRCodePoster: React.FC = () => {
         light: '#ffffff',
       },
       errorCorrectionLevel: 'H',
-    }).then(setQrCodeUrl);
+    })
+      .then(setQrCodeUrl)
+      .catch(() => setQrError(true));
   }, []);
 
   const handlePrint = () => {
@@ -31,8 +34,8 @@ export const QRCodePoster: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-3xl mx-auto no-print">
-        <div className="mb-8 flex items-center justify-between">
+      <div className="max-w-3xl mx-auto">
+        <div className="mb-8 flex items-center justify-between no-print">
           <h1 className="text-2xl font-bold text-slate-900">QR Code Poster for Hospital Walls</h1>
           <button
             onClick={handlePrint}
@@ -62,24 +65,32 @@ export const QRCodePoster: React.FC = () => {
 
             <div className="space-y-4">
               <p className="text-2xl font-bold text-slate-900">
-                Scan to share complaint • suggestion • compliment feedback
-              </p>
-              <p className="text-2xl font-bold text-slate-900">
                 ስካን በማድረግ ቅሬታ • ሀሳብ • ምስጋና • አስተያየትዎን ያካፍሉ
               </p>
               <p className="text-2xl font-bold text-slate-900">
-                Qabxii fayyadamiin komii • yaada • galmeessaa kenni
+                SCANII GOCHUDHAAN • YAADA • KOMII • JECHA BARBAADDAN NUUF QOODAA
+              </p>
+              <p className="text-2xl font-bold text-slate-900">
+                Scan to share complaint • suggestion • compliment feedback
               </p>
             </div>
 
             <div className="my-12">
               <div className="bg-white p-8 rounded-2xl border-4 border-slate-300 inline-block print:border-0 print:p-0">
-                {qrCodeUrl && (
+                {qrCodeUrl ? (
                   <img
                     src={qrCodeUrl}
                     alt="QR Code"
                     className="w-96 h-96 mx-auto print:w-[400px] print:h-[400px]"
                   />
+                ) : qrError ? (
+                  <div className="w-96 h-96 mx-auto flex items-center justify-center text-red-600 text-center">
+                    <p className="text-sm">Failed to generate QR code</p>
+                  </div>
+                ) : (
+                  <div className="w-96 h-96 mx-auto flex items-center justify-center text-slate-400">
+                    <p className="text-sm">Loading QR code...</p>
+                  </div>
                 )}
               </div>
             </div>
@@ -108,16 +119,66 @@ export const QRCodePoster: React.FC = () => {
         @media print {
           body {
             background: white !important;
+            margin: 0;
+            padding: 0;
           }
           .no-print {
             display: none !important;
           }
           @page {
             size: A4 portrait;
-            margin: 0.5cm;
+            margin: 0.3cm;
           }
           .print-page-break {
             page-break-after: always;
+          }
+          img {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+          /* Reduce spacing for print */
+          .min-h-screen {
+            min-height: auto !important;
+          }
+          .p-8 {
+            padding: 0.5rem !important;
+          }
+          .space-y-8 > * + * {
+            margin-top: 1rem !important;
+          }
+          .space-y-4 > * + * {
+            margin-top: 0.5rem !important;
+          }
+          .my-12 {
+            margin-top: 1rem !important;
+            margin-bottom: 1rem !important;
+          }
+          .text-4xl {
+            font-size: 1.75rem !important;
+          }
+          .text-2xl {
+            font-size: 1.25rem !important;
+          }
+          .text-lg {
+            font-size: 1rem !important;
+          }
+          .w-48 {
+            width: 8rem !important;
+          }
+          .h-48 {
+            height: 8rem !important;
+          }
+          .w-96 {
+            width: 20rem !important;
+          }
+          .h-96 {
+            height: 20rem !important;
+          }
+          .border-4 {
+            border-width: 2px !important;
+          }
+          .border-t-4 {
+            border-top-width: 2px !important;
           }
         }
       `}</style>
