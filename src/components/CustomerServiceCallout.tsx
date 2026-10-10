@@ -8,7 +8,8 @@ export const CustomerServiceCallout: React.FC = () => {
   if (!configuredPhone || !dialPhone) return null;
 
   return (
-    <aside className="care-concierge relative overflow-hidden rounded-3xl border border-amber-200/80 bg-gradient-to-r from-[#fff8e7] via-white to-[#e8fbf6] p-4 shadow-lg shadow-amber-900/5 dark:border-amber-900/60 dark:from-amber-950/30 dark:via-slate-900 dark:to-emerald-950/30 sm:p-5" aria-label="Call customer service">
+    <>
+      <aside className="care-concierge relative overflow-hidden rounded-3xl border border-amber-200/80 bg-gradient-to-r from-[#fff8e7] via-white to-[#e8fbf6] p-4 shadow-lg shadow-amber-900/5 dark:border-amber-900/60 dark:from-amber-950/30 dark:via-slate-900 dark:to-emerald-950/30 sm:p-5" aria-label="Call customer service">
       <div className="pointer-events-none absolute -right-10 -top-12 h-32 w-32 rounded-full bg-amber-300/20 blur-2xl" />
       <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-3">
@@ -28,6 +29,11 @@ export const CustomerServiceCallout: React.FC = () => {
           <Sparkles className="ml-1 h-4 w-4 text-amber-300" />
         </a>
       </div>
-    </aside>
+      </aside>
+      <a href={`tel:${dialPhone}`} aria-label={`Call customer service at ${configuredPhone}`} className="care-concierge-fab fixed bottom-4 right-4 z-40 inline-flex min-h-[48px] items-center gap-2 rounded-full bg-slate-950 px-4 py-3 text-xs font-bold text-white shadow-2xl shadow-slate-950/25 ring-4 ring-white/70 transition hover:-translate-y-0.5 dark:bg-white dark:text-slate-950 dark:ring-slate-950/70 sm:hidden">
+        <span className="grid h-7 w-7 place-items-center rounded-full bg-emerald-400 text-emerald-950"><PhoneCall className="h-3.5 w-3.5" /></span>
+        Call {configuredPhone}
+      </a>
+    </>
   );
 };
