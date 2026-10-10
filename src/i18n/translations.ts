@@ -237,6 +237,25 @@ export interface CloneTranslations {
   notificationPermission: string;
   notificationDescription: string;
   notificationEnabled: string;
+  customerServiceLive: string;
+  customerServiceTitle: string;
+  customerServiceDescription: string;
+  callCustomerService: string;
+  mobileLabel: string;
+  installApp: string;
+  reportAssistant: string;
+  reportAssistantTitle: string;
+  reportAssistantDescription: string;
+  reportAskPlaceholder: string;
+  printReport: string;
+  downloadCsv: string;
+  generatedLabel: string;
+  casesLabel: string;
+  unresolvedLabel: string;
+  seenLabel: string;
+  departmentBreakdown: string;
+  keyInsights: string;
+  reportPreviewHint: string;
 }
 
 export const translations: Record<Language, CloneTranslations> = {
@@ -476,6 +495,25 @@ export const translations: Record<Language, CloneTranslations> = {
     notificationPermission: 'Receive updates on your device',
     notificationDescription: 'Get notified when your case status changes or when staff respond to your feedback.',
     notificationEnabled: 'Push notifications enabled',
+    customerServiceLive: 'Customer service is live',
+    customerServiceTitle: 'Prefer to talk to someone?',
+    customerServiceDescription: 'Call customer service directly while you are here.',
+    callCustomerService: 'Call customer service',
+    mobileLabel: 'Mobile',
+    installApp: 'Install app',
+    reportAssistant: 'Report assistant',
+    reportAssistantTitle: 'Turn case data into a printable brief',
+    reportAssistantDescription: 'Ask naturally. The report uses cases visible in your dashboard.',
+    reportAskPlaceholder: 'Ask for a report...',
+    printReport: 'Print report',
+    downloadCsv: 'CSV',
+    generatedLabel: 'Generated',
+    casesLabel: 'Cases',
+    unresolvedLabel: 'Unresolved',
+    seenLabel: 'Seen',
+    departmentBreakdown: 'Department breakdown',
+    keyInsights: 'Key insights',
+    reportPreviewHint: 'Use a prompt or choose a suggestion to begin.',
   },
   am: {
     emergencyBanner: 'ለአስቸኳይ የህክምና ድንገተኛ አደጋ፣ ወዲያውኑ ወደ ድንገተኛ ክፍል ይሂዱ።',
@@ -713,6 +751,25 @@ export const translations: Record<Language, CloneTranslations> = {
     notificationPermission: 'በስልክዎ ላይ ዝማኔ ያግኙ',
     notificationDescription: 'የጉዳይዎ ሁኔታ ሲቀይር ወይም ሰራተኞች ምላሽ ሲሰጡ ማስታወሻ ይቀበሉ።',
     notificationEnabled: 'የስልክ ማስታወሻዎች ተንቀልቀሉ',
+    customerServiceLive: 'የደንበኞች አገልግሎት ክፍት ነው',
+    customerServiceTitle: 'ከሰው ጋር መነጋገር ይፈልጋሉ?',
+    customerServiceDescription: 'እዚህ እያሉ የደንበኞች አገልግሎትን በቀጥታ ይደውሉ።',
+    callCustomerService: 'የደንበኞች አገልግሎት ይደውሉ',
+    mobileLabel: 'ሞባይል',
+    installApp: 'መተግበሪያውን ጫን',
+    reportAssistant: 'የሪፖርት አጋዥ',
+    reportAssistantTitle: 'የጉዳይ መረጃን ወደ ሪፖርት ይቀይሩ',
+    reportAssistantDescription: 'በተፈጥሮ ቋንቋ ይጠይቁ። ሪፖርቱ በዳሽቦርድዎ ያሉ ጉዳዮችን ይጠቀማል።',
+    reportAskPlaceholder: 'ሪፖርት ይጠይቁ...',
+    printReport: 'ሪፖርት አትም',
+    downloadCsv: 'CSV',
+    generatedLabel: 'የተፈጠረበት',
+    casesLabel: 'ጉዳዮች',
+    unresolvedLabel: 'ያልተፈቱ',
+    seenLabel: 'የታዩ',
+    departmentBreakdown: 'የመምሪያ ስርጭት',
+    keyInsights: 'ዋና ግንዛቤዎች',
+    reportPreviewHint: 'ለመጀመር ጥያቄ ይጠቀሙ ወይም ከጥቆማ ይምረጡ።',
   },
   om: {
     emergencyBanner: 'Yeroo yaala hatattamaa, battalumatti gara Kutaa Balaa deemaa.',
@@ -949,5 +1006,24 @@ export const translations: Record<Language, CloneTranslations> = {
     notificationPermission: 'Qabxii keessatti yaada argachuu',
     notificationDescription: 'Yeroon haala dhimma jijjiirama ykn hojjettoonni deebii kennu yaada argachuu dandeessa.',
     notificationEnabled: 'Yaada bilbilaa agarsiifameera',
+    customerServiceLive: 'Tajaajilli maamilaa banaa dha',
+    customerServiceTitle: 'Nama waliin haasa’uu barbaadduu?',
+    customerServiceDescription: 'As jirtanitti tajaajila maamilaa kallattiin bilbilaa.',
+    callCustomerService: 'Tajaajila maamilaa bilbili',
+    mobileLabel: 'Moobaayila',
+    installApp: 'Appii fe’i',
+    reportAssistant: 'Gargaaraa gabaasaa',
+    reportAssistantTitle: 'Odeeffannoo dhimmaa gabaasa maxxanfamu taasisu',
+    reportAssistantDescription: 'Afaan uumamaatiin gaafadhaa. Gabaasni dhimma daashboordii keessan irratti mul’atu fayyadama.',
+    reportAskPlaceholder: 'Gabaasa gaafadhaa...',
+    printReport: 'Gabaasa maxxansi',
+    downloadCsv: 'CSV',
+    generatedLabel: 'Uumame',
+    casesLabel: 'Dhimmoonni',
+    unresolvedLabel: 'Kan hin furamne',
+    seenLabel: 'Kan ilaalame',
+    departmentBreakdown: 'Qoodinsa kutaa',
+    keyInsights: 'Hubannoo ijoo',
+    reportPreviewHint: 'Jalqabuuf gaafadhaa ykn yaada keessaa filadhaa.',
   },
 };

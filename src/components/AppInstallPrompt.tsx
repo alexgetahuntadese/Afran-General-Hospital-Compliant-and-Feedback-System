@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Download, Smartphone } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 interface InstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -7,6 +8,7 @@ interface InstallPromptEvent extends Event {
 }
 
 export const AppInstallPrompt: React.FC = () => {
+  const { t } = useLanguage();
   const [installEvent, setInstallEvent] = useState<InstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
 
@@ -40,7 +42,7 @@ export const AppInstallPrompt: React.FC = () => {
   return (
     <button type="button" onClick={() => void install()} className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-cyan-200 bg-cyan-50 px-3 py-2 text-xs font-bold text-cyan-800 shadow-sm transition hover:bg-cyan-100 dark:border-cyan-900/60 dark:bg-cyan-950/30 dark:text-cyan-200 dark:hover:bg-cyan-950/50">
       <Smartphone className="h-4 w-4" aria-hidden="true" />
-      <span>Install app</span>
+      <span>{t.installApp}</span>
       <Download className="h-3.5 w-3.5" aria-hidden="true" />
     </button>
   );
