@@ -3,6 +3,8 @@ import QRCode from 'qrcode';
 import hospitalLogo from '../assets/images/afran-general-hospital-logo.jpg';
 import { useLanguage } from '../context/LanguageContext';
 
+const PUBLIC_FEEDBACK_URL = 'https://afranfeedback.vercel.app';
+
 export const QRCodePoster: React.FC = () => {
   const { t, language } = useLanguage();
   const [qrCodeUrl, setQrCodeUrl] = useState('');
@@ -11,8 +13,7 @@ export const QRCodePoster: React.FC = () => {
   const posterRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const url = 'https://afranfeedback.vercel.app';
-    QRCode.toDataURL(url, {
+    QRCode.toDataURL(PUBLIC_FEEDBACK_URL, {
       width: 600,
       margin: 4,
       color: {
@@ -75,6 +76,18 @@ export const QRCodePoster: React.FC = () => {
               </p>
             </div>
 
+            <div className="my-8 rounded-2xl border-4 border-[#03045e] bg-[#ffdd57] px-4 py-5 shadow-xl print:my-4 print:px-3 print:py-3">
+              <p className="text-sm font-black uppercase tracking-[0.2em] text-[#03045e] print:text-xs">Open on your phone</p>
+              <a
+                href={PUBLIC_FEEDBACK_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-2 block whitespace-nowrap text-[clamp(1.25rem,4.5vw,2.75rem)] font-black leading-tight tracking-tight text-[#03045e] underline decoration-4 underline-offset-4 print:text-[2.2rem]"
+              >
+                afranfeedback.vercel.app
+              </a>
+            </div>
+
             <div className="my-12">
               <div className="bg-white p-8 rounded-2xl border-4 border-slate-300 inline-block print:border-0 print:p-0">
                 {qrCodeUrl ? (
@@ -95,10 +108,8 @@ export const QRCodePoster: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-8 border-t-4 border-slate-300">
-              <p className="text-lg font-bold text-slate-700">
-                https://afranfeedback.vercel.app
-              </p>
+            <div className="pt-2 border-t-4 border-slate-300">
+              <p className="text-base font-bold text-slate-700">Scan the code or type the website above</p>
             </div>
           </div>
         </div>
@@ -152,6 +163,10 @@ export const QRCodePoster: React.FC = () => {
           .my-12 {
             margin-top: 1rem !important;
             margin-bottom: 1rem !important;
+          }
+          .my-8 {
+            margin-top: 0.5rem !important;
+            margin-bottom: 0.5rem !important;
           }
           .text-4xl {
             font-size: 1.75rem !important;
