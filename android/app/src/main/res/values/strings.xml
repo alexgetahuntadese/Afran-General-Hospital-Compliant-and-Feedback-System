@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Afran General Hospital</string>
+    <string name="title_activity_main">Afran General Hospital</string>
+    <string name="package_name">com.afrangeneralhospital.feedback</string>
+    <string name="custom_url_scheme">com.afrangeneralhospital.feedback</string>
+</resources>

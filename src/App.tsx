@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
 import hospitalLogo from './assets/images/afran-general-hospital-logo.jpg';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -11,13 +11,14 @@ import { NotificationProvider } from './context/NotificationContext';
 import { Header } from './components/Header';
 import { SubmitView } from './components/SubmitView';
 import { TrackView } from './components/TrackView';
-import { StaffView } from './components/StaffView';
-import { QRCodePoster } from './components/QRCodePoster';
 import { Notifications } from './components/Notifications';
 import { CaseSubmission, StaffAccountAction, StaffRole, StaffUser } from './types/hospital';
 import type { Session } from '@supabase/supabase-js';
 import { createCase, createStaffAccount, getCases, getCurrentUserProfile, getStaffProfiles, manageStaffAccount, updateCase } from './lib/data';
 import { supabase } from './lib/supabase';
+
+const StaffView = lazy(() => import('./components/StaffView').then((module) => ({ default: module.StaffView })));
+const QRCodePoster = lazy(() => import('./components/QRCodePoster').then((module) => ({ default: module.QRCodePoster })));
 
 function HospitalFeedbackApp() {
   const { t } = useLanguage();
@@ -267,24 +268,24 @@ function HospitalFeedbackApp() {
           />
         )}
 
-        {currentView === 'staff' && (
-          <StaffView
-            cases={cases}
-            onUpdateCase={handleUpdateCase}
-            currentUser={currentUser}
-            onSignIn={handleSignIn}
-            onSignOut={handleSignOut}
-            staffList={staffList}
-            onManageStaffAccount={handleManageStaffAccount}
-            onCreateStaffAccount={handleCreateStaffAccount}
-            authError={authError}
-            dataError={dataError}
-          />
-        )}
+        <Suspense fallback={<div className="mx-auto grid min-h-[360px] max-w-6xl place-items-center px-4 text-sm text-slate-500">Loading hospital workspace…</div>}>
+          {currentView === 'staff' && (
+            <StaffView
+              cases={cases}
+              onUpdateCase={handleUpdateCase}
+              currentUser={currentUser}
+              onSignIn={handleSignIn}
+              onSignOut={handleSignOut}
+              staffList={staffList}
+              onManageStaffAccount={handleManageStaffAccount}
+              onCreateStaffAccount={handleCreateStaffAccount}
+              authError={authError}
+              dataError={dataError}
+            />
+          )}
 
-        {currentView === 'qrcode' && (
-          <QRCodePoster />
-        )}
+          {currentView === 'qrcode' && <QRCodePoster />}
+        </Suspense>
       </main>
 
       {/* Simple, Clean Footer */}

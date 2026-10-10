@@ -23,7 +23,6 @@ import { getDepartmentQuestions, LIKELIHOOD_OPTIONS, QUESTIONNAIRE_VERSION, SATI
 import { useLanguage } from '../context/LanguageContext';
 import { useNotification } from '../context/NotificationContext';
 import { removeUnlinkedComplaintAudio, uploadComplaintAudio } from '../lib/data';
-import { requestNotificationPermission } from '../lib/firebase';
 import { CareSignalFlight } from './CareSignalFlight';
 import { CustomerServiceCallout } from './CustomerServiceCallout';
 
@@ -461,6 +460,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
       // submitted when Firebase is not configured or the browser rejects it.
       if (enableNotifications && !notificationPermissionRequested) {
         try {
+          const { requestNotificationPermission } = await import('../lib/firebase');
           deviceToken = await requestNotificationPermission();
         } finally {
           setNotificationPermissionRequested(true);
