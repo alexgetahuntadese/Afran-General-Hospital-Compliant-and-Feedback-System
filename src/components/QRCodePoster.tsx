@@ -69,7 +69,7 @@ export const QRCodePoster: React.FC = () => {
             <h2 className="text-4xl font-black text-slate-900">{t.hospitalName}</h2>
 
             <div className="space-y-4">
-              <p className="qr-amharic text-3xl font-black leading-tight text-slate-900">
+              <p className="qr-amharic text-4xl font-black leading-tight tracking-tight text-slate-900">
                 ስካን በማድረግ ቅሬታ • ሀሳብ • ምስጋና • አስተያየትዎን ያካፍሉ
               </p>
               <p className="text-2xl font-black leading-tight text-slate-900">
@@ -194,8 +194,9 @@ export const QRCodePoster: React.FC = () => {
             font-size: 1.25rem !important;
           }
           .qr-amharic {
-            font-size: 1.55rem !important;
+            font-size: 1.8rem !important;
             font-weight: 900 !important;
+            line-height: 1.15 !important;
           }
           .text-lg {
             font-size: 1rem !important;
