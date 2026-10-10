@@ -29,8 +29,12 @@ export const QRCodePoster: React.FC = () => {
   const handlePrint = () => {
     if (isPrinting) return;
     setIsPrinting(true);
+    document.body.classList.add('printing-qr-poster');
     window.print();
-    setTimeout(() => setIsPrinting(false), 1000);
+    setTimeout(() => {
+      document.body.classList.remove('printing-qr-poster');
+      setIsPrinting(false);
+    }, 1000);
   };
 
   return (
@@ -54,7 +58,7 @@ export const QRCodePoster: React.FC = () => {
         {/* Single Portrait Poster with All Languages */}
         <div
           ref={posterRef}
-          className="bg-white rounded-2xl shadow-lg p-8 print:shadow-none print:border-0 print:p-12"
+          className="qr-poster-print bg-white rounded-2xl shadow-lg p-8 print:shadow-none print:border-0 print:p-12"
         >
           <div className="text-center space-y-8 max-w-lg mx-auto">
             <img
@@ -128,6 +132,21 @@ export const QRCodePoster: React.FC = () => {
 
       <style>{`
         @media print {
+          body.printing-qr-poster > * {
+            visibility: hidden !important;
+          }
+          body.printing-qr-poster .qr-poster-print,
+          body.printing-qr-poster .qr-poster-print * {
+            visibility: visible !important;
+          }
+          body.printing-qr-poster .qr-poster-print {
+            position: absolute !important;
+            inset: 0 !important;
+            width: 100% !important;
+            margin: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+          }
           body {
             background: white !important;
             margin: 0;
