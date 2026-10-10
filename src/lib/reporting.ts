@@ -14,6 +14,8 @@ export interface ReportResult {
   description: string;
   cases: CaseSubmission[];
   filters: ReportFilters;
+  departmentBreakdown: Array<{ department: string; total: number; unresolved: number; resolved: number }>;
+  insights: string[];
 }
 
 function findDepartment(query: string): string | undefined {
@@ -90,11 +92,34 @@ export function buildReport(query: string, allCases: CaseSubmission[]): ReportRe
       : '';
   const labelDepartment = filters.department ? ` for ${filters.department}` : '';
   const labelDate = filters.since ? ` since ${filters.since.toLocaleDateString()}` : '';
+  const departmentBreakdown = Array.from(new Set(cases.map((item) => item.assignedDepartment ?? item.department)))
+    .map((department) => {
+      const departmentCases = cases.filter((item) => (item.assignedDepartment ?? item.department) === department);
+      return {
+        department,
+        total: departmentCases.length,
+        unresolved: departmentCases.filter((item) => item.status !== 'resolved').length,
+        resolved: departmentCases.filter((item) => item.status === 'resolved').length,
+      };
+    })
+    .sort((a, b) => b.total - a.total);
+  const ratings = cases.filter((item) => item.rating > 0);
+  const averageRating = ratings.length ? ratings.reduce((sum, item) => sum + item.rating, 0) / ratings.length : null;
+  const insights: string[] = [];
+  if (!cases.length) insights.push('No cases match this request. Try a wider date range or remove a filter.');
+  if (departmentBreakdown[0]) insights.push(`${departmentBreakdown[0].department} has the largest share with ${departmentBreakdown[0].total} case${departmentBreakdown[0].total === 1 ? '' : 's'}.`);
+  const unresolved = cases.filter((item) => item.status !== 'resolved').length;
+  if (cases.length) insights.push(`${unresolved} of ${cases.length} case${cases.length === 1 ? '' : 's'} remain unresolved (${Math.round((unresolved / cases.length) * 100)}%).`);
+  if (averageRating !== null) insights.push(`Average rating is ${averageRating.toFixed(1)} out of 5 across ${ratings.length} rated case${ratings.length === 1 ? '' : 's'}.`);
+  const unseen = cases.filter((item) => item.kind === 'complaint' && !item.departmentHeadChecked).length;
+  if (unseen) insights.push(`${unseen} complaint${unseen === 1 ? '' : 's'} have not yet been marked seen by a department head.`);
 
   return {
     title: `${labelKind.charAt(0).toUpperCase()}${labelKind.slice(1)} report`,
     description: `Showing ${cases.length} ${labelKind}${labelStatus ? ` ${labelStatus}` : ''}${labelDepartment}${labelDate}.`,
     cases,
     filters,
+    departmentBreakdown,
+    insights,
   };
 }
