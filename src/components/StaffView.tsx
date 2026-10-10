@@ -150,6 +150,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
       received: visibleCases.filter(c => c.status === 'received').length,
       in_review: visibleCases.filter(c => c.status === 'in_review').length,
       resolved: visibleCases.filter(c => c.status === 'resolved').length,
+      seen: visibleCases.filter(c => c.departmentHeadChecked).length,
     };
   }, [visibleCases]);
 
@@ -170,25 +171,28 @@ export const StaffView: React.FC<StaffViewProps> = ({
   }, [visibleCases, statusFilter, searchQuery, currentUser?.role]);
 
   const handleOpenReview = async (c: CaseSubmission) => {
-    setSelectedCase(c);
-    setEditStatus(c.status);
-    setEditAssignedDepartment(c.assignedDepartment ?? c.department);
-    setEditResponse(c.response || '');
-    setEditEscalated(Boolean(c.escalated));
+    let reviewCase = c;
 
     // Auto-mark as checked by department head when they open the case
     if (currentUser?.role === 'department_head' && !c.departmentHeadChecked) {
+      reviewCase = {
+        ...c,
+        departmentHeadChecked: true,
+        departmentHeadCheckedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
       try {
-        await onUpdateCase({
-          ...c,
-          departmentHeadChecked: true,
-          departmentHeadCheckedAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        });
+        await onUpdateCase(reviewCase);
       } catch (error) {
         console.error('Failed to mark as checked by department head:', error);
       }
     }
+
+    setSelectedCase(reviewCase);
+    setEditStatus(reviewCase.status);
+    setEditAssignedDepartment(reviewCase.assignedDepartment ?? reviewCase.department);
+    setEditResponse(reviewCase.response || '');
+    setEditEscalated(Boolean(reviewCase.escalated));
   };
 
   const getStaffDraft = (staff: StaffUser) => staffAccountDrafts[staff.username] ?? {
@@ -567,6 +571,12 @@ export const StaffView: React.FC<StaffViewProps> = ({
               className="premium-input w-full pl-9"
             />
           </div>
+          {(currentUser.role === 'customer_service_manager' || currentUser.role === 'superadmin') && (
+            <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-300">
+              <CheckCircle2 className="h-4 w-4" />
+              <span>{counts.seen} seen by department heads</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -609,9 +619,12 @@ export const StaffView: React.FC<StaffViewProps> = ({
                     </span>
                   )}
                   {c.departmentHeadChecked && (
-                    <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 flex items-center gap-1">
+                    <span
+                      title={c.departmentHeadCheckedAt ? `Seen ${new Date(c.departmentHeadCheckedAt).toLocaleString()}` : 'Seen by department head'}
+                      className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 flex items-center gap-1"
+                    >
                       <CheckCircle2 className="w-3 h-3" />
-                      <span>Dept. Head</span>
+                      <span>Seen by dept. head</span>
                     </span>
                   )}
                   <span className="text-[11px] font-semibold capitalize px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
