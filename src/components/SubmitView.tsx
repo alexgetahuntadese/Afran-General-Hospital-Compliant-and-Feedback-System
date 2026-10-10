@@ -25,6 +25,7 @@ import { useNotification } from '../context/NotificationContext';
 import { removeUnlinkedComplaintAudio, uploadComplaintAudio } from '../lib/data';
 import { requestNotificationPermission } from '../lib/firebase';
 import { CareSignalFlight } from './CareSignalFlight';
+import { CustomerServiceCallout } from './CustomerServiceCallout';
 
 interface SubmitViewProps {
   onSubmitCase: (newCase: CaseSubmission) => Promise<void>;
@@ -522,6 +523,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
 
   return (
     <div className="max-w-6xl mx-auto py-8 sm:py-16 px-4 space-y-8 sm:space-y-12">
+      <CustomerServiceCallout />
       {/* Welcome panel */}
       <section className="premium-hero hero-float relative overflow-hidden rounded-[32px] border border-white/20 bg-gradient-to-br from-[#0077b6] via-[#00b4d8] to-[#90e0ef] px-6 py-8 text-white shadow-2xl sm:rounded-[40px] sm:px-12 sm:py-12">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4xIi8+PC9zdmc+')] opacity-30" aria-hidden="true" />
