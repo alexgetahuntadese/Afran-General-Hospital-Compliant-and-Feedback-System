@@ -35,11 +35,13 @@ Deno.serve(async (request) => {
   const admin = createClient(supabaseUrl, serviceRoleKey);
   const { data: requester, error: requesterError } = await admin
     .from('staff_profiles')
-    .select('role')
+    .select('role, is_active')
     .eq('id', authData.user.id)
     .maybeSingle();
   if (requesterError) return json({ error: requesterError.message }, 500);
-  if (requester?.role !== 'superadmin') return json({ error: 'Only superadmins can create staff accounts.' }, 403);
+  if (requester?.role !== 'superadmin' || !requester.is_active) {
+    return json({ error: 'Only active superadmins can create staff accounts.' }, 403);
+  }
 
   const body = await request.json().catch(() => null) as {
     username?: unknown;

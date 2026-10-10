@@ -1,5 +1,6 @@
 import { initializeApp, getApps } from 'firebase/app';
-import { getMessaging, getToken, onMessage, Messaging } from 'firebase/messaging';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import type { Messaging } from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -10,11 +11,27 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-const messaging = getMessaging(app);
+const hasFirebaseConfig = Object.values(firebaseConfig).every((value) => Boolean(value));
+
+// Notifications are an optional enhancement. Do not initialize Firebase at module
+// load time when the app is running without FCM environment variables, and do not
+// let unsupported browsers crash the entire feedback form.
+const app = hasFirebaseConfig
+  ? (getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0])
+  : null;
+
+const messaging: Messaging | null = app && typeof window !== 'undefined'
+  ? (() => {
+      try {
+        return getMessaging(app);
+      } catch {
+        return null;
+      }
+    })()
+  : null;
 
 export async function requestNotificationPermission(): Promise<string | null> {
-  if (!('Notification' in window)) {
+  if (!messaging || !('Notification' in window)) {
     console.log('This browser does not support notifications');
     return null;
   }
@@ -37,7 +54,8 @@ export async function requestNotificationPermission(): Promise<string | null> {
 }
 
 export function onMessageListener(callback: (payload: { notification?: { title?: string; body?: string }; data?: Record<string, string> }) => void) {
-  onMessage(messaging, (payload) => {
+  if (!messaging) return () => undefined;
+  return onMessage(messaging, (payload) => {
     callback(payload);
   });
 }

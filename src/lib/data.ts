@@ -189,7 +189,7 @@ export async function getCaseByReference(reference: string): Promise<CaseSubmiss
     lookup_reference: reference.trim().toUpperCase(),
   });
   if (error) throw error;
-  const rows = data as PublicCaseRow[];
+  const rows = Array.isArray(data) ? data as PublicCaseRow[] : [];
   return rows.length ? mapCaseRow(rows[0]) : null;
 }
 

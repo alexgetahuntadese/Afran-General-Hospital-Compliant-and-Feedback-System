@@ -426,12 +426,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
     const now = new Date().toISOString();
     const refCode = generateRef();
 
-    // Request notification permission if enabled
     let deviceToken: string | null = null;
-    if (enableNotifications && !notificationPermissionRequested) {
-      deviceToken = await requestNotificationPermission();
-      setNotificationPermissionRequested(true);
-    }
 
     const newCase: CaseSubmission = {
       id: refCode,
@@ -460,6 +455,15 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
 
     let uploadedAudioPath: string | undefined;
     try {
+      // Notification setup is optional and must not prevent a case from being
+      // submitted when Firebase is not configured or the browser rejects it.
+      if (enableNotifications && !notificationPermissionRequested) {
+        try {
+          deviceToken = await requestNotificationPermission();
+        } finally {
+          setNotificationPermissionRequested(true);
+        }
+      }
       if (audioBlob) uploadedAudioPath = await uploadComplaintAudio(refCode, audioBlob);
       const caseWithAudio = uploadedAudioPath ? { ...newCase, audioPath: uploadedAudioPath } : newCase;
       await onSubmitCase(caseWithAudio);
