@@ -12,6 +12,7 @@ import { Header } from './components/Header';
 import { SubmitView } from './components/SubmitView';
 import { TrackView } from './components/TrackView';
 import { Notifications } from './components/Notifications';
+import { AppInstallPrompt } from './components/AppInstallPrompt';
 import { CaseSubmission, StaffAccountAction, StaffRole, StaffUser } from './types/hospital';
 import type { Session } from '@supabase/supabase-js';
 import { createCase, createStaffAccount, getCases, getCurrentUserProfile, getStaffProfiles, manageStaffAccount, updateCase } from './lib/data';
@@ -290,6 +291,7 @@ function HospitalFeedbackApp() {
 
       {/* Simple, Clean Footer */}
       <footer className="border-t border-slate-200 dark:border-slate-800/80 py-8 px-4 text-center text-xs text-slate-500 dark:text-slate-400 space-y-2">
+        <div className="mb-4 flex justify-center"><AppInstallPrompt /></div>
         <div className="flex items-center justify-center gap-3">
           <span className="font-semibold text-slate-700 dark:text-slate-300">
             {t.hospitalName}
