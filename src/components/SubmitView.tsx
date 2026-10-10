@@ -13,7 +13,8 @@ import {
   ShieldCheck,
   Mic,
   Square,
-  Trash2
+  Trash2,
+  Bell
 } from 'lucide-react';
 import { SubmissionKind, CaseSubmission } from '../types/hospital';
 import { DEPARTMENTS } from '../data/seedData';
@@ -21,6 +22,7 @@ import { getDepartmentQuestions, LIKELIHOOD_OPTIONS, QUESTIONNAIRE_VERSION, SATI
 import { useLanguage } from '../context/LanguageContext';
 import { useNotification } from '../context/NotificationContext';
 import { removeUnlinkedComplaintAudio, uploadComplaintAudio } from '../lib/data';
+import { requestNotificationPermission } from '../lib/firebase';
 
 interface SubmitViewProps {
   onSubmitCase: (newCase: CaseSubmission) => Promise<void>;
@@ -115,6 +117,8 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
   const [isRecording, setIsRecording] = useState(false);
   const [recordingError, setRecordingError] = useState('');
   const [wizardStep, setWizardStep] = useState(0);
+  const [enableNotifications, setEnableNotifications] = useState(false);
+  const [notificationPermissionRequested, setNotificationPermissionRequested] = useState(false);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const recordingTimerRef = useRef<number | null>(null);
@@ -342,6 +346,13 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
     const now = new Date().toISOString();
     const refCode = generateRef();
 
+    // Request notification permission if enabled
+    let deviceToken: string | null = null;
+    if (enableNotifications && !notificationPermissionRequested) {
+      deviceToken = await requestNotificationPermission();
+      setNotificationPermissionRequested(true);
+    }
+
     const newCase: CaseSubmission = {
       id: refCode,
       reference: refCode,
@@ -374,6 +385,12 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
       await onSubmitCase(caseWithAudio);
       setSubmittedCase(caseWithAudio);
       showNotification('success', t.submissionSuccess);
+      
+      // Save device token if permission was granted
+      if (deviceToken) {
+        // TODO: Save device token to database
+        console.log('Device token obtained:', deviceToken);
+      }
     } catch (error) {
       let message = getSubmissionErrorMessage(error);
       if (uploadedAudioPath) {
@@ -881,6 +898,28 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
                 : [name, email, phone].filter(Boolean).join(' · ') || t.wizardNoMessage}
             </p>
           </section>
+        
+        {/* Push Notification Permission */}
+        <section className="rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100/50 p-4 dark:border-blue-900/70 dark:from-blue-950/35 dark:to-blue-900/20">
+          <label className="flex cursor-pointer items-start gap-3 select-none">
+            <input
+              type="checkbox"
+              checked={enableNotifications}
+              onChange={(e) => setEnableNotifications(e.target.checked)}
+              className="mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+            />
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                <Bell className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                <span className="text-xs font-bold text-slate-800 dark:text-slate-100">{t.enableNotifications}</span>
+              </div>
+              <p className="mt-1.5 text-[11px] leading-relaxed text-slate-600 dark:text-slate-300">
+                {t.notificationDescription}
+              </p>
+            </div>
+          </label>
+        </section>
+
         <div className="space-y-3 border-t border-slate-100 pt-4 dark:border-slate-800">
           <label className="flex cursor-pointer items-center gap-2.5 select-none">
             <input

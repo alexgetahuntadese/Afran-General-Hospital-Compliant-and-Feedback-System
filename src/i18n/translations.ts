@@ -231,6 +231,12 @@ export interface CloneTranslations {
   submissionError: string;
   networkError: string;
   tryAgain: string;
+
+  // Push notifications
+  enableNotifications: string;
+  notificationPermission: string;
+  notificationDescription: string;
+  notificationEnabled: string;
 }
 
 export const translations: Record<Language, CloneTranslations> = {
@@ -464,6 +470,12 @@ export const translations: Record<Language, CloneTranslations> = {
     submissionError: 'Unable to submit your feedback. Please try again.',
     networkError: 'Network error. Please check your connection and try again.',
     tryAgain: 'Please try again.',
+
+    // Push notifications
+    enableNotifications: 'Enable push notifications',
+    notificationPermission: 'Receive updates on your device',
+    notificationDescription: 'Get notified when your case status changes or when staff respond to your feedback.',
+    notificationEnabled: 'Push notifications enabled',
   },
   am: {
     emergencyBanner: 'ለአስቸኳይ የህክምና ድንገተኛ አደጋ፣ ወዲያውኑ ወደ ድንገተኛ ክፍል ይሂዱ።',
@@ -695,6 +707,12 @@ export const translations: Record<Language, CloneTranslations> = {
     submissionError: 'አስተያየትዎን ማቅረብ አልተቻለም። እባክዎ እንደገና ይሞክሩ።',
     networkError: 'የኔትወርክ ስህተት። እባክዎ የኢንተርኔት አገናኝዎን ያረጋግጡና እንደገና ይሞክሩ።',
     tryAgain: 'እባክዎ እንደገና ይሞክሩ።',
+
+    // Push notifications
+    enableNotifications: 'የስልክ ማስታወሻዎችን አንቃ',
+    notificationPermission: 'በስልክዎ ላይ ዝማኔ ያግኙ',
+    notificationDescription: 'የጉዳይዎ ሁኔታ ሲቀይር ወይም ሰራተኞች ምላሽ ሲሰጡ ማስታወሻ ይቀበሉ።',
+    notificationEnabled: 'የስልክ ማስታወሻዎች ተንቀልቀሉ',
   },
   om: {
     emergencyBanner: 'Yeroo yaala hatattamaa, battalumatti gara Kutaa Balaa deemaa.',
@@ -925,5 +943,11 @@ export const translations: Record<Language, CloneTranslations> = {
     submissionError: 'Yaada keessan dhiyeessuu hin danda\'amu. Firiin haaraa deebi\'aa.',
     networkError: 'Dogoggora neettiiorkii. Qabxii keessan ilaali fi deebi\'ii deebi\'aa.',
     tryAgain: 'Deebi\'ii deebi\'aa.',
+
+    // Push notifications
+    enableNotifications: 'Yaada bilbila agarsiisuuf eeyyamaa',
+    notificationPermission: 'Qabxii keessatti yaada argachuu',
+    notificationDescription: 'Yeroon haala dhimma jijjiirama ykn hojjettoonni deebii kennu yaada argachuu dandeessa.',
+    notificationEnabled: 'Yaada bilbilaa agarsiifameera',
   },
 };
