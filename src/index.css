@@ -291,6 +291,41 @@
     }
   }
 
+  @media print {
+    body.printing-report {
+      background: white !important;
+    }
+
+    body.printing-report > * {
+      visibility: hidden;
+    }
+
+    body.printing-report .report-print-surface,
+    body.printing-report .report-print-surface * {
+      visibility: visible;
+    }
+
+    body.printing-report .report-print-surface {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      background: white !important;
+      color: #0f172a !important;
+    }
+
+    body.printing-report .report-print-surface button,
+    body.printing-report .report-print-surface input {
+      display: none !important;
+    }
+
+    body.printing-report .report-print-surface table {
+      font-size: 10pt;
+    }
+  }
+
   /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 6px;

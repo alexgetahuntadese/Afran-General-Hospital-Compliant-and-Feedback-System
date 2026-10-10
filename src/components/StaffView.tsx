@@ -25,6 +25,7 @@ import {
 import { CaseSubmission, StaffAccountAction, StaffRole, StaffUser, SubmissionStatus } from '../types/hospital';
 import { useLanguage } from '../context/LanguageContext';
 import { StaffAnalyticsSummary } from './StaffAnalyticsSummary';
+import { StaffReportAssistant } from './StaffReportAssistant';
 import { getDepartmentQuestions, LIKELIHOOD_OPTIONS, SATISFACTION_OPTIONS } from '../data/questionnaires';
 import { DEPARTMENTS } from '../data/seedData';
 import { getComplaintAudioUrl } from '../lib/data';
@@ -41,6 +42,8 @@ interface StaffViewProps {
   authError: string;
   dataError: string;
 }
+
+const RESPONSE_DRAFT_PREFIX = 'afran-response-draft:';
 
 export const StaffView: React.FC<StaffViewProps> = ({
   cases,
@@ -92,6 +95,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
   const [editStatus, setEditStatus] = useState<SubmissionStatus>('received');
   const [editAssignedDepartment, setEditAssignedDepartment] = useState('');
   const [editResponse, setEditResponse] = useState('');
+  const [responseDraftSaved, setResponseDraftSaved] = useState(false);
   const [editEscalated, setEditEscalated] = useState(false);
   const [saveError, setSaveError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
@@ -135,6 +139,20 @@ export const StaffView: React.FC<StaffViewProps> = ({
       active = false;
     };
   }, [selectedCase?.audioPath]);
+
+  useEffect(() => {
+    if (!selectedCase || !currentUser) return;
+    const draftKey = `${RESPONSE_DRAFT_PREFIX}${currentUser.username}:${selectedCase.id}`;
+    const saveTimer = window.setTimeout(() => {
+      try {
+        window.localStorage.setItem(draftKey, editResponse);
+        setResponseDraftSaved(true);
+      } catch {
+        // Local storage can be disabled; the response field remains usable.
+      }
+    }, 350);
+    return () => window.clearTimeout(saveTimer);
+  }, [currentUser, editResponse, selectedCase]);
 
   const visibleCases = useMemo(() => {
     if (currentUser?.role === 'ceo') return cases.filter((c) => c.escalated);
@@ -191,7 +209,14 @@ export const StaffView: React.FC<StaffViewProps> = ({
     setSelectedCase(reviewCase);
     setEditStatus(reviewCase.status);
     setEditAssignedDepartment(reviewCase.assignedDepartment ?? reviewCase.department);
-    setEditResponse(reviewCase.response || '');
+    let cachedResponse = '';
+    try {
+      cachedResponse = window.localStorage.getItem(`${RESPONSE_DRAFT_PREFIX}${currentUser?.username}:${c.id}`) ?? '';
+    } catch {
+      cachedResponse = '';
+    }
+    setEditResponse(cachedResponse || reviewCase.response || '');
+    setResponseDraftSaved(Boolean(cachedResponse));
     setEditEscalated(Boolean(reviewCase.escalated));
   };
 
@@ -524,6 +549,10 @@ export const StaffView: React.FC<StaffViewProps> = ({
         </div>
       </div>
 
+      {(currentUser.role === 'customer_service_manager' || currentUser.role === 'superadmin') && (
+        <StaffReportAssistant cases={visibleCases} />
+      )}
+
       {/* Analytics Summary Dashboard (Recharts Visualization) */}
       {showCharts && (currentUser.role === 'superadmin' || currentUser.role === 'customer_service_manager' || currentUser.role === 'department_head') && (
         <StaffAnalyticsSummary
@@ -834,6 +863,12 @@ export const StaffView: React.FC<StaffViewProps> = ({
                     respondedAt: editResponse.trim() ? new Date().toISOString() : selectedCase.respondedAt,
                     updatedAt: new Date().toISOString(),
                   });
+                  try {
+                    window.localStorage.removeItem(`${RESPONSE_DRAFT_PREFIX}${currentUser?.username}:${selectedCase.id}`);
+                  } catch {
+                    // Ignore storage cleanup failures after a successful save.
+                  }
+                  setResponseDraftSaved(false);
                   setSelectedCase(null);
                 } catch (error) {
                   setSaveError(error instanceof Error ? error.message : 'Unable to save case changes.');
@@ -928,6 +963,26 @@ export const StaffView: React.FC<StaffViewProps> = ({
                     placeholder="Write a clear, courteous update or resolution..."
                     className="premium-input w-full"
                   />
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-[11px]">
+                    <span className={responseDraftSaved ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-400 dark:text-slate-500'}>
+                      {responseDraftSaved ? 'Draft saved on this device' : 'Draft saves automatically while you type'}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditResponse('');
+                        setResponseDraftSaved(false);
+                        try {
+                          window.localStorage.removeItem(`${RESPONSE_DRAFT_PREFIX}${currentUser?.username}:${selectedCase.id}`);
+                        } catch {
+                          // Ignore storage cleanup failures.
+                        }
+                      }}
+                      className="font-semibold text-slate-500 underline-offset-2 hover:text-rose-600 hover:underline dark:text-slate-400 dark:hover:text-rose-300"
+                    >
+                      Clear draft
+                    </button>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
