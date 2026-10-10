@@ -98,14 +98,14 @@ export const QRCodePoster: React.FC = () => {
                   <img
                     src={qrCodeUrl}
                     alt="QR Code"
-                    className="w-96 h-96 mx-auto print:w-[400px] print:h-[400px]"
+                    className="h-[min(82vw,28rem)] w-[min(82vw,28rem)] mx-auto print:h-[460px] print:w-[460px]"
                   />
                 ) : qrError ? (
-                  <div className="w-96 h-96 mx-auto flex items-center justify-center text-red-600 text-center">
+                  <div className="h-[min(82vw,28rem)] w-[min(82vw,28rem)] mx-auto flex items-center justify-center text-red-600 text-center">
                     <p className="text-sm">Failed to generate QR code</p>
                   </div>
                 ) : (
-                  <div className="w-96 h-96 mx-auto flex items-center justify-center text-slate-400">
+                  <div className="h-[min(82vw,28rem)] w-[min(82vw,28rem)] mx-auto flex items-center justify-center text-slate-400">
                     <p className="text-sm">Loading QR code...</p>
                   </div>
                 )}
@@ -201,12 +201,6 @@ export const QRCodePoster: React.FC = () => {
           }
           .h-48 {
             height: 8rem !important;
-          }
-          .w-96 {
-            width: 20rem !important;
-          }
-          .h-96 {
-            height: 20rem !important;
           }
           .border-4 {
             border-width: 2px !important;
