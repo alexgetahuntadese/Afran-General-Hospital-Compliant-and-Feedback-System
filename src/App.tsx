@@ -13,6 +13,7 @@ import { SubmitView } from './components/SubmitView';
 import { TrackView } from './components/TrackView';
 import { Notifications } from './components/Notifications';
 import { AppInstallPrompt } from './components/AppInstallPrompt';
+import { useNotification } from './context/NotificationContext';
 import { CaseSubmission, StaffAccountAction, StaffRole, StaffUser } from './types/hospital';
 import type { Session } from '@supabase/supabase-js';
 import { createCase, createStaffAccount, getCases, getCurrentUserProfile, getStaffProfiles, manageStaffAccount, updateCase } from './lib/data';
@@ -21,8 +22,36 @@ import { supabase } from './lib/supabase';
 const StaffView = lazy(() => import('./components/StaffView').then((module) => ({ default: module.StaffView })));
 const QRCodePoster = lazy(() => import('./components/QRCodePoster').then((module) => ({ default: module.QRCodePoster })));
 
+function playComplaintAlert() {
+  const AudioContextConstructor = window.AudioContext
+    || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  if (!AudioContextConstructor) return;
+
+  const audioContext = new AudioContextConstructor();
+  const playTone = (start: number, frequency: number) => {
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    oscillator.type = 'sine';
+    oscillator.frequency.value = frequency;
+    gain.gain.setValueAtTime(0.0001, audioContext.currentTime + start);
+    gain.gain.exponentialRampToValueAtTime(0.18, audioContext.currentTime + start + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + start + 0.32);
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+    oscillator.start(audioContext.currentTime + start);
+    oscillator.stop(audioContext.currentTime + start + 0.34);
+  };
+
+  void audioContext.resume().then(() => {
+    playTone(0, 740);
+    playTone(0.18, 988);
+    window.setTimeout(() => void audioContext.close(), 700);
+  }).catch(() => void audioContext.close());
+}
+
 function HospitalFeedbackApp() {
   const { t } = useLanguage();
+  const { showNotification } = useNotification();
 
   const [showSplash, setShowSplash] = useState(true);
   const [isSplashExiting, setIsSplashExiting] = useState(false);
@@ -124,6 +153,32 @@ function HospitalFeedbackApp() {
       active = false;
     };
   }, [currentUser]);
+
+  useEffect(() => {
+    if (!currentUser || (currentUser.role !== 'customer_service_manager' && currentUser.role !== 'superadmin') || !supabase) return;
+
+    const channel = supabase
+      .channel(`manager-new-complaints-${currentUser.username}`)
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'feedback_cases',
+        filter: 'kind=eq.complaint',
+      }, (payload) => {
+        const reference = typeof payload.new?.reference === 'string' ? payload.new.reference : '';
+        playComplaintAlert();
+        showNotification('info', reference ? `${t.newComplaintAlert}: ${reference}` : t.newComplaintAlertBody, 10000);
+        if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+          new Notification(t.newComplaintAlert, { body: reference ? `${t.newComplaintAlertBody} (${reference})` : t.newComplaintAlertBody });
+        }
+        void getCases().then((latestCases) => setCases(latestCases)).catch(() => undefined);
+      })
+      .subscribe();
+
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [currentUser, showNotification, t]);
 
   const handleCreateCase = async (newCase: CaseSubmission) => {
     await createCase(newCase);

@@ -256,6 +256,8 @@ export interface CloneTranslations {
   departmentBreakdown: string;
   keyInsights: string;
   reportPreviewHint: string;
+  newComplaintAlert: string;
+  newComplaintAlertBody: string;
 }
 
 export const translations: Record<Language, CloneTranslations> = {
@@ -514,6 +516,8 @@ export const translations: Record<Language, CloneTranslations> = {
     departmentBreakdown: 'Department breakdown',
     keyInsights: 'Key insights',
     reportPreviewHint: 'Use a prompt or choose a suggestion to begin.',
+    newComplaintAlert: 'New complaint received',
+    newComplaintAlertBody: 'A new complaint is ready for review in the manager dashboard.',
   },
   am: {
     emergencyBanner: 'ለአስቸኳይ የህክምና ድንገተኛ አደጋ፣ ወዲያውኑ ወደ ድንገተኛ ክፍል ይሂዱ።',
@@ -770,6 +774,8 @@ export const translations: Record<Language, CloneTranslations> = {
     departmentBreakdown: 'የመምሪያ ስርጭት',
     keyInsights: 'ዋና ግንዛቤዎች',
     reportPreviewHint: 'ለመጀመር ጥያቄ ይጠቀሙ ወይም ከጥቆማ ይምረጡ።',
+    newComplaintAlert: 'አዲስ ቅሬታ ደርሷል',
+    newComplaintAlertBody: 'አዲስ ቅሬታ በአስተዳዳሪው ዳሽቦርድ ላይ ለግምገማ ዝግጁ ነው።',
   },
   om: {
     emergencyBanner: 'Yeroo yaala hatattamaa, battalumatti gara Kutaa Balaa deemaa.',
@@ -1025,5 +1031,7 @@ export const translations: Record<Language, CloneTranslations> = {
     departmentBreakdown: 'Qoodinsa kutaa',
     keyInsights: 'Hubannoo ijoo',
     reportPreviewHint: 'Jalqabuuf gaafadhaa ykn yaada keessaa filadhaa.',
+    newComplaintAlert: 'Komii haaraan dhufeera',
+    newComplaintAlertBody: 'Komii haaraan daashboordii bulchaa irratti gamaaggamaaf qophiidha.',
   },
 };
