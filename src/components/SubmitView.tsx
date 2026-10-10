@@ -14,7 +14,8 @@ import {
   Mic,
   Square,
   Trash2,
-  Bell
+  Bell,
+  X
 } from 'lucide-react';
 import { SubmissionKind, CaseSubmission } from '../types/hospital';
 import { DEPARTMENTS } from '../data/seedData';
@@ -35,24 +36,25 @@ const ratingOptionStyles: Record<number, { selected: string; idle: string }> = {
     idle: 'border-rose-200 bg-gradient-to-br from-rose-50 to-white text-rose-700 hover:border-rose-400 hover:shadow-md hover:shadow-rose-500/10 dark:border-rose-900 dark:from-rose-950/50 dark:to-slate-900 dark:text-rose-300',
   },
   2: {
-    selected: 'border-orange-500 bg-gradient-to-br from-orange-500 to-amber-600 text-white shadow-lg shadow-orange-500/25',
+    selected: 'border-orange-500 bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/25',
     idle: 'border-orange-200 bg-gradient-to-br from-orange-50 to-white text-orange-700 hover:border-orange-400 hover:shadow-md hover:shadow-orange-500/10 dark:border-orange-900 dark:from-orange-950/50 dark:to-slate-900 dark:text-orange-300',
   },
   3: {
-    selected: 'border-amber-500 bg-gradient-to-br from-amber-400 to-yellow-500 text-amber-950 shadow-lg shadow-amber-500/25',
-    idle: 'border-amber-200 bg-gradient-to-br from-amber-50 to-white text-amber-800 hover:border-amber-400 hover:shadow-md hover:shadow-amber-500/10 dark:border-amber-900 dark:from-amber-950/50 dark:to-slate-900 dark:text-amber-300',
+    selected: 'border-yellow-500 bg-gradient-to-br from-yellow-500 to-yellow-600 text-white shadow-lg shadow-yellow-500/25',
+    idle: 'border-yellow-200 bg-gradient-to-br from-yellow-50 to-white text-yellow-700 hover:border-yellow-400 hover:shadow-md hover:shadow-yellow-500/10 dark:border-yellow-900 dark:from-yellow-950/50 dark:to-slate-900 dark:text-yellow-300',
   },
   4: {
-    selected: 'border-blue-500 bg-gradient-to-br from-blue-500 to-sky-600 text-white shadow-lg shadow-blue-500/25',
-    idle: 'border-blue-200 bg-gradient-to-br from-blue-50 to-white text-blue-800 hover:border-blue-400 hover:shadow-md hover:shadow-blue-500/10 dark:border-blue-900 dark:from-blue-950/50 dark:to-slate-900 dark:text-blue-300',
+    selected: 'border-lime-500 bg-gradient-to-br from-lime-500 to-lime-600 text-white shadow-lg shadow-lime-500/25',
+    idle: 'border-lime-200 bg-gradient-to-br from-lime-50 to-white text-lime-700 hover:border-lime-400 hover:shadow-md hover:shadow-lime-500/10 dark:border-lime-900 dark:from-lime-950/50 dark:to-slate-900 dark:text-lime-300',
   },
   5: {
-    selected: 'border-sky-500 bg-gradient-to-br from-sky-500 to-blue-600 text-white shadow-lg shadow-sky-500/25',
-    idle: 'border-sky-200 bg-gradient-to-br from-sky-50 to-white text-sky-800 hover:border-sky-400 hover:shadow-md hover:shadow-sky-500/10 dark:border-sky-900 dark:from-sky-950/50 dark:to-slate-900 dark:text-sky-300',
+    selected: 'border-emerald-500 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/25',
+    idle: 'border-emerald-200 bg-gradient-to-br from-emerald-50 to-white text-emerald-700 hover:border-emerald-400 hover:shadow-md hover:shadow-emerald-500/10 dark:border-emerald-900 dark:from-emerald-950/50 dark:to-slate-900 dark:text-emerald-300',
   },
 };
 
 const minimumQuestionnaireAnswers = 4;
+const FORM_CACHE_KEY = 'afran_feedback_form_cache';
 
 function getSubmissionErrorMessage(error: unknown): string {
   const fallback = 'Unable to submit feedback. Please try again.';
@@ -205,6 +207,84 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
     if (recordingTimerRef.current !== null) window.clearTimeout(recordingTimerRef.current);
     mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
   }, []);
+
+  // Save form state to localStorage
+  useEffect(() => {
+    const formState = {
+      kind,
+      department,
+      questionnaireAnswers,
+      rating,
+      subject,
+      message,
+      anonymous,
+      name,
+      email,
+      phone,
+      enableNotifications,
+      wizardStep,
+    };
+    try {
+      localStorage.setItem(FORM_CACHE_KEY, JSON.stringify(formState));
+    } catch (e) {
+      console.error('Failed to save form state:', e);
+    }
+  }, [kind, department, questionnaireAnswers, rating, subject, message, anonymous, name, email, phone, enableNotifications, wizardStep]);
+
+  // Load form state from localStorage on mount
+  useEffect(() => {
+    try {
+      const cached = localStorage.getItem(FORM_CACHE_KEY);
+      if (cached) {
+        const formState = JSON.parse(cached);
+        if (formState.kind) setKind(formState.kind);
+        if (formState.department) setDepartment(formState.department);
+        if (formState.questionnaireAnswers) setQuestionnaireAnswers(formState.questionnaireAnswers);
+        if (formState.rating) setRating(formState.rating);
+        if (formState.subject) setSubject(formState.subject);
+        if (formState.message) setMessage(formState.message);
+        if (formState.anonymous !== undefined) setAnonymous(formState.anonymous);
+        if (formState.name) setName(formState.name);
+        if (formState.email) setEmail(formState.email);
+        if (formState.phone) setPhone(formState.phone);
+        if (formState.enableNotifications !== undefined) setEnableNotifications(formState.enableNotifications);
+        if (formState.wizardStep !== undefined) setWizardStep(formState.wizardStep);
+      }
+    } catch (e) {
+      console.error('Failed to load form state:', e);
+    }
+  }, []);
+
+  // Clear form cache
+  const clearFormCache = () => {
+    try {
+      localStorage.removeItem(FORM_CACHE_KEY);
+    } catch (e) {
+      console.error('Failed to clear form cache:', e);
+    }
+  };
+
+  // Reset form and clear cache
+  const handleResetForm = () => {
+    setKind('complaint');
+    setDepartment('');
+    setQuestionnaireAnswers({});
+    setRating(0);
+    setSubject('');
+    setMessage('');
+    setAnonymous(false);
+    setName('');
+    setEmail('');
+    setPhone('');
+    setEnableNotifications(false);
+    setWizardStep(0);
+    setSubmitError('');
+    setAudioBlob(null);
+    setAudioPreviewUrl('');
+    setAudioConsent(false);
+    clearFormCache();
+    showNotification('info', 'Form cleared');
+  };
 
   const stopRecording = () => {
     if (recordingTimerRef.current !== null) {
@@ -386,6 +466,9 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
       setSubmittedCase(caseWithAudio);
       showNotification('success', t.submissionSuccess);
       
+      // Clear form cache after successful submission
+      clearFormCache();
+      
       // Save device token if permission was granted
       if (deviceToken) {
         // TODO: Save device token to database
@@ -458,10 +541,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
             <button
               onClick={() => {
                 setSubmittedCase(null);
-                setSubject('');
-                setMessage('');
-                setRating(0);
-                setWizardStep(0);
+                handleResetForm();
               }}
               className="w-full sm:w-auto px-5 py-3 min-h-[44px] text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-sm rounded-2xl transition-all duration-300 hover:shadow-md flex items-center justify-center gap-2 border-2 border-slate-200/60 dark:border-slate-700/60"
             >
@@ -528,12 +608,18 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
             </div>
             <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{t.submitButton}</h2>
             <p className="mt-2 text-base text-slate-500 dark:text-slate-400 leading-relaxed">
-              {t.feedbackTypePrompt}
+              {questionDescription}
             </p>
           </div>
-          <span className="hidden rounded-full bg-gradient-to-r from-[#0077b6] to-[#00b4d8] px-5 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-xl shadow-[#0077b6]/30 sm:inline-flex">
-            {t.patientRelations}
-          </span>
+          <button
+            type="button"
+            onClick={handleResetForm}
+            className="shrink-0 flex items-center gap-2 px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all border border-slate-200 dark:border-slate-700"
+            title="Clear form and reset"
+          >
+            <X className="w-4 h-4" />
+            <span className="hidden sm:inline">Clear</span>
+          </button>
         </div>
         <div ref={wizardProgressRef} className="sticky top-[4.5rem] z-10 -mx-1 mt-8 rounded-3xl border border-slate-200/50 bg-white/80 backdrop-blur-xl p-6 shadow-xl dark:border-slate-700/50 dark:bg-slate-900/80 sm:static sm:mx-0 sm:mt-10 sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none sm:backdrop-blur-none">
           <ol aria-label={`${t.wizardStepProgress} ${wizardStep + 1} / ${wizardSteps.length}: ${wizardSteps[wizardStep]}`} className="grid grid-cols-4 gap-4">
