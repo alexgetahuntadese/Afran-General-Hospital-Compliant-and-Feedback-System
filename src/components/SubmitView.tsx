@@ -19,6 +19,7 @@ import { SubmissionKind, CaseSubmission } from '../types/hospital';
 import { DEPARTMENTS } from '../data/seedData';
 import { getDepartmentQuestions, LIKELIHOOD_OPTIONS, QUESTIONNAIRE_VERSION, SATISFACTION_OPTIONS } from '../data/questionnaires';
 import { useLanguage } from '../context/LanguageContext';
+import { useNotification } from '../context/NotificationContext';
 import { removeUnlinkedComplaintAudio, uploadComplaintAudio } from '../lib/data';
 
 interface SubmitViewProps {
@@ -90,6 +91,7 @@ function getSubmissionErrorMessage(error: unknown): string {
 
 export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigateTrack }) => {
   const { t, language, getDeptName } = useLanguage();
+  const { showNotification } = useNotification();
   const maxRecordingBytes = 10 * 1024 * 1024;
 
   const [kind, setKind] = useState<SubmissionKind>('complaint');
@@ -371,6 +373,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
       const caseWithAudio = uploadedAudioPath ? { ...newCase, audioPath: uploadedAudioPath } : newCase;
       await onSubmitCase(caseWithAudio);
       setSubmittedCase(caseWithAudio);
+      showNotification('success', t.submissionSuccess);
     } catch (error) {
       let message = getSubmissionErrorMessage(error);
       if (uploadedAudioPath) {
@@ -382,6 +385,7 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
         }
       }
       setSubmitError(message);
+      showNotification('error', t.submissionError);
     } finally {
       setIsSubmitting(false);
     }

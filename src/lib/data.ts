@@ -43,7 +43,7 @@ type PublicCaseRow = Omit<CaseRow, 'name' | 'email' | 'phone' | 'escalated' | 'q
 
 function requireSupabase() {
   if (!supabase) {
-    throw new Error('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.');
+    throw new Error('Database connection not configured. Please contact system administrator.');
   }
   return supabase;
 }
@@ -272,5 +272,5 @@ async function getFunctionError(error: unknown): Promise<Error> {
     }
   }
   if (error instanceof Error) return error;
-  return new Error('The staff account request failed.');
+  return new Error('Unable to complete the request. Please check your connection and try again.');
 }

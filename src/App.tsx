@@ -7,11 +7,13 @@ import React, { useState, useEffect } from 'react';
 import hospitalLogo from './assets/images/afran-general-hospital-logo.jpg';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { NotificationProvider } from './context/NotificationContext';
 import { Header } from './components/Header';
 import { SubmitView } from './components/SubmitView';
 import { TrackView } from './components/TrackView';
 import { StaffView } from './components/StaffView';
 import { QRCodePoster } from './components/QRCodePoster';
+import { Notifications } from './components/Notifications';
 import { CaseSubmission, StaffAccountAction, StaffRole, StaffUser } from './types/hospital';
 import type { Session } from '@supabase/supabase-js';
 import { createCase, createStaffAccount, getCases, getCurrentUserProfile, getStaffProfiles, manageStaffAccount, updateCase } from './lib/data';
@@ -306,7 +308,10 @@ export default function App() {
   return (
     <ThemeProvider>
       <LanguageProvider>
-        <HospitalFeedbackApp />
+        <NotificationProvider>
+          <HospitalFeedbackApp />
+          <Notifications />
+        </NotificationProvider>
       </LanguageProvider>
     </ThemeProvider>
   );

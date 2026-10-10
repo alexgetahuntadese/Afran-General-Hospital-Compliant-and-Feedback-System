@@ -221,6 +221,16 @@ export interface CloneTranslations {
   totalCases: string;
   showCharts: string;
   hideCharts: string;
+
+  // Notifications
+  notificationSuccess: string;
+  notificationError: string;
+  notificationWarning: string;
+  notificationInfo: string;
+  submissionSuccess: string;
+  submissionError: string;
+  networkError: string;
+  tryAgain: string;
 }
 
 export const translations: Record<Language, CloneTranslations> = {
@@ -444,6 +454,16 @@ export const translations: Record<Language, CloneTranslations> = {
     totalCases: 'Total Cases',
     showCharts: 'Show Analytics',
     hideCharts: 'Hide Analytics',
+
+    // Notifications
+    notificationSuccess: 'Success',
+    notificationError: 'Error',
+    notificationWarning: 'Warning',
+    notificationInfo: 'Information',
+    submissionSuccess: 'Your feedback has been submitted successfully.',
+    submissionError: 'Unable to submit your feedback. Please try again.',
+    networkError: 'Network error. Please check your connection and try again.',
+    tryAgain: 'Please try again.',
   },
   am: {
     emergencyBanner: 'ለአስቸኳይ የህክምና ድንገተኛ አደጋ፣ ወዲያውኑ ወደ ድንገተኛ ክፍል ይሂዱ።',
@@ -665,6 +685,16 @@ export const translations: Record<Language, CloneTranslations> = {
     totalCases: 'አጠቃላይ ጉዳዮች',
     showCharts: 'ትንታኔ አሳይ',
     hideCharts: 'ትንታኔ ደብቅ',
+
+    // Notifications
+    notificationSuccess: 'ተሳክቷል',
+    notificationError: 'ስህተት',
+    notificationWarning: 'ማስጠንቀቂያ',
+    notificationInfo: 'መረጃ',
+    submissionSuccess: 'አስተያየትዎ በተሳካ ሁኔታ ቀርቧል።',
+    submissionError: 'አስተያየትዎን ማቅረብ አልተቻለም። እባክዎ እንደገና ይሞክሩ።',
+    networkError: 'የኔትወርክ ስህተት። እባክዎ የኢንተርኔት አገናኝዎን ያረጋግጡና እንደገና ይሞክሩ።',
+    tryAgain: 'እባክዎ እንደገና ይሞክሩ።',
   },
   om: {
     emergencyBanner: 'Yeroo yaala hatattamaa, battalumatti gara Kutaa Balaa deemaa.',
@@ -883,8 +913,17 @@ export const translations: Record<Language, CloneTranslations> = {
     resolutionRate: 'Qixa furmaataa',
     avgRating: 'Sadarkaa giddugaleessaa',
     anonymousRate: 'Maqaa malee',
-    totalCases: 'Baay’ina dhimma waliigalaa',
-    showCharts: 'Xiinxala agarsiisi',
-    hideCharts: 'Xiinxala dhoksi',
-  }
+    totalCases: 'Tuuta Waliigalaa',
+    showCharts: 'Garaagaatti agarsiisu',
+    hideCharts: 'Garaagaatti qabachiisu',
+
+    notificationSuccess: 'Milkaa\'ina',
+    notificationError: 'Dogoggora',
+    notificationWarning: 'Yaaddoo',
+    notificationInfo: 'Odeeffannoo',
+    submissionSuccess: 'Yaada keessan milkaa\'inaan dhiyeessama.',
+    submissionError: 'Yaada keessan dhiyeessuu hin danda\'amu. Firiin haaraa deebi\'aa.',
+    networkError: 'Dogoggora neettiiorkii. Qabxii keessan ilaali fi deebi\'ii deebi\'aa.',
+    tryAgain: 'Deebi\'ii deebi\'aa.',
+  },
 };
