@@ -24,6 +24,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useNotification } from '../context/NotificationContext';
 import { removeUnlinkedComplaintAudio, uploadComplaintAudio } from '../lib/data';
 import { requestNotificationPermission } from '../lib/firebase';
+import { CareSignalFlight } from './CareSignalFlight';
 
 interface SubmitViewProps {
   onSubmitCase: (newCase: CaseSubmission) => Promise<void>;
@@ -506,54 +507,15 @@ export const SubmitView: React.FC<SubmitViewProps> = ({ onSubmitCase, onNavigate
   if (submittedCase) {
     return (
       <div className="max-w-md mx-auto py-12 px-4">
-        <div className="bg-gradient-to-br from-white via-white to-slate-50/50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950/50 rounded-3xl border-2 border-slate-200/60 dark:border-slate-800/60 shadow-2xl p-8 sm:p-10 text-center space-y-6">
-          <div className="w-16 h-16 bg-gradient-to-br from-[#0077b6] to-[#00b4d8] text-white rounded-2xl flex items-center justify-center mx-auto shadow-xl shadow-[#0077b6]/30">
-            <CheckCircle2 className="w-8 h-8" />
-        </div>
-
-          <div className="space-y-2">
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
-              {t.thankYouTitle}
-            </h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              {t.keepRefNotice}
-            </p>
-          </div>
-
-          <div className="py-4 px-5 bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800/60 dark:to-slate-900/60 rounded-2xl border-2 border-slate-200/60 dark:border-slate-700/60 flex items-center justify-center gap-4 shadow-md">
-            <span className="font-mono text-2xl font-bold tracking-wider text-[#0077b6] dark:text-[#90e0ef]">
-              {submittedCase.reference}
-            </span>
-            <button
-              onClick={handleCopyRef}
-              className="p-2 rounded-xl text-slate-400 hover:text-[#0077b6] dark:hover:text-[#90e0ef] hover:bg-white dark:hover:bg-slate-800 transition-all shadow-sm hover:shadow-md"
-              title={t.copyReference}
-              aria-label={t.copyReference}
-            >
-              {copied ? <Check className="w-5 h-5 text-[#00b4d8]" /> : <Copy className="w-5 h-5" />}
-            </button>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-            <button
-              onClick={() => onNavigateTrack(submittedCase.reference)}
-              className="w-full sm:w-auto px-5 py-3 min-h-[48px] bg-gradient-to-r from-[#0077b6] via-[#00b4d8] to-[#90e0ef] hover:from-[#006094] hover:via-[#0096a8] hover:to-[#70c5dd] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#90e0ef]/40 text-white font-semibold text-sm rounded-2xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl flex items-center justify-center gap-2 shadow-lg shadow-[#0077b6]/25"
-            >
-              <span>{t.trackThisCase}</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => {
-                setSubmittedCase(null);
-                handleResetForm();
-              }}
-              className="w-full sm:w-auto px-5 py-3 min-h-[44px] text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-sm rounded-2xl transition-all duration-300 hover:shadow-md flex items-center justify-center gap-2 border-2 border-slate-200/60 dark:border-slate-700/60"
-            >
-              <RotateCcw className="w-4 h-4" />
-              <span>{t.submitAnother}</span>
-            </button>
-          </div>
-        </div>
+        <CareSignalFlight
+          reference={submittedCase.reference}
+          department={getDeptName(submittedCase.department)}
+          onTrack={() => onNavigateTrack(submittedCase.reference)}
+          onReset={() => {
+            setSubmittedCase(null);
+            handleResetForm();
+          }}
+        />
       </div>
     );
   }

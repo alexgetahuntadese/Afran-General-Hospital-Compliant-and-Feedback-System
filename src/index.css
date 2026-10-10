@@ -326,6 +326,31 @@
     }
   }
 
+  .care-signal-flight-dot {
+    animation: care-signal-flight 3.8s ease-in-out infinite;
+  }
+
+  .care-signal-orbit {
+    animation: care-signal-orbit 3s ease-in-out infinite;
+  }
+
+  @keyframes care-signal-flight {
+    0%, 100% { transform: translate(0, -50%) rotate(-2deg); }
+    50% { transform: translate(710%, -115%) rotate(8deg); }
+  }
+
+  @keyframes care-signal-orbit {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-4px) rotate(4deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .care-signal-flight-dot,
+    .care-signal-orbit {
+      animation: none;
+    }
+  }
+
   /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
