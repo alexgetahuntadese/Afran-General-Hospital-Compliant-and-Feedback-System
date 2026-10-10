@@ -28,24 +28,27 @@ function playComplaintAlert() {
   if (!AudioContextConstructor) return;
 
   const audioContext = new AudioContextConstructor();
-  const playTone = (start: number, frequency: number) => {
+  const playTone = (start: number, frequency: number, duration = 0.42) => {
     const oscillator = audioContext.createOscillator();
     const gain = audioContext.createGain();
     oscillator.type = 'sine';
     oscillator.frequency.value = frequency;
     gain.gain.setValueAtTime(0.0001, audioContext.currentTime + start);
     gain.gain.exponentialRampToValueAtTime(0.18, audioContext.currentTime + start + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + start + 0.32);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + start + duration);
     oscillator.connect(gain);
     gain.connect(audioContext.destination);
     oscillator.start(audioContext.currentTime + start);
-    oscillator.stop(audioContext.currentTime + start + 0.34);
+    oscillator.stop(audioContext.currentTime + start + duration + 0.02);
   };
 
   void audioContext.resume().then(() => {
-    playTone(0, 740);
-    playTone(0.18, 988);
-    window.setTimeout(() => void audioContext.close(), 700);
+    playTone(0, 659);
+    playTone(0.4, 784);
+    playTone(0.8, 988);
+    playTone(1.2, 784);
+    playTone(1.6, 988, 0.55);
+    window.setTimeout(() => void audioContext.close(), 2600);
   }).catch(() => void audioContext.close());
 }
 
