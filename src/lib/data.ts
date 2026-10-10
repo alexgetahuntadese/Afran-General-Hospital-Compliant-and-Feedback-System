@@ -15,6 +15,8 @@ interface CaseRow {
   phone: string | null;
   status: SubmissionStatus;
   escalated: boolean;
+  assigned_department: string | null;
+  assigned_at: string | null;
   submitted_at: string;
   updated_at: string;
   response: string | null;
@@ -63,6 +65,8 @@ function mapCaseRow(row: CaseRow | PublicCaseRow): CaseSubmission {
     phone: 'phone' in row ? row.phone ?? undefined : undefined,
     status: row.status,
     escalated: 'escalated' in row ? row.escalated : undefined,
+    assignedDepartment: 'assigned_department' in row ? row.assigned_department ?? undefined : undefined,
+    assignedAt: 'assigned_at' in row ? row.assigned_at ?? undefined : undefined,
     submittedAt: row.submitted_at,
     updatedAt: row.updated_at,
     response: row.response ?? undefined,
@@ -170,6 +174,8 @@ export async function updateCase(updatedCase: CaseSubmission): Promise<void> {
     .update({
       status: updatedCase.status,
       escalated: Boolean(updatedCase.escalated),
+      assigned_department: updatedCase.assignedDepartment ?? null,
+      assigned_at: updatedCase.assignedDepartment ? (updatedCase.assignedAt ?? new Date().toISOString()) : null,
       response: updatedCase.response ?? null,
       responded_at: updatedCase.respondedAt ?? null,
       department_head_checked: updatedCase.departmentHeadChecked ?? false,

@@ -57,6 +57,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
   const { t, language, getDeptName } = useLanguage();
   const canManageStaff = currentUser?.role === 'superadmin';
   const canReadStaffDirectory = canManageStaff || currentUser?.role === 'customer_service_manager';
+  const canAssignCases = canManageStaff || currentUser?.role === 'customer_service_manager';
 
   // Login form state
   const [loginUsername, setLoginUsername] = useState('');
@@ -89,6 +90,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
 
   // Editing case in modal
   const [editStatus, setEditStatus] = useState<SubmissionStatus>('received');
+  const [editAssignedDepartment, setEditAssignedDepartment] = useState('');
   const [editResponse, setEditResponse] = useState('');
   const [editEscalated, setEditEscalated] = useState(false);
   const [saveError, setSaveError] = useState('');
@@ -137,7 +139,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
   const visibleCases = useMemo(() => {
     if (currentUser?.role === 'ceo') return cases.filter((c) => c.escalated);
     if (currentUser?.role === 'department_head') {
-      return cases.filter((c) => c.department === currentUser.department);
+      return cases.filter((c) => (c.assignedDepartment ?? c.department) === currentUser.department);
     }
     return currentUser?.role === 'customer_service_manager' || currentUser?.role === 'superadmin' ? cases : [];
   }, [cases, currentUser]);
@@ -170,6 +172,7 @@ export const StaffView: React.FC<StaffViewProps> = ({
   const handleOpenReview = async (c: CaseSubmission) => {
     setSelectedCase(c);
     setEditStatus(c.status);
+    setEditAssignedDepartment(c.assignedDepartment ?? c.department);
     setEditResponse(c.response || '');
     setEditEscalated(Boolean(c.escalated));
 
@@ -585,6 +588,14 @@ export const StaffView: React.FC<StaffViewProps> = ({
                   <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">
                     {getDeptName(c.department)}
                   </span>
+                  {c.assignedDepartment && c.assignedDepartment !== c.department && (
+                    <>
+                      <span aria-hidden="true" className="text-slate-300 dark:text-slate-700">→</span>
+                      <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">
+                        {getDeptName(c.assignedDepartment)}
+                      </span>
+                    </>
+                  )}
                   <span aria-hidden="true" className="text-slate-300 dark:text-slate-700">·</span>
                   <span className="text-[11px] text-slate-400 font-mono">
                     {new Date(c.submittedAt).toLocaleDateString()}
@@ -801,6 +812,10 @@ export const StaffView: React.FC<StaffViewProps> = ({
                   await onUpdateCase({
                     ...selectedCase,
                     status: editStatus,
+                    assignedDepartment: canAssignCases ? editAssignedDepartment : selectedCase.assignedDepartment,
+                    assignedAt: canAssignCases && editAssignedDepartment !== (selectedCase.assignedDepartment ?? selectedCase.department)
+                      ? new Date().toISOString()
+                      : selectedCase.assignedAt,
                     escalated: editEscalated,
                     response: editResponse.trim() || undefined,
                     respondedAt: editResponse.trim() ? new Date().toISOString() : selectedCase.respondedAt,
@@ -828,6 +843,25 @@ export const StaffView: React.FC<StaffViewProps> = ({
                   {t.markEscalated}
                 </label>
                 <div>
+                  {canAssignCases && (
+                    <div className="mb-4">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                        {t.staffDepartmentLabel} · Assigned
+                      </label>
+                      <select
+                        value={editAssignedDepartment}
+                        onChange={(e) => setEditAssignedDepartment(e.target.value)}
+                        className="premium-input w-full"
+                      >
+                        {DEPARTMENTS.map((department) => (
+                          <option key={department} value={department}>{getDeptName(department)}</option>
+                        ))}
+                      </select>
+                      <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+                        The selected department head will see this case in their queue.
+                      </p>
+                    </div>
+                  )}
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
                     {t.statusLabel}
                   </label>

@@ -18,6 +18,8 @@ export interface CaseSubmission {
   phone?: string;
   status: SubmissionStatus;
   escalated?: boolean;
+  assignedDepartment?: string;
+  assignedAt?: string;
   submittedAt: string;
   updatedAt: string;
   response?: string;
